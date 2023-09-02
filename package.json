@@ -1,0 +1,13 @@
+{
+  "name": "com.djm.core-utilities",
+  "version": "1.0.0",
+  "displayName": "DJM Core Utilities",
+  "description": "Core utilities for small scale games in Unity.",
+  "dependencies": {
+  },
+  "author": {
+    "name": "danjm.dev",
+    "email": "danjm.dev@gmail.com",
+    "url": "https://github.com/danjm-dev"
+  }
+}
