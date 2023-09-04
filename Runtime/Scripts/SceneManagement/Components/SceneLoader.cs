@@ -28,7 +28,7 @@ namespace DJM.CoreUtilities
             var sceneTransitionCanvas = canvas.GetComponent<SceneTransitionCanvas>();
             
             // show canvas
-            yield return sceneTransitionCanvas.ShowCanvasCoroutine(transitionConfig);
+            yield return StartCoroutine(sceneTransitionCanvas.ShowCanvasCoroutine(transitionConfig));
             
             // start scene load
             var sceneLoadAsyncOperation = SceneManager.LoadSceneAsync(sceneName);
@@ -38,19 +38,20 @@ namespace DJM.CoreUtilities
             if (transitionConfig.progressBar)
             {
                 var progressBar = canvas.GetComponent<SceneTransitionProgressBar>();
-                yield return progressBar.FillCoroutine(sceneLoadAsyncOperation, transitionConfig);
+                yield return StartCoroutine(progressBar.FillBarCoroutine(sceneLoadAsyncOperation, transitionConfig));
             }
             else
                 while (sceneLoadAsyncOperation.progress < 0.9f) yield return null;
             
-            // swap scenes
-            sceneLoadAsyncOperation.allowSceneActivation = true;
-            
             // wait for delay
             yield return new WaitForSeconds(transitionConfig.loadCompleteDelayDuration);
             
+            // complete load, and wait till actually done
+            sceneLoadAsyncOperation.allowSceneActivation = true;
+            while (!sceneLoadAsyncOperation.isDone) yield return null;
+            
             // hide then destroy canvas
-            yield return sceneTransitionCanvas.HideCanvasCoroutine(transitionConfig);
+            yield return StartCoroutine(sceneTransitionCanvas.HideCanvasCoroutine(transitionConfig));
             Destroy(canvas);
         }
     }

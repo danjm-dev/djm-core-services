@@ -8,7 +8,7 @@ namespace DJM.CoreUtilities
 
         protected virtual void Awake() => InitializeInstance();
 
-        protected virtual void InitializeInstance()
+        private void InitializeInstance()
         {
             if (!Application.isPlaying) return;
             

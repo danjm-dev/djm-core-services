@@ -16,24 +16,22 @@ namespace DJM.CoreUtilities
             fillImage.fillAmount = 0f;
         }
         
-        public IEnumerator FillCoroutine
+        public IEnumerator FillBarCoroutine
         (
-            AsyncOperation loadOperation, 
+            AsyncOperation sceneLoadOperation, 
             SceneLoadTransitionConfig transitionConfig
         )
         {
             canvasGroup.alpha = 1f;
-            
             do
             {
-                SetFillTarget(loadOperation.progress, transitionConfig.progressBarMinLoadDuration);
+                SetFillTarget(sceneLoadOperation.progress, transitionConfig.progressBarMinLoadDuration);
                 yield return null;
             } 
-            while (loadOperation.progress < 0.9f);
+            while (sceneLoadOperation.progress < 0.9f);
             
             SetFillTarget(1f, transitionConfig.progressBarMinLoadDuration);
             while (fillImage.fillAmount < 1f) yield return null;
-            
             canvasGroup.alpha = 0f;
         }
 
