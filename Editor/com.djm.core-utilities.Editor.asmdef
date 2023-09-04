@@ -1,10 +1,8 @@
 {
-    "name": "com.djm.core-utilities.Tests",
-    "rootNamespace": "DJM.CoreUtilities.Tests",
+    "name": "com.djm.core-utilities.Editor",
+    "rootNamespace": "DJM.CoreUtilities.Editor",
     "references": [
-        "GUID:f23912e9624765346a824faade71f837",
-        "GUID:0acc523941302664db1f4e527237feb3",
-        "GUID:27619889b8ba8c24980f49ee34dbb44a"
+        "GUID:f23912e9624765346a824faade71f837"
     ],
     "includePlatforms": [
         "Editor"
