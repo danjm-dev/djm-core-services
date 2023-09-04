@@ -33,17 +33,6 @@ namespace DJM.CoreUtilities.Editor
 
         private static void VerifySceneTransitionCanvasComponent(GameObject prefab, ICollection<string> errorMessages)
         {
-            if (prefab.GetComponent<Canvas>() == null)
-            {
-                var errorMessage = VerificationMessages.PrefabRequiresComponentOnRootMessage
-                (
-                    prefab.name, 
-                    nameof(Canvas)
-                );
-                
-                errorMessages.Add(errorMessage);
-            }
-            
             if (prefab.GetComponent<SceneTransitionCanvas>() == null)
             {
                 var errorMessage = VerificationMessages.PrefabRequiresComponentOnRootMessage

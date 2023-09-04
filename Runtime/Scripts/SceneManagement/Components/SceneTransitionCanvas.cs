@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace DJM.CoreUtilities
 {
+    [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroup))]
     public sealed class SceneTransitionCanvas : MonoBehaviour
     {
+        private Canvas _canvas;
         public CanvasGroup CanvasGroup { get; private set; }
         private void Awake()
         {
+            _canvas = GetComponent<Canvas>();
             CanvasGroup = GetComponent<CanvasGroup>();
+
+            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            _canvas.sortingOrder = short.MaxValue;
             CanvasGroup.alpha = 0f;
         }
         
