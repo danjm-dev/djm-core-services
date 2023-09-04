@@ -15,23 +15,23 @@ namespace DJM.CoreUtilities.Editor
             GUILayout.Space(20f);
             
             GUI.enabled = transition.transitionCanvasPrefab != null;
-            if (GUILayout.Button("Verify Transition Canvas Prefab")) OnVerifyCanvasPrefab(transition);
+            if (GUILayout.Button("Verify Transition Canvas Prefab")) VerifyTransitionCanvasPrefab(transition);
             GUI.enabled = true;
         }
 
-        private static void OnVerifyCanvasPrefab(SceneLoadTransitionConfig transitionConfig)
+        private static void VerifyTransitionCanvasPrefab(SceneLoadTransitionConfig transitionConfig)
         {
             var errorMessages = new List<string>();
             var canvasPrefab = transitionConfig.transitionCanvasPrefab;
             
-            VerifyCanvasComponent(canvasPrefab, errorMessages);
-            if (!transitionConfig.progressBar) VerifyProgressBarComponent(canvasPrefab, errorMessages);
+            VerifySceneTransitionCanvasComponent(canvasPrefab, errorMessages);
+            if (transitionConfig.progressBar) VerifySceneTransitionProgressBarComponent(canvasPrefab, errorMessages);
             
             foreach (var message in errorMessages) Debug.LogError(message, transitionConfig);
             Debug.Log(VerificationMessages.VerificationCompleteMessage(errorMessages.Count), transitionConfig);
         }
 
-        private static void VerifyCanvasComponent(GameObject prefab, ICollection<string> errorMessages)
+        private static void VerifySceneTransitionCanvasComponent(GameObject prefab, ICollection<string> errorMessages)
         {
             if (prefab.GetComponent<Canvas>() == null)
             {
@@ -43,37 +43,29 @@ namespace DJM.CoreUtilities.Editor
                 
                 errorMessages.Add(errorMessage);
             }
-
-            var canvasGroup = prefab.GetComponent<CanvasGroup>();
             
-            if (canvasGroup == null)
+            if (prefab.GetComponent<SceneTransitionCanvas>() == null)
             {
                 var errorMessage = VerificationMessages.PrefabRequiresComponentOnRootMessage
                 (
                     prefab.name, 
-                    nameof(CanvasGroup)
+                    nameof(SceneTransitionCanvas)
                 );
                 
                 errorMessages.Add(errorMessage);
-                return;
-            }
-            
-            if (canvasGroup.alpha > 0f)
-            {
-                errorMessages.Add(VerificationMessages.PrefabRootCanvasGroupAlphaValueMessage(prefab.name));
             }
         }
         
-        private static void VerifyProgressBarComponent(GameObject prefab, ICollection<string> errorMessages)
+        private static void VerifySceneTransitionProgressBarComponent(GameObject prefab, ICollection<string> errorMessages)
         {
-            var progressBarComponent = prefab.GetComponent<ProgressBar>();
+            var progressBarComponent = prefab.GetComponent<SceneTransitionProgressBar>();
 
             if (progressBarComponent == null)
             {
                 var errorMessage = VerificationMessages.PrefabRequiresComponentOnRootMessage
                 (
                     prefab.name,
-                    nameof(ProgressBar)
+                    nameof(SceneTransitionProgressBar)
                 );
                 
                 errorMessages.Add(errorMessage);
@@ -85,7 +77,7 @@ namespace DJM.CoreUtilities.Editor
                 var errorMessage = VerificationMessages.PrefabComponentFieldNotAssignedMessage
                 (
                     progressBarComponent.name,
-                    nameof(ProgressBar),
+                    nameof(SceneTransitionProgressBar),
                     nameof(progressBarComponent.canvasGroup)
                 );
                 
@@ -97,7 +89,7 @@ namespace DJM.CoreUtilities.Editor
                 var errorMessage = VerificationMessages.PrefabComponentFieldNotAssignedMessage
                 (
                     progressBarComponent.name,
-                    nameof(ProgressBar),
+                    nameof(SceneTransitionProgressBar),
                     nameof(progressBarComponent.fillImage)
                 );
                 
@@ -114,9 +106,7 @@ namespace DJM.CoreUtilities.Editor
                 VerificationMessagePrefix + "{0} prefab requires a {1} component on its root game object.";
             private const string ComponentNotAssigned = 
                 VerificationMessagePrefix + "{0} component {1} field has not been assigned in the {2} prefab";
-            private const string PrefabRootCanvasGroupAlphaValue = 
-                VerificationMessagePrefix + "prefab {0} CanvasGroup component on root gameobject should have alpha value set to 0";
-            private const string VerificationComplete = 
+             private const string VerificationComplete = 
                 VerificationMessagePrefix + "Verification complete with {0} errors";
             
             internal static string PrefabRequiresComponentOnRootMessage(string prefabName, string missingComponentName)
@@ -128,12 +118,7 @@ namespace DJM.CoreUtilities.Editor
             {
                 return string.Format(ComponentNotAssigned, componentName, fieldName, prefabName);
             }
-
-            internal static string PrefabRootCanvasGroupAlphaValueMessage(string prefabName)
-            {
-                return string.Format(PrefabRootCanvasGroupAlphaValue, prefabName);
-            }
-
+            
             internal static string VerificationCompleteMessage(int issueCont)
             {
                 return string.Format(VerificationComplete, issueCont);

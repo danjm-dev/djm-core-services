@@ -12,42 +12,46 @@ namespace DJM.CoreUtilities
         
         public void LoadScene(string sceneName, SceneLoadTransitionConfig loadTransitionConfig)
         {
-            StartCoroutine(LoadSceneASync(sceneName, loadTransitionConfig));
+            StartCoroutine(LoadSceneCoroutine(sceneName, loadTransitionConfig));
         }
         
         public void LoadScene(string sceneName)
         {
-            if (defaultLoadTransition is null) LoadSceneSync(sceneName);
-            else StartCoroutine(LoadSceneASync(sceneName, defaultLoadTransition));
+            if (defaultLoadTransition is null) SceneManager.LoadScene(sceneName);
+            else StartCoroutine(LoadSceneCoroutine(sceneName, defaultLoadTransition));
         }
         
-        private void LoadSceneSync(string sceneName) => SceneManager.LoadScene(sceneName);
-        
-        private IEnumerator LoadSceneASync(string sceneName, SceneLoadTransitionConfig transitionConfig)
+        private IEnumerator LoadSceneCoroutine(string sceneName, SceneLoadTransitionConfig transitionConfig)
         {
+            // create canvas
             var canvas  = Instantiate(transitionConfig.transitionCanvasPrefab, transform);
-            var mainCanvasGroup = canvas.GetComponent<CanvasGroup>();
+            var sceneTransitionCanvas = canvas.GetComponent<SceneTransitionCanvas>();
             
-            yield return TransitionCanvasOperations.ShowCanvas(mainCanvasGroup, transitionConfig);
+            // show canvas
+            yield return sceneTransitionCanvas.ShowCanvasCoroutine(transitionConfig);
             
             // start scene load
             var sceneLoadAsyncOperation = SceneManager.LoadSceneAsync(sceneName);
             sceneLoadAsyncOperation.allowSceneActivation = false;
 
+            // wait for load to complete
             if (transitionConfig.progressBar)
-                yield return ProgressBarOperations.FillAsync
-                (
-                    canvas.GetComponent<ProgressBar>(),
-                    sceneLoadAsyncOperation, 
-                    transitionConfig.progressBarMinLoadDuration
-                );
+            {
+                var progressBar = canvas.GetComponent<SceneTransitionProgressBar>();
+                yield return progressBar.FillCoroutine(sceneLoadAsyncOperation, transitionConfig);
+            }
             else
-                yield return sceneLoadAsyncOperation;
+                while (sceneLoadAsyncOperation.progress < 0.9f) yield return null;
             
+            // swap scenes
             sceneLoadAsyncOperation.allowSceneActivation = true;
+            
+            // wait for delay
             yield return new WaitForSeconds(transitionConfig.loadCompleteDelayDuration);
             
-            yield return TransitionCanvasOperations.HideCanvas(mainCanvasGroup, transitionConfig);
+            // hide then destroy canvas
+            yield return sceneTransitionCanvas.HideCanvasCoroutine(transitionConfig);
+            Destroy(canvas);
         }
     }
 }

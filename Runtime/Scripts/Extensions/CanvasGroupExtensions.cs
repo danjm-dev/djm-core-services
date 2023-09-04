@@ -17,7 +17,7 @@ namespace DJM.CoreUtilities.Extensions
         public static IEnumerator FadeOutCanvasAsync(this CanvasGroup canvasGroup, float duration, Ease ease)
         {
             yield return canvasGroup
-                .DOFade(1f, duration)
+                .DOFade(0f, duration)
                 .SetEase(ease)
                 .WaitForCompletion();
         }
