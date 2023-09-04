@@ -2,7 +2,7 @@
     "name": "com.djm.core-utilities",
     "rootNamespace": "DJM.CoreUtilities",
     "references": [
-        "GUID:7895e55730d722d4a968bc56cfc1ce94"
+        "DOTween.Modules"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
