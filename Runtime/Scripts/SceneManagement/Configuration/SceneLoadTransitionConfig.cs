@@ -17,9 +17,10 @@ namespace DJM.CoreUtilities
         [Header("Transition Timing")] [Space]
         
         [SerializeField] [ConditionalEnableProperty(nameof(fadeInCanvas))] [Min(0f)] public float fadeInDuration;
-        [SerializeField] [Min(0f)] public float newSceneInitializationDelay;
+        [SerializeField] [Min(0f)] public float newSceneLoadStartDelay;
         [SerializeField] [Min(0f)] public float minimumLoadDuration;
         [SerializeField] [Min(0f)] public float newSceneActivationDelay;
+        [SerializeField] [Min(0f)] public float fadeOutCanvasDelay;
         [SerializeField] [ConditionalEnableProperty(nameof(fadeOutCanvas))] [Min(0f)] public float fadeOutDuration;
         
         [Header("Animation")] [Space]

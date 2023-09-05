@@ -14,8 +14,6 @@ namespace DJM.CoreUtilities
         public UnityEvent onFadeInStart;
         public UnityEvent onFadeInEnd;
         
-        public UnityEvent onNewSceneInitialization;
-        
         public UnityEvent onLoadStart;
         public UnityEvent<float> onSetLoadProgress;
         public UnityEvent onLoadEnd;

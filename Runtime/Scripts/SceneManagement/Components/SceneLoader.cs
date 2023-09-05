@@ -28,44 +28,59 @@ namespace DJM.CoreUtilities
         {
             var transitionCanvas  = Instantiate(transitionConfig.sceneTransitionCanvasPrefab, transform);
             
-            // show canvas
+            transitionCanvas.onFadeInStart?.Invoke();
             yield return StartCoroutine(transitionCanvas.CanvasGroupFader.FadeCanvasGroupAlphaCoroutine
             (
                 1f, 
                 transitionConfig.fadeInDuration, 
                 transitionConfig.fadeInEase
             ));
+            transitionCanvas.onFadeInEnd?.Invoke();
+
+
+            yield return new WaitForSeconds(transitionConfig.newSceneLoadStartDelay);
+            transitionCanvas.onLoadStart?.Invoke();
             
             // start scene load
             var sceneLoadAsyncOperation = SceneManager.LoadSceneAsync(sceneName);
             sceneLoadAsyncOperation.allowSceneActivation = false;
-
-            // wait for load to complete
+            
             var sceneLoadProgress = new DynamicFloatTween(0f);
             do
             {
                 sceneLoadProgress.SetTarget(sceneLoadAsyncOperation.progress, transitionConfig.minimumLoadDuration);
+                transitionCanvas.onSetLoadProgress?.Invoke(sceneLoadProgress.Value);
                 yield return null;
             } 
             while (sceneLoadAsyncOperation.progress < 0.9f);
             
             sceneLoadProgress.SetTarget(1f, transitionConfig.minimumLoadDuration);
-            while (!sceneLoadProgress.AtTarget) yield return null;
+            while (!sceneLoadProgress.AtTarget)
+            {
+                transitionCanvas.onSetLoadProgress?.Invoke(sceneLoadProgress.Value);
+                yield return null;
+            }
+            transitionCanvas.onSetLoadProgress?.Invoke(sceneLoadProgress.Value); // is this necessary?
+            transitionCanvas.onLoadEnd?.Invoke();
             
             // wait for delay
             yield return new WaitForSeconds(transitionConfig.newSceneActivationDelay);
             
+            
             // complete load, and wait till actually done
             sceneLoadAsyncOperation.allowSceneActivation = true;
             while (!sceneLoadAsyncOperation.isDone) yield return null;
+            transitionCanvas.onNewSceneActivation?.Invoke();
             
-            // hide then destroy canvas
+            
+            transitionCanvas.onFadeOutStart?.Invoke();
             yield return StartCoroutine(transitionCanvas.CanvasGroupFader.FadeCanvasGroupAlphaCoroutine
             (
                 0f, 
                 transitionConfig.fadeOutDuration, 
                 transitionConfig.fadeOutEase
             ));
+            transitionCanvas.onFadeOutEnd?.Invoke();
             Destroy(transitionCanvas.gameObject);
         }
     }
