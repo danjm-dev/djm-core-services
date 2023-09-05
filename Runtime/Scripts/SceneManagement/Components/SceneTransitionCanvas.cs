@@ -1,49 +1,38 @@
-using System.Collections;
-using DJM.CoreUtilities.Extensions;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DJM.CoreUtilities
 {
     [RequireComponent(typeof(Canvas))]
-    [RequireComponent(typeof(CanvasGroup))]
+    [RequireComponent(typeof(CanvasGroupFader))]
     public sealed class SceneTransitionCanvas : MonoBehaviour
     {
-        private Canvas _canvas;
-        public CanvasGroup CanvasGroup { get; private set; }
+        public CanvasGroupFader CanvasGroupFader { get; private set; }
+
+        [Header("Transition Events")]
+        
+        public UnityEvent onFadeInStart;
+        public UnityEvent onFadeInEnd;
+        
+        public UnityEvent onNewSceneInitialization;
+        
+        public UnityEvent onLoadStart;
+        public UnityEvent<float> onSetLoadProgress;
+        public UnityEvent onLoadEnd;
+        
+        public UnityEvent onNewSceneActivation;
+        
+        public UnityEvent onFadeOutStart;
+        public UnityEvent onFadeOutEnd;
+        
         private void Awake()
         {
-            _canvas = GetComponent<Canvas>();
-            CanvasGroup = GetComponent<CanvasGroup>();
+            var canvas = GetComponent<Canvas>();
+            CanvasGroupFader = GetComponent<CanvasGroupFader>();
 
-            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _canvas.sortingOrder = short.MaxValue;
-            CanvasGroup.alpha = 0f;
-        }
-        
-        public IEnumerator ShowCanvasCoroutine(SceneLoadTransitionConfig transitionConfig)
-        {
-            if (transitionConfig.fadeInCanvas)
-            {
-                yield return CanvasGroup.FadeInCanvasAsync
-                (
-                    transitionConfig.fadeInDuration,
-                    transitionConfig.fadeInEase
-                );
-            }
-            CanvasGroup.alpha = 1f;
-        }
-        
-        public IEnumerator HideCanvasCoroutine(SceneLoadTransitionConfig transitionConfig)
-        {
-            if (transitionConfig.fadeOutCanvas)
-            {
-                yield return CanvasGroup.FadeOutCanvasAsync
-                (
-                    transitionConfig.fadeOutDuration,
-                    transitionConfig.fadeOutEase
-                );
-            }
-            CanvasGroup.alpha = 0f;
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = short.MaxValue;
+            CanvasGroupFader.SetCanvasGroupAlpha(0f);
         }
     }
 }

@@ -9,23 +9,23 @@ namespace DJM.CoreUtilities
     {
         [SerializeField] public bool fadeInCanvas;
         [SerializeField] public bool fadeOutCanvas;
-        [SerializeField] public bool progressBar;
         
         [Space]
         
-        [SerializeField] public GameObject transitionCanvasPrefab;
+        [SerializeField] public SceneTransitionCanvas sceneTransitionCanvasPrefab;
         
         [Header("Transition Timing")] [Space]
         
-        [SerializeField] [ConditionalShowProperty(nameof(fadeInCanvas))] [Min(0f)] public float fadeInDuration;
-        [SerializeField] [ConditionalShowProperty(nameof(progressBar))] [Min(0f)] public float progressBarMinLoadDuration;
-        [SerializeField] [Min(0f)] public float loadCompleteDelayDuration;
-        [SerializeField] [ConditionalShowProperty(nameof(fadeOutCanvas))] [Min(0f)] public float fadeOutDuration;
+        [SerializeField] [ConditionalEnableProperty(nameof(fadeInCanvas))] [Min(0f)] public float fadeInDuration;
+        [SerializeField] [Min(0f)] public float newSceneInitializationDelay;
+        [SerializeField] [Min(0f)] public float minimumLoadDuration;
+        [SerializeField] [Min(0f)] public float newSceneActivationDelay;
+        [SerializeField] [ConditionalEnableProperty(nameof(fadeOutCanvas))] [Min(0f)] public float fadeOutDuration;
         
         [Header("Animation")] [Space]
         
-        [SerializeField] [ConditionalShowProperty(nameof(fadeInCanvas))] public Ease fadeInEase = Ease.InOutSine;
-        [SerializeField] [ConditionalShowProperty(nameof(fadeOutCanvas))] public Ease fadeOutEase = Ease.InOutSine;
+        [SerializeField] [ConditionalEnableProperty(nameof(fadeInCanvas))] public Ease fadeInEase = Ease.InOutSine;
+        [SerializeField] [ConditionalEnableProperty(nameof(fadeOutCanvas))] public Ease fadeOutEase = Ease.InOutSine;
 
 
         private void OnValidate()
@@ -40,11 +40,6 @@ namespace DJM.CoreUtilities
             {
                 fadeOutDuration = 0f;
                 fadeOutEase = Ease.InOutSine;
-            }
-
-            if (!progressBar)
-            {
-                progressBarMinLoadDuration = 0f;
             }
         }
     }
