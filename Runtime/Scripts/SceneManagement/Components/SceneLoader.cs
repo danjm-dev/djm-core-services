@@ -12,7 +12,8 @@ namespace DJM.CoreUtilities
         
         public void LoadScene(string sceneName, SceneLoadTransitionConfig loadTransitionConfig)
         {
-            StartCoroutine(LoadSceneCoroutine(sceneName, loadTransitionConfig));
+            if (loadTransitionConfig is null) LoadScene(sceneName);
+            else StartCoroutine(LoadSceneCoroutine(sceneName, loadTransitionConfig));
         }
         
         public void LoadScene(string sceneName)
