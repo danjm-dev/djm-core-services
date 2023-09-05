@@ -38,7 +38,7 @@ namespace DJM.CoreUtilities
             transitionCanvas.onFadeInEnd?.Invoke();
 
 
-            yield return new WaitForSeconds(transitionConfig.newSceneLoadStartDelay);
+            yield return new WaitForSeconds(transitionConfig.loadStartDelay);
             transitionCanvas.onLoadStart?.Invoke();
             
             // start scene load
@@ -46,6 +46,7 @@ namespace DJM.CoreUtilities
             sceneLoadAsyncOperation.allowSceneActivation = false;
             
             var sceneLoadProgress = new DynamicFloatTween(0f);
+            transitionCanvas.onSetLoadProgress?.Invoke(sceneLoadProgress.Value);
             do
             {
                 sceneLoadProgress.SetTarget(sceneLoadAsyncOperation.progress, transitionConfig.minimumLoadDuration);
@@ -55,7 +56,7 @@ namespace DJM.CoreUtilities
             while (sceneLoadAsyncOperation.progress < 0.9f);
             
             sceneLoadProgress.SetTarget(1f, transitionConfig.minimumLoadDuration);
-            while (!sceneLoadProgress.AtTarget)
+            while (sceneLoadProgress.Value < 1f)
             {
                 transitionCanvas.onSetLoadProgress?.Invoke(sceneLoadProgress.Value);
                 yield return null;
@@ -63,15 +64,15 @@ namespace DJM.CoreUtilities
             transitionCanvas.onSetLoadProgress?.Invoke(sceneLoadProgress.Value); // is this necessary?
             transitionCanvas.onLoadEnd?.Invoke();
             
-            // wait for delay
-            yield return new WaitForSeconds(transitionConfig.newSceneActivationDelay);
+            yield return new WaitForSeconds(transitionConfig.activateNewSceneDelay);
             
             
             // complete load, and wait till actually done
             sceneLoadAsyncOperation.allowSceneActivation = true;
             while (!sceneLoadAsyncOperation.isDone) yield return null;
-            transitionCanvas.onNewSceneActivation?.Invoke();
+            transitionCanvas.onActivateNewScene?.Invoke();
             
+            yield return new WaitForSeconds(transitionConfig.fadeOutStartDelay);
             
             transitionCanvas.onFadeOutStart?.Invoke();
             yield return StartCoroutine(transitionCanvas.CanvasGroupFader.FadeCanvasGroupAlphaCoroutine
