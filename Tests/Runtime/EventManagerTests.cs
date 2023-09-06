@@ -150,7 +150,7 @@ namespace DJM.CoreUtilities.Tests
         [Test]
         public void Reset_EmptyStructEvent_NoSubscribers_ShouldNotThrow()
         {
-            Assert.DoesNotThrow(() => _eventManager.Reset());
+            Assert.DoesNotThrow(() => _eventManager.ClearAllEvents());
         }
         
         
@@ -171,7 +171,7 @@ namespace DJM.CoreUtilities.Tests
             _eventManager.Subscribe(valueStructEventListener);
             
             // act
-            _eventManager.Reset();
+            _eventManager.ClearAllEvents();
             _eventManager.TriggerEvent(Vector2.one);
             _eventManager.TriggerEvent(new EmptyStructEvent());
             _eventManager.TriggerEvent(new ValueStructEvent(1));
