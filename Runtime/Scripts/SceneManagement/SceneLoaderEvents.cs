@@ -2,7 +2,7 @@ using System;
 
 namespace DJM.CoreUtilities
 {
-    internal sealed class SceneLoadEventManager
+    internal sealed class SceneLoaderEvents : ISceneLoaderEvents
     {
         public event Action Start;
         public event Action FadeInStart;

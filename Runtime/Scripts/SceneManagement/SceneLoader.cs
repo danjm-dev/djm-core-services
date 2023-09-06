@@ -8,14 +8,9 @@ namespace DJM.CoreUtilities
 {
     public sealed class SceneLoader : MonoBehaviour
     {
-        private SceneLoadEventManager _eventManager;
+        private readonly SceneLoaderEvents _sceneLoaderEvents = new();
         
         [SerializeField] private SceneTransitionConfig defaultTransition;
-
-        private void Awake()
-        {
-            _eventManager = new SceneLoadEventManager();
-        }
 
         public void Reset() => defaultTransition = null;
         
@@ -34,83 +29,74 @@ namespace DJM.CoreUtilities
         private IEnumerator LoadSceneCoroutine(string sceneName, SceneTransitionConfig transitionConfig)
         {
             var transitionCanvas  = Instantiate(transitionConfig.transitionCanvasPrefab, transform);
-            transitionCanvas.onStart?.Invoke();
+            _sceneLoaderEvents.InvokeStart();
             
             // fade in
-            yield return RunFadePhase
-            (
-                transitionConfig.fadeInPhaseConfig, 
-                transitionCanvas.fadeInPhaseEvents,
-                transitionCanvas.CanvasGroupFader, 
-                1f
-            );
+            yield return RunFadeInPhase(transitionConfig.fadeInPhaseConfig, transitionCanvas.CanvasGroupFader);
             
             AsyncOperation sceneLoadOperation = null;
             
             // scene load
             yield return RunLoadPhase
             (
-                transitionConfig.loadPhaseConfig, 
-                transitionCanvas.loadPhaseEvents, 
+                transitionConfig.loadPhaseConfig,
                 sceneName, 
                 operation => sceneLoadOperation = operation
             );
             
             // activate new scene
-            yield return RunActivatePhase
-            (
-                transitionConfig.activatePhaseConfig, 
-                transitionCanvas.activatePhaseEvents,
-                sceneLoadOperation
-            );
+            yield return RunActivatePhase(transitionConfig.activatePhaseConfig, sceneLoadOperation);
             
             // fade out
-            yield return RunFadePhase
-            (
-                transitionConfig.fadeOutPhaseConfig, 
-                transitionCanvas.fadeOutPhaseEvents,
-                transitionCanvas.CanvasGroupFader, 
-                0f
-            );
+            yield return RunFadeOutPhase(transitionConfig.fadeOutPhaseConfig, transitionCanvas.CanvasGroupFader);
             
             // transition complete
-            transitionCanvas.onEnd?.Invoke();
+            _sceneLoaderEvents.InvokeEnd();
             Destroy(transitionCanvas.gameObject);
         }
 
-        private static IEnumerator RunFadePhase
+        private IEnumerator RunFadeInPhase
         (
             SceneTransitionPhase.FadePhaseConfig config, 
-            SceneTransitionPhase.FadePhaseEvents events,
-            CanvasGroupFader canvasGroupFader,
-            float alphaTarget
+            CanvasGroupFader canvasGroupFader
         )
         {
             yield return HandleDelay(config.delay);
-            events.onFadeStart?.Invoke();
+            _sceneLoaderEvents.InvokeFadeInStart();
             
-            yield return canvasGroupFader.FadeCanvasGroupAlphaCoroutine(alphaTarget, config.duration, config.ease);
-            events.onFadeEnd?.Invoke();
+            yield return canvasGroupFader.FadeCanvasGroupAlphaCoroutine(1f, config.duration, config.ease);
+            _sceneLoaderEvents.InvokeFadeInEnd();
+        }
+        
+        private IEnumerator RunFadeOutPhase
+        (
+            SceneTransitionPhase.FadePhaseConfig config, 
+            CanvasGroupFader canvasGroupFader
+        )
+        {
+            yield return HandleDelay(config.delay);
+            _sceneLoaderEvents.InvokeFadeOutStart();
+            
+            yield return canvasGroupFader.FadeCanvasGroupAlphaCoroutine(0f, config.duration, config.ease);
+            _sceneLoaderEvents.InvokeFadeOutEnd();
         }
 
-        private static IEnumerator RunLoadPhase
+        private IEnumerator RunLoadPhase
         (
             SceneTransitionPhase.LoadPhaseConfig config, 
-            SceneTransitionPhase.LoadPhaseEvents events,
             string sceneName,
             Action<AsyncOperation> onComplete
         )
         {
             yield return HandleDelay(config.delay);
             
-            events.onLoadStart?.Invoke();
+            _sceneLoaderEvents.InvokeLoadStart();
             
             var sceneLoadAsyncOperation = SceneManager.LoadSceneAsync(sceneName);
             sceneLoadAsyncOperation.allowSceneActivation = false;
             
             var progressHandler = new DynamicFloatTween(0f, config.minimumDuration);
-            Action<float> progressUpdateHandler = progress => events.onLoadProgress?.Invoke(progress);
-            progressHandler.OnValueUpdate += progressUpdateHandler;
+            progressHandler.OnValueUpdate += _sceneLoaderEvents.InvokeLoadProgress;
             
             do
             {
@@ -121,16 +107,15 @@ namespace DJM.CoreUtilities
             
             progressHandler.SetTarget(1f);
             while (progressHandler.Value < 1f) yield return null;
-            progressHandler.OnValueUpdate -= progressUpdateHandler;
+            progressHandler.OnValueUpdate -= _sceneLoaderEvents.InvokeLoadProgress;
             
-            events.onLoadEnd?.Invoke();
+            _sceneLoaderEvents.InvokeLoadEnd();
             onComplete?.Invoke(sceneLoadAsyncOperation);
         }
         
-        private static IEnumerator RunActivatePhase
+        private IEnumerator RunActivatePhase
         (
             SceneTransitionPhase.ActivatePhaseConfig config, 
-            SceneTransitionPhase.ActivatePhaseEvents events,
             AsyncOperation sceneLoadOperation
         )
         {
@@ -139,7 +124,7 @@ namespace DJM.CoreUtilities
             sceneLoadOperation.allowSceneActivation = true;
             while (!sceneLoadOperation.isDone) yield return null;
             
-            events.onActivate?.Invoke();
+            _sceneLoaderEvents.InvokeActivate();
         }
 
         private static IEnumerator HandleDelay(float delay)
