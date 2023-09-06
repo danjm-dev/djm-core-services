@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace DJM.CoreUtilities.TweenExtensions
     public sealed class DynamicFloatTween
     {
         private Tween _tween;
+        private readonly float _durationPerUnit;
         
         /// <summary>
         /// Gets the current floating-point value of the tween.
@@ -16,21 +18,40 @@ namespace DJM.CoreUtilities.TweenExtensions
         public float Value { get; private set; }
         
         /// <summary>
+        /// Gets the current floating-point value target of the tween.
+        /// </summary>
+        public float TargetValue { get; private set; }
+
+        /// <summary>
+        /// Event triggered whenever the value of the tween updates.
+        /// </summary>
+        public event Action<float> OnValueUpdate;
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="DynamicFloatTween"/> class with the specified initial value.
         /// </summary>
         /// <param name="value">The initial floating-point value.</param>
-        public DynamicFloatTween(float value) => Value = value;
-        
+        /// <param name="durationPerUnit">The duration it takes for the value to change by one unit.</param>
+        public DynamicFloatTween(float value, float durationPerUnit)
+        {
+            Value = value;
+            TargetValue = Value;
+            _durationPerUnit = durationPerUnit;
+        }
+
         /// <summary>
         /// Updates the target value for the tween and begins the tween animation.
         /// </summary>
         /// <param name="target">The target floating-point value.</param>
-        /// <param name="durationPerUnit">The duration it takes for the value to change by one unit.</param>
-        public void SetTarget(float target, float durationPerUnit)
+        public void SetTarget(float target)
         {
+            if(Mathf.Approximately(target, TargetValue)) return;
+            
             if(_tween is not null) DOTween.Kill(_tween);
-            var duration = durationPerUnit * Mathf.Abs(target - Value);
-            _tween = DOTween.To(()=> Value, x=> Value = x, target, duration);
+            var duration = _durationPerUnit * Mathf.Abs(target - Value);
+            _tween = DOTween
+                .To(()=> Value, x=> Value = x, target, duration)
+                .OnUpdate(() => OnValueUpdate?.Invoke(Value));
         }
     }
 }

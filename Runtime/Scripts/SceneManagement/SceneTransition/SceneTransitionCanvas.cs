@@ -8,27 +8,21 @@ namespace DJM.CoreUtilities
     public sealed class SceneTransitionCanvas : MonoBehaviour
     {
         public CanvasGroupFader CanvasGroupFader { get; private set; }
+        
+        public UnityEvent onStart;
+        public UnityEvent onEnd;
 
-        [Header("Transition Events")]
+        public SceneTransitionPhase.FadePhaseEvents fadeInPhaseEvents;
+        public SceneTransitionPhase.LoadPhaseEvents loadPhaseEvents;
+        public SceneTransitionPhase.ActivatePhaseEvents activatePhaseEvents;
+        public SceneTransitionPhase.FadePhaseEvents fadeOutPhaseEvents;
         
-        public UnityEvent onFadeInStart;
-        public UnityEvent onFadeInEnd;
-        
-        public UnityEvent onLoadStart;
-        public UnityEvent<float> onSetLoadProgress;
-        public UnityEvent onLoadEnd;
-        
-        public UnityEvent onActivateNewScene;
-        
-        public UnityEvent onFadeOutStart;
-        public UnityEvent onFadeOutEnd;
         
         private void Awake()
         {
             var canvas = GetComponent<Canvas>();
             CanvasGroupFader = GetComponent<CanvasGroupFader>();
-
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            
             canvas.sortingOrder = short.MaxValue;
             CanvasGroupFader.SetCanvasGroupAlpha(0f);
         }

@@ -2,7 +2,7 @@ using UnityEditor;
 
 namespace DJM.CoreUtilities.Editor
 {
-    [CustomEditor(typeof(SceneLoadTransitionConfig))]
+    [CustomEditor(typeof(SceneTransitionConfig))]
     internal sealed class SceneLoadTransitionEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
@@ -10,12 +10,10 @@ namespace DJM.CoreUtilities.Editor
             DrawDefaultInspector();
             EditorGUILayout.Space();
 
-            var property = serializedObject.FindProperty("sceneTransitionCanvasPrefab");
+            var property = serializedObject.FindProperty("transitionCanvasPrefab");
             var transitionCanvas = property.objectReferenceValue as SceneTransitionCanvas;
-
-            if (transitionCanvas != null) return;
-            
-            EditorGUILayout.HelpBox("sceneTransitionCanvasPrefab requires a prefab!", MessageType.Error);
+            if (transitionCanvas == null)
+                EditorGUILayout.HelpBox("transitionCanvasPrefab requires a prefab!", MessageType.Error);
         }
     }
 }
