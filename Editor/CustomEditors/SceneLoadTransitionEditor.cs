@@ -1,8 +1,9 @@
+using DJM.CoreUtilities.SceneManagement;
 using UnityEditor;
 
 namespace DJM.CoreUtilities.Editor
 {
-    [CustomEditor(typeof(SceneTransitionConfig))]
+    [CustomEditor(typeof(SceneTransition))]
     internal sealed class SceneLoadTransitionEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()

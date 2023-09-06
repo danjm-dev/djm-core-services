@@ -1,22 +1,22 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.SceneManagement
 {
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroupFader))]
     public sealed class SceneTransitionCanvas : MonoBehaviour
     {
-        private ISceneLoaderEvents _sceneLoaderEvents;
         public CanvasGroupFader CanvasGroupFader { get; private set; }
         
         [SerializeField] private UnityEvent onStart;
         [SerializeField] private UnityEvent onEnd;
 
-        [SerializeField] private SceneTransitionPhase.FadePhaseEvents fadeInPhaseEvents;
-        [SerializeField] private SceneTransitionPhase.LoadPhaseEvents loadPhaseEvents;
-        [SerializeField] private SceneTransitionPhase.ActivatePhaseEvents activatePhaseEvents;
-        [SerializeField] private SceneTransitionPhase.FadePhaseEvents fadeOutPhaseEvents;
+        [SerializeField] private SceneTransitionEvents.FadePhase fadeInPhaseEvents;
+        [SerializeField] private SceneTransitionEvents.LoadPhase loadPhaseEvents;
+        [SerializeField] private SceneTransitionEvents.ActivatePhase activatePhaseEvents;
+        [SerializeField] private SceneTransitionEvents.FadePhase fadeOutPhaseEvents;
         
         
         private void Awake()
@@ -28,27 +28,32 @@ namespace DJM.CoreUtilities
             CanvasGroupFader.SetCanvasGroupAlpha(0f);
         }
 
-        public void RegisterSceneLoaderEvents(ISceneLoaderEvents sceneLoaderEvents)
+        private void Start()
         {
-            _sceneLoaderEvents = sceneLoaderEvents;
-            SubscribeToSceneLoaderEvents();
+            FadeInStartEvent.Subscribe(OnFadeInStartEvent);
+            FadeInEndEvent.Subscribe(OnFadeInEndEvent);
+            LoadProgressEvent.Subscribe(OnLoadProgressEvent);
+        }
+        
+        private void OnFadeInStartEvent(FadeInStartEvent fadeInStartEvent)
+        {
+            fadeInPhaseEvents.onFadeStart?.Invoke();
+        }
+        private void OnFadeInEndEvent(FadeInEndEvent fadeInEndEvent)
+        {
+            fadeInPhaseEvents.onFadeEnd?.Invoke();
+        }
+
+        private void OnLoadProgressEvent(LoadProgressEvent loadProgressEvent)
+        {
+            loadPhaseEvents.onLoadProgress?.Invoke(loadProgressEvent.Progress);
         }
 
         private void OnDestroy()
         {
-            if(_sceneLoaderEvents is null) return;
-            UnSubscribeFromSceneLoaderEvents();
-        }
-
-
-        private void SubscribeToSceneLoaderEvents()
-        {
-            _sceneLoaderEvents.Start += () => onStart?.Invoke();
-        }
-        
-        private void UnSubscribeFromSceneLoaderEvents()
-        {
-            
+            FadeInStartEvent.Unsubscribe(OnFadeInStartEvent);
+            FadeInEndEvent.Unsubscribe(OnFadeInEndEvent);
+            LoadProgressEvent.Unsubscribe(OnLoadProgressEvent);
         }
     }
 }
