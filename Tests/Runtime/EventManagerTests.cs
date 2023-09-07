@@ -106,28 +106,24 @@ namespace DJM.CoreUtilities.Tests
         
         
         [Test]
-        public void NoSubscribeUnsubscribe_EmptyStructEvent_ValidListener_ShouldNotThrow()
+        public void UnsubscribeWithoutSubscribing_EmptyStructEvent_ValidListener_ShouldNotThrow()
         {
             // arrange
-            var called = false;
-            Action<EmptyStructEvent> listener = _ => called = true;
+            Action<EmptyStructEvent> listener = _ => { };
             
             // act
-            _eventManager.Subscribe(listener);
             _eventManager.Unsubscribe(listener);
     
             // assert
             Assert.DoesNotThrow(() => _eventManager.Unsubscribe(listener));
         }
         [Test]
-        public void NoSubscribeUnsubscribe_Vector2Event_ValidListener_ShouldNotThrow()
+        public void UnsubscribeWithoutSubscribing_Vector2Event_ValidListener_ShouldNotThrow()
         {
             // arrange
-            var callbackValue = Vector2.zero;
-            Action<Vector2> listener = (vec2) => callbackValue = vec2;
+            Action<Vector2> listener = (vec2) => _ = vec2;
             
             // act
-            _eventManager.Subscribe(listener);
             _eventManager.Unsubscribe(listener);
     
             // assert

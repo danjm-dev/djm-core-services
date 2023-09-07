@@ -14,15 +14,15 @@ namespace DJM.CoreUtilities.SceneManagement
 
         internal static void Trigger(float progress)
         {
-            GlobalEventManager.Instance.TriggerEvent(new LoadProgressEvent(progress));
+            InternalGlobalEventManager.Instance.TriggerEvent(new LoadProgressEvent(progress));
         }
         internal static void Subscribe(Action<LoadProgressEvent> listener)
         {
-            GlobalEventManager.Instance.Subscribe(listener);
+            InternalGlobalEventManager.Instance.Subscribe(listener);
         }
         internal static void Unsubscribe(Action<LoadProgressEvent> listener)
         {
-            GlobalEventManager.Instance.Unsubscribe(listener);
+            InternalGlobalEventManager.Instance.Unsubscribe(listener);
         }
     }
     

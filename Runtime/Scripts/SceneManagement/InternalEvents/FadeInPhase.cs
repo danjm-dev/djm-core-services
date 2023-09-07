@@ -7,15 +7,15 @@ namespace DJM.CoreUtilities.SceneManagement
     {
         internal static void Trigger()
         {
-            GlobalEventManager.Instance.TriggerEvent(new FadeInStartEvent());
+            InternalGlobalEventManager.Instance.TriggerEvent(new FadeInStartEvent());
         }
         internal static void Subscribe(Action<FadeInStartEvent> listener)
         {
-            GlobalEventManager.Instance.Subscribe(listener);
+            InternalGlobalEventManager.Instance.Subscribe(listener);
         }
         internal static void Unsubscribe(Action<FadeInStartEvent> listener)
         {
-            GlobalEventManager.Instance.Unsubscribe(listener);
+            InternalGlobalEventManager.Instance.Unsubscribe(listener);
         }
     }
     
@@ -23,15 +23,15 @@ namespace DJM.CoreUtilities.SceneManagement
     {
         internal static void Trigger()
         {
-            GlobalEventManager.Instance.TriggerEvent(new FadeInEndEvent());
+            InternalGlobalEventManager.Instance.TriggerEvent(new FadeInEndEvent());
         }
         internal static void Subscribe(Action<FadeInEndEvent> listener)
         {
-            GlobalEventManager.Instance.Subscribe(listener);
+            InternalGlobalEventManager.Instance.Subscribe(listener);
         }
         internal static void Unsubscribe(Action<FadeInEndEvent> listener)
         {
-            GlobalEventManager.Instance.Unsubscribe(listener);
+            InternalGlobalEventManager.Instance.Unsubscribe(listener);
         }
     }
 }

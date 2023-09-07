@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DJM.CoreUtilities.EventManagement
 {
     /// <summary>
-    /// Base abstract implementation for <see cref="IEventManager"/>, managing generic struct events
+    /// Base abstract event manager implementation for classes implementing <see cref="IEventManager"/>.
     /// Each event is identified by a struct type, which is also used as the event parameter for subscribed listeners.
     /// </summary>
     public abstract class EventManagerBase : IEventManager
@@ -60,6 +60,14 @@ namespace DJM.CoreUtilities.EventManagement
                     Debug.LogError(errorMessage);
                 }
             }
+        }
+        
+        public void ClearAllEvents() => EventDictionary.Clear();
+        
+        public void ClearEvent<T>() where T : struct
+        {
+            var eventId = typeof(T);
+            EventDictionary.Remove(eventId);
         }
     }
 }
