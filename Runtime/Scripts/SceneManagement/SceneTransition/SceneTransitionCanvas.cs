@@ -1,4 +1,5 @@
 using System.Collections;
+using DJM.CoreUtilities.UIAnimators;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.SceneManagement

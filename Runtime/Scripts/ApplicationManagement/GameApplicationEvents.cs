@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.ApplicationManagement
 {
     public static class GameApplicationEvents
     {

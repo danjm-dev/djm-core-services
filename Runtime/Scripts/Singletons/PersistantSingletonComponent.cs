@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.Singletons
 {
     public class PersistantSingletonComponent<T> : MonoBehaviour where T : Component
     {

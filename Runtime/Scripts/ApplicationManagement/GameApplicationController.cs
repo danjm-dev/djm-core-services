@@ -1,7 +1,7 @@
 using DJM.CoreUtilities.EventManagement;
 using UnityEngine;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.ApplicationManagement
 {
     public sealed class GameApplicationController : MonoBehaviour
     {
