@@ -31,6 +31,6 @@ namespace DJM.CoreUtilities
         /// Sets the alpha value of the associated canvas group.
         /// </summary>
         /// <param name="alpha">The alpha value to set, ranging from 0 (fully transparent) to 1 (fully opaque).</param>
-        public void SetCanvasGroupAlpha(float alpha) => _canvasGroup.alpha = alpha;
+        public void SetAlpha(float alpha) => _canvasGroup.alpha = alpha;
     }
 }

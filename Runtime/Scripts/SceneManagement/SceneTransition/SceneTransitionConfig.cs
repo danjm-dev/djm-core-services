@@ -1,14 +1,19 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace DJM.CoreUtilities.SceneManagement
 {
-    [System.Serializable]
-    internal static class SceneTransitionConfig
+    [CreateAssetMenu(fileName = "SceneTransitionConfig", menuName = "ScriptableObject/SceneManagement/SceneTransitionConfig")]
+    public sealed class SceneTransitionConfig : ScriptableObject
     {
+        [SerializeField] public SceneTransitionCanvas transitionCanvasPrefab;
+        
+        [Space] [SerializeField] internal FadeTransitionConfig fadeIn;
+        [Space] [SerializeField] internal SceneLoadingConfig loadNewScene;
+        [Space] [SerializeField] internal FadeTransitionConfig fadeOut;
+        
         [System.Serializable]
-        internal sealed class FadePhase
+        internal sealed class FadeTransitionConfig
         {
             [Min(0f)] public float delay;
             [Min(0f)] public float duration;
@@ -16,16 +21,13 @@ namespace DJM.CoreUtilities.SceneManagement
         }
         
         [System.Serializable]
-        internal sealed class LoadPhase
+        internal sealed class SceneLoadingConfig
         {
-            [Min(0f)] public float delay;
-            [Min(0f)] public float minimumDuration;
-        }
-        
-        [System.Serializable]
-        internal sealed class ActivatePhase
-        {
-            [Min(0f)] public float delay;
+            [Min(0f)] public float loadStartDelay;
+            [Min(0f)] public float minimumLoadDuration;
+            [Min(0f)] public float loadCompleteSceneActivationDelay;
         }
     }
+    
+
 }

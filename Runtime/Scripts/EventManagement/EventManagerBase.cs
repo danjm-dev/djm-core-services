@@ -42,6 +42,7 @@ namespace DJM.CoreUtilities.EventManagement
             if (EventDictionary[eventId] is null) EventDictionary.Remove(eventId);
         }
         
+        // ReSharper disable Unity.PerformanceAnalysis
         public virtual void TriggerEvent<T>(T eventInstance) where T : struct
         {
             var eventId = typeof(T);

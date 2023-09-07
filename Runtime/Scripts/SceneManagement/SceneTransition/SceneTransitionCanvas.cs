@@ -1,6 +1,5 @@
-using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace DJM.CoreUtilities.SceneManagement
 {
@@ -8,52 +7,30 @@ namespace DJM.CoreUtilities.SceneManagement
     [RequireComponent(typeof(CanvasGroupFader))]
     public sealed class SceneTransitionCanvas : MonoBehaviour
     {
-        public CanvasGroupFader CanvasGroupFader { get; private set; }
-        
-        [SerializeField] private UnityEvent onStart;
-        [SerializeField] private UnityEvent onEnd;
+        private CanvasGroupFader _canvasGroupFader;
 
-        [SerializeField] private SceneTransitionEvents.FadePhase fadeInPhaseEvents;
-        [SerializeField] private SceneTransitionEvents.LoadPhase loadPhaseEvents;
-        [SerializeField] private SceneTransitionEvents.ActivatePhase activatePhaseEvents;
-        [SerializeField] private SceneTransitionEvents.FadePhase fadeOutPhaseEvents;
-        
+        [SerializeField] private SceneTransitionCanvasEvents events;
         
         private void Awake()
         {
             var canvas = GetComponent<Canvas>();
-            CanvasGroupFader = GetComponent<CanvasGroupFader>();
+            _canvasGroupFader = GetComponent<CanvasGroupFader>();
             
             canvas.sortingOrder = short.MaxValue;
-            CanvasGroupFader.SetCanvasGroupAlpha(0f);
+            _canvasGroupFader.SetAlpha(0f);
         }
 
-        private void Start()
+        private void Start() => events.EnableEventListeners();
+        private void OnDestroy() => events.DisableEventListeners();
+
+        internal IEnumerator ShowCoroutine(SceneTransitionConfig.FadeTransitionConfig config)
         {
-            FadeInStartEvent.Subscribe(OnFadeInStartEvent);
-            FadeInEndEvent.Subscribe(OnFadeInEndEvent);
-            LoadProgressEvent.Subscribe(OnLoadProgressEvent);
+            yield return _canvasGroupFader.FadeCanvasGroupAlphaCoroutine(1f, config.duration, config.ease);
         }
         
-        private void OnFadeInStartEvent(FadeInStartEvent fadeInStartEvent)
+        internal IEnumerator HideCoroutine(SceneTransitionConfig.FadeTransitionConfig config)
         {
-            fadeInPhaseEvents.onFadeStart?.Invoke();
-        }
-        private void OnFadeInEndEvent(FadeInEndEvent fadeInEndEvent)
-        {
-            fadeInPhaseEvents.onFadeEnd?.Invoke();
-        }
-
-        private void OnLoadProgressEvent(LoadProgressEvent loadProgressEvent)
-        {
-            loadPhaseEvents.onLoadProgress?.Invoke(loadProgressEvent.Progress);
-        }
-
-        private void OnDestroy()
-        {
-            FadeInStartEvent.Unsubscribe(OnFadeInStartEvent);
-            FadeInEndEvent.Unsubscribe(OnFadeInEndEvent);
-            LoadProgressEvent.Unsubscribe(OnLoadProgressEvent);
+            yield return _canvasGroupFader.FadeCanvasGroupAlphaCoroutine(0f, config.duration, config.ease);
         }
     }
 }

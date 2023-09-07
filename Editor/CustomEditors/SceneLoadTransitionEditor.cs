@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace DJM.CoreUtilities.Editor
 {
-    [CustomEditor(typeof(SceneTransition))]
+    [CustomEditor(typeof(SceneTransitionConfig))]
     internal sealed class SceneLoadTransitionEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
