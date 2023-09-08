@@ -1,6 +1,6 @@
 namespace DJM.CoreUtilities.SceneManagement
 {
-    internal static class SceneLoadEvents
+    public static class SceneLoadEvents
     {
         internal static void StartedEvent() => DJMEvents.TriggerEvent(new Started());
         internal static void ShowTransitionCanvasStartedEvent() => DJMEvents.TriggerEvent(new ShowTransitionCanvasStarted());
