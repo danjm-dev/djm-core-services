@@ -1,12 +1,13 @@
 using System;
+using DJM.CoreUtilities.EventManagement;
 
-namespace DJM.CoreUtilities.EventManagement
+namespace DJM.CoreUtilities
 {
     /// <summary>
-    /// Utility class for managing and dispatching global events within a Unity project.
+    /// Static utility class for managing and dispatching global events within the Unity project.
     /// Global events allow different parts of the game to communicate and respond to events efficiently.
     /// </summary>
-    public static class GameEvents
+    public static class DJMEvents
     {
         /// <summary>
         /// Subscribes a listener method to a global event of a specified type.

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Singletons
+namespace DJM.CoreUtilities.BaseClasses
 {
-    public class PersistantSingletonComponent<T> : MonoBehaviour where T : Component
+    public class SingletonComponent<T> : MonoBehaviour where T : Component
     {
         public static T Instance { get; private set; }
 
@@ -11,12 +11,7 @@ namespace DJM.CoreUtilities.Singletons
         private void InitializeInstance()
         {
             if (!Application.isPlaying) return;
-            
-            if (Instance is null)
-            {
-                Instance = this as T;
-                DontDestroyOnLoad(gameObject);
-            }
+            if (Instance is null) Instance = this as T;
             else Destroy(gameObject);
         }
     }

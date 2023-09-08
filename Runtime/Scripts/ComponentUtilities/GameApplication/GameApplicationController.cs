@@ -1,22 +1,21 @@
-using DJM.CoreUtilities.EventManagement;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.ApplicationManagement
+namespace DJM.CoreUtilities.GameApplication
 {
     public sealed class GameApplicationController : MonoBehaviour
     {
         private void Start()
         {
-            GameEvents.Subscribe<GameApplicationEvents.QuitGameEvent>(Quit);
-            GameEvents.Subscribe<GameApplicationEvents.PauseGameEvent>(Pause);
-            GameEvents.Subscribe<GameApplicationEvents.UnPauseGameEvent>(UnPause);
+            DJMEvents.Subscribe<GameApplicationEvents.QuitGameEvent>(Quit);
+            DJMEvents.Subscribe<GameApplicationEvents.PauseGameEvent>(Pause);
+            DJMEvents.Subscribe<GameApplicationEvents.UnPauseGameEvent>(UnPause);
         }
         
         private void OnDestroy()
         {
-            GameEvents.Unsubscribe<GameApplicationEvents.QuitGameEvent>(Quit);
-            GameEvents.Unsubscribe<GameApplicationEvents.PauseGameEvent>(Pause);
-            GameEvents.Unsubscribe<GameApplicationEvents.UnPauseGameEvent>(UnPause);
+            DJMEvents.Unsubscribe<GameApplicationEvents.QuitGameEvent>(Quit);
+            DJMEvents.Unsubscribe<GameApplicationEvents.PauseGameEvent>(Pause);
+            DJMEvents.Unsubscribe<GameApplicationEvents.UnPauseGameEvent>(UnPause);
         }
 
         private static void Quit(GameApplicationEvents.QuitGameEvent quitGameEventEvent)

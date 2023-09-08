@@ -4,30 +4,22 @@ using UnityEngine.SceneManagement;
 
 namespace DJM.CoreUtilities.SceneManagement
 {
-    public sealed class SceneLoadManager : MonoBehaviour
+    public static class SceneLoadManager
     {
-        [SerializeField] private SceneTransitionConfig defaultTransitionConfig;
-
-        public void Reset() => defaultTransitionConfig = null;
-        
-        public void LoadScene(string sceneName, SceneTransitionConfig transitionConfig)
+        public static void LoadScene(string sceneName, SceneTransitionConfig transitionConfig)
         {
             if (transitionConfig is null) LoadScene(sceneName);
-            else StartCoroutine(LoadSceneCoroutine(sceneName, transitionConfig));
+            else DJMComponentContext.Instance.StartCoroutine(LoadSceneCoroutine(sceneName, transitionConfig));
         }
         
-        public void LoadScene(string sceneName)
-        {
-            if (defaultTransitionConfig is null) SceneManager.LoadScene(sceneName);
-            else StartCoroutine(LoadSceneCoroutine(sceneName, defaultTransitionConfig));
-        }
+        public static void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
         
-        private IEnumerator LoadSceneCoroutine(string sceneName, SceneTransitionConfig transitionConfig)
+        private static IEnumerator LoadSceneCoroutine(string sceneName, SceneTransitionConfig transitionConfig)
         {
             // start
             
             SceneLoadEvents.StartedEvent();
-            var transitionCanvas  = Instantiate(transitionConfig.transitionCanvasPrefab, transform);
+            var transitionCanvas = DJMComponentContext.Instance.InstantiateChild(transitionConfig.transitionCanvasPrefab);
 
             // show canvas
             
@@ -64,7 +56,7 @@ namespace DJM.CoreUtilities.SceneManagement
             // done
             
             SceneLoadEvents.CompletedEvent();
-            Destroy(transitionCanvas.gameObject);
+            Object.Destroy(transitionCanvas.gameObject);
         }
 
         private static IEnumerator Delay(float delay)

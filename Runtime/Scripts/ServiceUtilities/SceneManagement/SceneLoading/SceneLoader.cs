@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using DJM.CoreUtilities.TweenHelpers;
+using DJM.CoreUtilities.TweenControllers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
