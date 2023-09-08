@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities.SceneManagement
+namespace DJM.CoreUtilities.SceneLoading
 {
     public static class SceneLoadEvents
     {

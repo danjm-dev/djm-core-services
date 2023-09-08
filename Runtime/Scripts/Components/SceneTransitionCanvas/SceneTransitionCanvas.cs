@@ -1,5 +1,5 @@
 using System.Collections;
-using DJM.CoreUtilities.SceneManagement;
+using DJM.CoreUtilities.SceneLoading;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.Components

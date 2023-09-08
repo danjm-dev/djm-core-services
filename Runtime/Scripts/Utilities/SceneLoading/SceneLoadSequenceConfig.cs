@@ -2,7 +2,7 @@ using DG.Tweening;
 using DJM.CoreUtilities.Components;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.SceneManagement
+namespace DJM.CoreUtilities.SceneLoading
 {
     [CreateAssetMenu(fileName = "SceneLoadSequenceConfig", menuName = "ScriptableObject/SceneManagement/SceneLoadSequenceConfig")]
     public sealed class SceneLoadSequenceConfig : ScriptableObject

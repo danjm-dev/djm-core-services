@@ -1,3 +1,4 @@
+using DJM.CoreUtilities.Audio;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.Configuration
@@ -7,16 +8,20 @@ namespace DJM.CoreUtilities.Configuration
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         internal static void InitializeUtilities()
         {
+            // reset
             ResetStaticUtilities();
+
+            // add context root component
+            var djmContextRoot = CreateGameObject<DJMContextComponent>(null, "[DJMContext]");
             
-            CreateGameObject<DJMSceneContextComponent>();
-            
+            // add sub-components
+            djmContextRoot.CreateComponentOnNewGameObjectAsChild<AudioManager>();
         }
 
-        private static void CreateGameObject<T>(string name = null) where T : MonoBehaviour
+        private static T CreateGameObject<T>(Transform parent = null, string name = null) where T : MonoBehaviour
         {
             var obj = new GameObject(name ?? typeof(T).Name);
-            obj.AddComponent<T>();
+            return obj.AddComponent<T>();
         }
 
         private static void ResetStaticUtilities()

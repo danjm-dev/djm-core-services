@@ -1,5 +1,5 @@
 using System;
-using DJM.CoreUtilities.EventManagement;
+using DJM.CoreUtilities.Events;
 
 namespace DJM.CoreUtilities
 {

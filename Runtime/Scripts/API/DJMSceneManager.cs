@@ -1,4 +1,4 @@
-using DJM.CoreUtilities.SceneManagement;
+using DJM.CoreUtilities.SceneLoading;
 using UnityEngine.SceneManagement;
 
 namespace DJM.CoreUtilities

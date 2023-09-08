@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities.EventManagement
+namespace DJM.CoreUtilities.Events
 {
     /// <summary>
     /// Internal singleton event manager class responsible for managing global generic struct events.

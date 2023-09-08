@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities.EventManagement
+namespace DJM.CoreUtilities.Events
 {
     /// <summary>
     /// Event manager class responsible for managing generic struct events.

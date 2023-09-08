@@ -4,7 +4,7 @@ using DJM.CoreUtilities.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace DJM.CoreUtilities.SceneManagement
+namespace DJM.CoreUtilities.SceneLoading
 {
     internal sealed class SceneLoaderService
     {

@@ -1,19 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.SceneManagement
+namespace DJM.CoreUtilities.SceneLoading
 {
     internal static class SceneLoadSequenceRunner
     {
         internal static void Run(string sceneName, SceneLoadSequenceConfig loadSequenceConfig)
         {
-            DJMSceneContext.DelegateStartCoroutine(SceneLoadSequenceCoroutine(sceneName, loadSequenceConfig));
+            DJMContext.DelegateStartCoroutine(SceneLoadSequenceCoroutine(sceneName, loadSequenceConfig));
         }
         
         private static IEnumerator SceneLoadSequenceCoroutine(string sceneName, SceneLoadSequenceConfig loadSequenceConfig)
         {
             // start
-            var transitionCanvas = DJMSceneContext.Add(loadSequenceConfig.transitionCanvasPrefab);
+            var transitionCanvas = DJMContext.Add(loadSequenceConfig.transitionCanvasPrefab);
             SceneLoadEvents.StartedEvent();
             
 

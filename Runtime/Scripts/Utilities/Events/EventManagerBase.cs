@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.EventManagement
+namespace DJM.CoreUtilities.Events
 {
     /// <summary>
     /// Base abstract event manager implementation for classes implementing <see cref="IEventManager"/>.

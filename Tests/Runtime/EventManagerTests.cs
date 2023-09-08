@@ -1,5 +1,5 @@
 using System;
-using DJM.CoreUtilities.EventManagement;
+using DJM.CoreUtilities.Events;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;

@@ -1,6 +1,6 @@
 using System;
 
-namespace DJM.CoreUtilities.EventManagement
+namespace DJM.CoreUtilities.Events
 {
     /// <summary>
     /// Event manager interface for centralized events.
