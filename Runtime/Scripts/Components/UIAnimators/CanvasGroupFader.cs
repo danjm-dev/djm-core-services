@@ -2,7 +2,7 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.UIAnimators
+namespace DJM.CoreUtilities.Components
 {
     [RequireComponent(typeof(CanvasGroup))]
     public sealed class CanvasGroupFader : MonoBehaviour

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using DJM.CoreUtilities.Components;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.SceneManagement

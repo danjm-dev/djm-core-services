@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Audio
+namespace DJM.CoreUtilities.Components
 {
     internal sealed class PlayAudioOnStart : MonoBehaviour
     {

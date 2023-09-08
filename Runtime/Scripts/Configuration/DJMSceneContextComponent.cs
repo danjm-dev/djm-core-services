@@ -1,4 +1,5 @@
 using DJM.CoreUtilities.BaseClasses;
+using DJM.CoreUtilities.Components.BaseClasses;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.Configuration

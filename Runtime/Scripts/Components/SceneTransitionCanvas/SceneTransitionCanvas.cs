@@ -1,8 +1,8 @@
 using System.Collections;
-using DJM.CoreUtilities.UIAnimators;
+using DJM.CoreUtilities.SceneManagement;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.SceneManagement
+namespace DJM.CoreUtilities.Components
 {
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroupFader))]
