@@ -9,7 +9,7 @@ namespace DJM.CoreUtilities.Configuration
         {
             ResetStaticUtilities();
             
-            CreateGameObject<DJMComponentContext>();
+            CreateGameObject<DJMPersistentComponentContext>();
             
         }
 

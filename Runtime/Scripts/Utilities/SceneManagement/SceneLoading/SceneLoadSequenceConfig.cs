@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace DJM.CoreUtilities.SceneManagement
 {
-    [CreateAssetMenu(fileName = "SceneTransitionConfig", menuName = "ScriptableObject/SceneManagement/SceneTransitionConfig")]
-    public sealed class SceneTransitionConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "SceneLoadSequenceConfig", menuName = "ScriptableObject/SceneManagement/SceneLoadSequenceConfig")]
+    public sealed class SceneLoadSequenceConfig : ScriptableObject
     {
         [SerializeField] public SceneTransitionCanvas transitionCanvasPrefab;
         

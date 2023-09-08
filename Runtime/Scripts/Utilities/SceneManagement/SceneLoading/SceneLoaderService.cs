@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace DJM.CoreUtilities.SceneManagement
 {
-    internal sealed class SceneLoader
+    internal sealed class SceneLoaderService
     {
         private AsyncOperation _sceneLoadOperation;
         

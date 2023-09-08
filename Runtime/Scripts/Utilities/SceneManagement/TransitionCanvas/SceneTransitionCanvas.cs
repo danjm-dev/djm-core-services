@@ -24,12 +24,12 @@ namespace DJM.CoreUtilities.SceneManagement
         private void Start() => events.EnableEventListeners();
         private void OnDestroy() => events.DisableEventListeners();
 
-        internal IEnumerator ShowCoroutine(SceneTransitionConfig.FadeTransitionConfig config)
+        internal IEnumerator ShowCoroutine(SceneLoadSequenceConfig.FadeTransitionConfig config)
         {
             yield return _canvasGroupFader.FadeCanvasGroupAlphaCoroutine(1f, config.duration, config.ease);
         }
         
-        internal IEnumerator HideCoroutine(SceneTransitionConfig.FadeTransitionConfig config)
+        internal IEnumerator HideCoroutine(SceneLoadSequenceConfig.FadeTransitionConfig config)
         {
             yield return _canvasGroupFader.FadeCanvasGroupAlphaCoroutine(0f, config.duration, config.ease);
         }
