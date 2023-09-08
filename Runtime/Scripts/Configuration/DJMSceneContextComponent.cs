@@ -1,9 +1,9 @@
 using DJM.CoreUtilities.BaseClasses;
 using UnityEngine;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.Configuration
 {
-    internal sealed class DJMPersistentComponentContext : PersistantSingletonComponent<DJMPersistentComponentContext>
+    internal sealed class DJMSceneContextComponent : PersistantSingletonComponent<DJMSceneContextComponent>
     {
         internal T InstantiatePrefabAsChild<T>(T prefab) where T : MonoBehaviour
         {

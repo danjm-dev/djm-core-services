@@ -7,13 +7,13 @@ namespace DJM.CoreUtilities.SceneManagement
     {
         internal static void Run(string sceneName, SceneLoadSequenceConfig loadSequenceConfig)
         {
-            DJMContext.DelegateStartCoroutine(SceneLoadSequenceCoroutine(sceneName, loadSequenceConfig));
+            DJMSceneContext.DelegateStartCoroutine(SceneLoadSequenceCoroutine(sceneName, loadSequenceConfig));
         }
         
         private static IEnumerator SceneLoadSequenceCoroutine(string sceneName, SceneLoadSequenceConfig loadSequenceConfig)
         {
             // start
-            var transitionCanvas = DJMContext.Add(loadSequenceConfig.transitionCanvasPrefab);
+            var transitionCanvas = DJMSceneContext.Add(loadSequenceConfig.transitionCanvasPrefab);
             SceneLoadEvents.StartedEvent();
             
 
