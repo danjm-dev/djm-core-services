@@ -31,7 +31,7 @@ namespace DJM.CoreUtilities.Audio
 
 
         // effects
-        private void MuteEffects(AudioEffectEvents.Mute  muteEvent) => _effectsSource.mute = true;
+        private void MuteEffects(AudioEffectEvents.Mute  muteEvent) => _effectsSource.mute = !_effectsSource.mute;
         private void SetEffectVolume(AudioEffectEvents.SetVolume volumeEvent) => _effectsSource.volume = volumeEvent.Volume;
         
         private void PlayOneShotEffect(AudioEffectEvents.PlayClip playClipEvent)
