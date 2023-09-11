@@ -7,8 +7,8 @@ namespace DJM.CoreUtilities.Components
     [RequireComponent(typeof(CanvasGroup))]
     public sealed class CanvasGroupFader : MonoBehaviour
     {
-        private CanvasGroup _canvasGroup;
-        private void Awake() => _canvasGroup = GetComponent<CanvasGroup>();
+        public CanvasGroup CanvasGroup { get; private set; }
+        private void Awake() => CanvasGroup = GetComponent<CanvasGroup>();
         
         /// <summary>
         /// Fades the alpha of a canvas group from its current value to the specified target alpha over a given duration.
@@ -19,9 +19,9 @@ namespace DJM.CoreUtilities.Components
         /// <returns>An IEnumerator used by Unity's coroutine system.</returns>
         public IEnumerator FadeCanvasGroupAlphaCoroutine(float targetAlpha, float unscaledFadeDuration, Ease ease)
         {
-            var fadeDuration = Mathf.Abs(_canvasGroup.alpha - targetAlpha) * unscaledFadeDuration;
+            var fadeDuration = Mathf.Abs(CanvasGroup.alpha - targetAlpha) * unscaledFadeDuration;
             
-            yield return _canvasGroup
+            yield return CanvasGroup
                 .DOFade(targetAlpha, fadeDuration)
                 .SetEase(ease)
                 .WaitForCompletion();
@@ -31,6 +31,6 @@ namespace DJM.CoreUtilities.Components
         /// Sets the alpha value of the associated canvas group.
         /// </summary>
         /// <param name="alpha">The alpha value to set, ranging from 0 (fully transparent) to 1 (fully opaque).</param>
-        public void SetAlpha(float alpha) => _canvasGroup.alpha = alpha;
+        public void SetAlpha(float alpha) => CanvasGroup.alpha = alpha;
     }
 }
