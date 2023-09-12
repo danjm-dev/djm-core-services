@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace DJM.CoreUtilities
 {
-    public static class DJMApplicationController
+    public static class DJMApplication
     {
         public static void QuitGame()
         {

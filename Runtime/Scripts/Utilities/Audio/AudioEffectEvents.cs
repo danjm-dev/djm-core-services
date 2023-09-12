@@ -10,7 +10,11 @@ namespace DJM.CoreUtilities.Audio
             public PlayClip(AudioClip audioClip) => AudioClip = audioClip;
         }
 
-        internal readonly struct Mute { }
+        internal readonly struct SetMute
+        {
+            public readonly bool Mute;
+            public SetMute(bool mute) => Mute = mute;
+        }
 
         internal readonly struct SetVolume
         {
