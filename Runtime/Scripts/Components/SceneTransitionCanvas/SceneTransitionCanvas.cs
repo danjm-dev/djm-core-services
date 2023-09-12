@@ -22,7 +22,10 @@ namespace DJM.CoreUtilities.Components
         }
 
         private void Start() => events.EnableEventListeners();
-        private void OnDestroy() => events.DisableEventListeners();
+        private void OnDestroy()
+        {
+            events.DisableEventListeners();
+        }
 
         internal IEnumerator ShowCoroutine(SceneLoadSequenceConfig.FadeTransitionConfig config)
         {

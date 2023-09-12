@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -32,5 +33,7 @@ namespace DJM.CoreUtilities.Components
         /// </summary>
         /// <param name="alpha">The alpha value to set, ranging from 0 (fully transparent) to 1 (fully opaque).</param>
         public void SetAlpha(float alpha) => CanvasGroup.alpha = alpha;
+
+        private void OnDestroy() => DOTween.Kill(CanvasGroup);
     }
 }
