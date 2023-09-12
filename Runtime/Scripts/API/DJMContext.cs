@@ -13,7 +13,7 @@ namespace DJM.CoreUtilities
         
         internal static T Add<T>() where T : MonoBehaviour
         {
-            return DJMContextComponent.Instance.CreateComponentOnNewGameObjectAsChild<T>();
+            return DJMContextComponent.Instance.AddComponentToNewChildGameObject<T>();
         }
         
         public static void DelegateStartCoroutine(IEnumerator coroutine)

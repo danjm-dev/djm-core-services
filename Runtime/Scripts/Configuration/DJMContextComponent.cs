@@ -10,14 +10,11 @@ namespace DJM.CoreUtilities.Configuration
             return Instantiate(prefab, transform);
         }
         
-        internal T CreateComponentOnNewGameObjectAsChild<T>() where T : MonoBehaviour
+        internal T AddComponentToNewChildGameObject<T>() where T : MonoBehaviour
         {
             var obj = new GameObject(typeof(T).Name)
             {
-                transform =
-                {
-                    parent = transform
-                }
+                transform = { parent = transform }
             };
             return obj.AddComponent<T>();
         }

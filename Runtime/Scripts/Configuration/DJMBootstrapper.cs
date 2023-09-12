@@ -15,7 +15,7 @@ namespace DJM.CoreUtilities.Configuration
             var djmContextRoot = CreateGameObject<DJMContextComponent>(null, "[DJMContext]");
             
             // add sub-components
-            djmContextRoot.CreateComponentOnNewGameObjectAsChild<AudioManager>();
+            djmContextRoot.AddComponentToNewChildGameObject<AudioManager>();
         }
 
         private static T CreateGameObject<T>(Transform parent = null, string name = null) where T : MonoBehaviour
