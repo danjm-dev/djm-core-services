@@ -1,5 +1,6 @@
 using System;
-using DJM.CoreUtilities.Events;
+using DJM.CoreUtilities.ServiceContext;
+using DJM.CoreUtilities.Services.Events;
 
 namespace DJM.CoreUtilities
 {
@@ -9,6 +10,7 @@ namespace DJM.CoreUtilities
     /// </summary>
     public static class DJMEvents
     {
+        private static readonly IEventManagerService EventManagerService = DJMServiceContext.Instance.EventManagerService;
         /// <summary>
         /// Subscribes a listener method to a global event of a specified type.
         /// </summary>
@@ -16,7 +18,7 @@ namespace DJM.CoreUtilities
         /// <param name="listener">The method to execute when the event is triggered.</param>
         public static void Subscribe<T>(Action<T> listener) where T : struct
         {
-            InternalGlobalEventManager.Instance.Subscribe(listener);
+            EventManagerService.Subscribe(listener);
         }
         
         /// <summary>
@@ -26,7 +28,7 @@ namespace DJM.CoreUtilities
         /// <param name="listener">The method that was previously subscribed to the event.</param>
         public static void Unsubscribe<T>(Action<T> listener) where T : struct
         {
-            InternalGlobalEventManager.Instance.Unsubscribe(listener);
+            EventManagerService.Unsubscribe(listener);
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace DJM.CoreUtilities
         /// <param name="eventInstance">The event data to be passed to the event listeners.</param>
         public static void TriggerEvent<T>(T eventInstance) where T : struct
         {
-            InternalGlobalEventManager.Instance.TriggerEvent(eventInstance);
+            EventManagerService.TriggerEvent(eventInstance);
         }
     }
 }

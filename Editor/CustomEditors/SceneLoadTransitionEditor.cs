@@ -1,5 +1,7 @@
 using DJM.CoreUtilities.Components;
-using DJM.CoreUtilities.SceneLoading;
+using DJM.CoreUtilities.MonoBehaviors;
+using DJM.CoreUtilities.MonoBehaviors.SceneTransitionCanvas;
+using DJM.CoreUtilities.Services.SceneLoader;
 using UnityEditor;
 
 namespace DJM.CoreUtilities.Editor
