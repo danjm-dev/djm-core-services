@@ -1,4 +1,4 @@
-using DJM.CoreUtilities.MonoBehaviors.SceneTransitionCanvas;
+using DJM.CoreUtilities.MonoServices.SceneTransitionCanvas;
 using DJM.CoreUtilities.Services.SceneLoader;
 using UnityEditor;
 

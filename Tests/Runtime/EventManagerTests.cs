@@ -28,7 +28,7 @@ namespace DJM.CoreUtilities.Tests
             var expectedErrorMessage = TestLoggerService.GetRawLogMessage
             (
                 $"Subscription attempt to {typeof(EmptyStructEvent)} event had null listener.",
-                nameof(EventManagerBase),
+                nameof(EventManagerServiceBase),
                 LogLevel.Error
             );
             
@@ -45,7 +45,7 @@ namespace DJM.CoreUtilities.Tests
             var expectedErrorMessage = TestLoggerService.GetRawLogMessage
             (
                 $"Subscription attempt to {typeof(Vector2)} event had null listener.",
-                nameof(EventManagerBase),
+                nameof(EventManagerServiceBase),
                 LogLevel.Error
             );
             
