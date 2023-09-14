@@ -7,6 +7,7 @@ namespace DJM.CoreUtilities.MonoBehaviors.UI
     [RequireComponent(typeof(CanvasGroup))]
     public sealed class CanvasGroupFader : MonoBehaviour
     {
+        private Tween _tween;
         public CanvasGroup CanvasGroup { get; private set; }
         private void Awake() => CanvasGroup = GetComponent<CanvasGroup>();
         
@@ -20,11 +21,8 @@ namespace DJM.CoreUtilities.MonoBehaviors.UI
         public IEnumerator FadeCanvasGroupAlphaCoroutine(float targetAlpha, float unscaledFadeDuration, Ease ease)
         {
             var fadeDuration = Mathf.Abs(CanvasGroup.alpha - targetAlpha) * unscaledFadeDuration;
-            
-            yield return CanvasGroup
-                .DOFade(targetAlpha, fadeDuration)
-                .SetEase(ease)
-                .WaitForCompletion();
+            _tween = CanvasGroup.DOFade(targetAlpha, fadeDuration).SetEase(ease);
+             yield return _tween.WaitForCompletion();
         }
 
         /// <summary>
@@ -33,6 +31,6 @@ namespace DJM.CoreUtilities.MonoBehaviors.UI
         /// <param name="alpha">The alpha value to set, ranging from 0 (fully transparent) to 1 (fully opaque).</param>
         public void SetAlpha(float alpha) => CanvasGroup.alpha = alpha;
 
-        private void OnDestroy() => DOTween.Kill(CanvasGroup);
+        private void OnDestroy() => _tween?.Kill();
     }
 }

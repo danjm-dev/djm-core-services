@@ -6,10 +6,7 @@ using UnityEngine;
 
 namespace DJM.CoreUtilities.Services.Music
 {
-    /// <summary>
-    /// Handles various audio events and transitions for music tracks.
-    /// </summary>
-    internal sealed class MusicService : IMusicService
+    public sealed class MusicService : IMusicService
     {
         private readonly AudioSourcePool _audioSourcePool;
         private readonly ILoggerService _loggerService;
@@ -18,9 +15,10 @@ namespace DJM.CoreUtilities.Services.Music
 
         private Sequence _trackOperation;
 
-        internal float Volume { get; private set; }
+        public float Volume { get; private set; }
+        public bool IsPlaying => _audioSource is not null && _audioSource.isPlaying;
         
-        internal MusicService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
+        public MusicService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 

@@ -20,7 +20,7 @@ namespace DJM.CoreUtilities.Services.Logger
             Debug.Log(CreateMessage(message, context, LogLevel.Info));
         }
 
-        public string GetRawLogMessage(string message, string context, LogLevel level)
+        public static string GetRawLogMessage(string message, string context, LogLevel level)
         {
             return CreateMessage(message, context, level);
         }

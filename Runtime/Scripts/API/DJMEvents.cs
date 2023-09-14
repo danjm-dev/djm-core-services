@@ -2,7 +2,7 @@ using System;
 using DJM.CoreUtilities.ServiceContext;
 using DJM.CoreUtilities.Services.Events;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.API
 {
     /// <summary>
     /// Static utility class for managing and dispatching global events within the Unity project.

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace DJM.CoreUtilities.Services.Sound
 {
-    internal sealed class SoundService : ISoundService
+    public sealed class SoundService : ISoundService
     {
         private readonly AudioSourcePool _audioSourcePool;
         private ILoggerService _loggerService;
@@ -17,7 +17,7 @@ namespace DJM.CoreUtilities.Services.Sound
         
         private readonly List<AudioSource> _activeBackupAudioSources;
 
-        internal SoundService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
+        public SoundService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 

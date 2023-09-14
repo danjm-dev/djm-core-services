@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace DJM.CoreUtilities.Services.Logger
 {
-    internal sealed class LoggerService : ILoggerService
+    public sealed class LoggerService : ILoggerService
     {
         private readonly bool _enableLogging;
         private readonly LogLevel _loggingThreshold;
 
-        internal LoggerService(bool enableLogging, LogLevel loggingThreshold)
+        public LoggerService(bool enableLogging, LogLevel loggingThreshold)
         {
             _enableLogging = enableLogging;
             _loggingThreshold = loggingThreshold;

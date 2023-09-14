@@ -2,7 +2,7 @@ using DJM.CoreUtilities.ServiceContext;
 using DJM.CoreUtilities.Services.Events;
 using DJM.CoreUtilities.Services.SceneLoader;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.API
 {
     public static class DJMSceneLoader
     {

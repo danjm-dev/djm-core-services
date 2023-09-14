@@ -3,7 +3,7 @@ using DJM.CoreUtilities.Services.Events;
 using DJM.CoreUtilities.Services.Sound;
 using UnityEngine;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.API
 {
     /// <summary>
     /// Static utility class for playing and controlling transient sound effects.

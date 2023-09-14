@@ -37,10 +37,6 @@ namespace DJM.CoreUtilities.ServiceContext
             var musicEventHandler = new MusicEventHandler(eventManagerService, musicService);
             var soundEventHandler = new SoundEventHandler(eventManagerService, soundService);
             var sceneLoaderEventHandler = new SceneLoaderEventHandler(eventManagerService, sceneLoaderService);
-
-
-
-
         }
         
         private static void ResetEnvironment()

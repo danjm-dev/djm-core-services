@@ -12,8 +12,6 @@ namespace DJM.CoreUtilities.Services.Events
     {
         private readonly Dictionary<Type, Delegate> _eventDictionary = new();
         protected readonly ILoggerService LoggerService;
-            
-        
         
         protected EventManagerBase(ILoggerService loggerService) => LoggerService = loggerService;
 

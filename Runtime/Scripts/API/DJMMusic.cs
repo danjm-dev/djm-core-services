@@ -3,7 +3,7 @@ using DJM.CoreUtilities.Services.Events;
 using DJM.CoreUtilities.Services.Music;
 using UnityEngine;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreUtilities.API
 {
     public static class DJMMusic
     {
