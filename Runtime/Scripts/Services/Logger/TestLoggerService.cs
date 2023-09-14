@@ -19,6 +19,11 @@ namespace DJM.CoreUtilities.Services.Logger
         {
             Debug.Log(CreateMessage(message, context, LogLevel.Info));
         }
+
+        public string GetRawLogMessage(string message, string context, LogLevel level)
+        {
+            return CreateMessage(message, context, level);
+        }
         
         private const string LogMessageTemplate = "<size=13><b><color=purple>TEST LOGGER</color> <color=blue>[{0}]</color></b></size> <color={1}>{2}</color>";
         private static string CreateMessage(string message, string context, LogLevel level)

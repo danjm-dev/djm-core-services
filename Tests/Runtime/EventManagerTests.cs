@@ -11,17 +11,26 @@ namespace DJM.CoreUtilities.Tests
     internal sealed class EventManagerTests
     {
         private EventManagerService _eventManagerService;
-    
+        private TestLoggerService _testLoggerService;
+        
         [SetUp]
-        public void SetUp() => _eventManagerService = new EventManagerService(new TestLoggerService());
-        
-        
+        public void SetUp()
+        {
+            _testLoggerService = new TestLoggerService();
+            _eventManagerService = new EventManagerService(_testLoggerService);
+        }
+
+
         [Test]
         public void Subscribe_EmptyStructEvent_NullListener_ShouldLogError()
         {
             // arrange
-            var expectedErrorMessage = EventManagerErrorMessages
-                .SubscribeNullListener(nameof(EventManagerService), typeof(EmptyStructEvent));
+            var expectedErrorMessage = _testLoggerService.GetRawLogMessage
+            (
+                $"Subscription attempt to {typeof(EmptyStructEvent)} event had null listener.",
+                nameof(EventManagerBase),
+                LogLevel.Error
+            );
             
             // act
             _eventManagerService.Subscribe<EmptyStructEvent>(null);
@@ -33,8 +42,12 @@ namespace DJM.CoreUtilities.Tests
         public void Subscribe_Vector2Event_NullListener_ShouldLogError()
         {
             // arrange
-            var expectedErrorMessage = EventManagerErrorMessages
-                .SubscribeNullListener(nameof(EventManagerService), typeof(Vector2));
+            var expectedErrorMessage = _testLoggerService.GetRawLogMessage
+            (
+                $"Subscription attempt to {typeof(Vector2)} event had null listener.",
+                nameof(EventManagerBase),
+                LogLevel.Error
+            );
             
             // act
             _eventManagerService.Subscribe<Vector2>(null);
