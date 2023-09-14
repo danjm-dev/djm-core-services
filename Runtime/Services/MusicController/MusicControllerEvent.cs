@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Services.MusicController
+namespace DJM.CoreServices.Services.MusicController
 {
     internal static class MusicControllerEvent
     {

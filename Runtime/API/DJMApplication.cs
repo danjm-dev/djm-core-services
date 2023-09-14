@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities.API
+namespace DJM.CoreServices.API
 {
     public static class DJMApplication
     {

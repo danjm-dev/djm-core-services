@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreServices.Interfaces
 {
     public interface ISoundController
     {

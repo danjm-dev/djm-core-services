@@ -1,9 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DJM.CoreServices.Interfaces;
 using UnityEngine.SceneManagement;
 
-namespace DJM.CoreUtilities.Services.SceneLoader
+namespace DJM.CoreServices.Services.SceneLoader
 {
     internal sealed class SceneLoaderService : ISceneLoader
     {

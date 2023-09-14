@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.Services.DI
+namespace DJM.CoreServices.Services.DI
 {
     internal sealed class ContainerService : IContainer
     {

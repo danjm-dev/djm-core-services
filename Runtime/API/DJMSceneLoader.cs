@@ -1,8 +1,8 @@
-using DJM.CoreUtilities.Bootstrap;
-using DJM.CoreUtilities.Services.Events;
-using DJM.CoreUtilities.Services.SceneLoader;
+using DJM.CoreServices.Bootstrap;
+using DJM.CoreServices.Interfaces;
+using DJM.CoreServices.Services.SceneLoader;
 
-namespace DJM.CoreUtilities.API
+namespace DJM.CoreServices.API
 {
     public static class DJMSceneLoader
     {

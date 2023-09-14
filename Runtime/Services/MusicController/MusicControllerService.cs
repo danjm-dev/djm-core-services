@@ -1,9 +1,11 @@
 using System;
 using DG.Tweening;
-using DJM.CoreUtilities.MonoServices.AudioSource;
+using DJM.CoreServices.Interfaces;
+using DJM.CoreServices.MonoServices.AudioSource;
 using UnityEngine;
+using ILogger = DJM.CoreServices.Interfaces.ILogger;
 
-namespace DJM.CoreUtilities.Services.MusicController
+namespace DJM.CoreServices.Services.MusicController
 {
     public sealed class MusicControllerService : IMusicController
     {

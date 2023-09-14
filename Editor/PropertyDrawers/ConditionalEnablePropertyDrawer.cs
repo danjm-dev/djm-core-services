@@ -1,8 +1,8 @@
+using DJM.CoreServices.Attributes;
 using UnityEditor;
-using DJM.CoreUtilities.Attributes;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Editor
+namespace DJM.CoreServices.Editor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(ConditionalEnablePropertyAttribute))]
     internal sealed class ConditionalEnablePropertyDrawer : PropertyDrawer

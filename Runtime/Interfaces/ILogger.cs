@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities
+namespace DJM.CoreServices.Interfaces
 {
     public interface ILogger
     {

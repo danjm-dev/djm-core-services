@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Attributes
+namespace DJM.CoreServices.Attributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property |
                     AttributeTargets.Class | AttributeTargets.Struct)]

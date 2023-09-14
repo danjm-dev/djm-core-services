@@ -1,12 +1,14 @@
-using DJM.CoreUtilities.MonoServices.AudioSource;
-using DJM.CoreUtilities.Services.Events;
-using DJM.CoreUtilities.Services.Logger;
-using DJM.CoreUtilities.Services.MusicController;
-using DJM.CoreUtilities.Services.SceneLoader;
-using DJM.CoreUtilities.Services.SoundController;
+using DJM.CoreServices.Interfaces;
+using DJM.CoreServices.MonoServices.AudioSource;
+using DJM.CoreServices.Services.Events;
+using DJM.CoreServices.Services.Logger;
+using DJM.CoreServices.Services.MusicController;
+using DJM.CoreServices.Services.SceneLoader;
+using DJM.CoreServices.Services.SoundController;
 using UnityEngine;
+using ILogger = DJM.CoreServices.Interfaces.ILogger;
 
-namespace DJM.CoreUtilities.Bootstrap
+namespace DJM.CoreServices.Bootstrap
 {
     internal static class Bootstrapper
     {

@@ -1,8 +1,8 @@
-using DJM.CoreUtilities.MonoServices.SceneTransitionCanvas;
-using DJM.CoreUtilities.Services.SceneLoader;
+using DJM.CoreServices.MonoServices.SceneTransitionCanvas;
+using DJM.CoreServices.Services.SceneLoader;
 using UnityEditor;
 
-namespace DJM.CoreUtilities.Editor
+namespace DJM.CoreServices.Editor.CustomEditors
 {
     [CustomEditor(typeof(SceneLoadSequenceConfig))]
     internal sealed class SceneLoadTransitionEditor : UnityEditor.Editor

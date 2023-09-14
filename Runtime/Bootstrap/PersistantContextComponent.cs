@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Bootstrap
+namespace DJM.CoreServices.Bootstrap
 {
     internal sealed class PersistantContextComponent : MonoBehaviour
     {

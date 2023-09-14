@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using DJM.CoreUtilities.Services.Events;
-using DJM.CoreUtilities.Services.Logger;
+using DJM.CoreServices.Interfaces;
 using UnityEngine;
+using ILogger = DJM.CoreServices.Interfaces.ILogger;
 
-namespace DJM.CoreUtilities.Bootstrap
+namespace DJM.CoreServices.Bootstrap
 {
     internal sealed class DJMServiceContext
     {

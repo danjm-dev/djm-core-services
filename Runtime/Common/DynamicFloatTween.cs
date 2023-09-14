@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Common
+namespace DJM.CoreServices.Common
 {
     /// <summary>
     /// Represents a dynamic tween for floating-point values using DOTween.

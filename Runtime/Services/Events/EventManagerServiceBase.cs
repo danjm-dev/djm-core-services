@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.Services.Events
+namespace DJM.CoreServices.Services.Events
 {
     /// <summary>
     /// Base abstract event manager implementation for classes implementing <see cref="IEventManager"/>.

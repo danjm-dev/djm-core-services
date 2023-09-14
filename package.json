@@ -1,8 +1,8 @@
 {
-  "name": "com.djm.core-utilities",
+  "name": "com.djm.core-services",
   "version": "1.0.0",
-  "displayName": "DJM Core Utilities",
-  "description": "Core utilities for small scale games in Unity.",
+  "displayName": "DJM Core Services",
+  "description": "Core services for Unity projects.",
   "dependencies": {
   },
   "author": {

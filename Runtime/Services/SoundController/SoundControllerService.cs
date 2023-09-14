@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using DJM.CoreUtilities.MonoServices.AudioSource;
+using DJM.CoreServices.Interfaces;
+using DJM.CoreServices.MonoServices.AudioSource;
 using UnityEngine;
+using ILogger = DJM.CoreServices.Interfaces.ILogger;
 
-namespace DJM.CoreUtilities.Services.SoundController
+namespace DJM.CoreServices.Services.SoundController
 {
     public sealed class SoundControllerService : ISoundController
     {

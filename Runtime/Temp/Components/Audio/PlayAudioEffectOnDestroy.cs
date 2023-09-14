@@ -1,7 +1,7 @@
-using DJM.CoreUtilities.API;
+using DJM.CoreServices.API;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Components.Audio
+namespace DJM.CoreServices.Temp.Components.Audio
 {
     internal sealed class PlayAudioEffectOnDestroy : MonoBehaviour
     {

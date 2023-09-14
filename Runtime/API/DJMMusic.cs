@@ -1,9 +1,9 @@
-﻿using DJM.CoreUtilities.Bootstrap;
-using DJM.CoreUtilities.Services.Events;
-using DJM.CoreUtilities.Services.MusicController;
+﻿using DJM.CoreServices.Bootstrap;
+using DJM.CoreServices.Interfaces;
+using DJM.CoreServices.Services.MusicController;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.API
+namespace DJM.CoreServices.API
 {
     public static class DJMMusic
     {

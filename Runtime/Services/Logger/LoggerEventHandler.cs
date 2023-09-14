@@ -1,6 +1,7 @@
 ﻿using System;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.Services.Logger
+namespace DJM.CoreServices.Services.Logger
 {
     internal sealed class LoggerEventHandler : IDisposable
     {

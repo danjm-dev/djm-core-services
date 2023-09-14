@@ -1,6 +1,6 @@
 {
-    "name": "com.djm.core-utilities.Tests",
-    "rootNamespace": "DJM.CoreUtilities.Tests",
+    "name": "com.djm.core-services.Tests",
+    "rootNamespace": "DJM.CoreServices.Tests",
     "references": [
         "GUID:f23912e9624765346a824faade71f837",
         "GUID:0acc523941302664db1f4e527237feb3",

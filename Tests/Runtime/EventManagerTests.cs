@@ -1,11 +1,11 @@
 using System;
-using DJM.CoreUtilities.Services.Events;
-using DJM.CoreUtilities.Services.Logger;
+using DJM.CoreServices.Services.Events;
+using DJM.CoreServices.Services.Logger;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace DJM.CoreUtilities.Tests
+namespace DJM.CoreServices.Tests.Runtime
 {
     [TestFixture]
     internal sealed class EventManagerTests

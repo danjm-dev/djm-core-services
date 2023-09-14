@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DJM.CoreUtilities.MonoServices.SceneTransitionCanvas
+namespace DJM.CoreServices.MonoServices.SceneTransitionCanvas
 {
     [System.Serializable]
     internal class SceneTransitionCanvasEvents

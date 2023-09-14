@@ -1,6 +1,7 @@
 using System;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.Services.SceneLoader
+namespace DJM.CoreServices.Services.SceneLoader
 {
     internal sealed class SceneLoaderEventHandler : IDisposable
     {

@@ -1,4 +1,6 @@
-namespace DJM.CoreUtilities.Services.Events
+using DJM.CoreServices.Interfaces;
+
+namespace DJM.CoreServices.Services.Events
 {
     /// <summary>
     /// Event manager class responsible for managing generic struct events.

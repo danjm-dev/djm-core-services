@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Services.SoundController
+namespace DJM.CoreServices.Services.SoundController
 {
     internal static class SoundControllerEvent
     {

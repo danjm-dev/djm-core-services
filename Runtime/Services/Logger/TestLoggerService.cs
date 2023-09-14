@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using ILogger = DJM.CoreServices.Interfaces.ILogger;
 
-namespace DJM.CoreUtilities.Services.Logger
+namespace DJM.CoreServices.Services.Logger
 {
     public sealed class TestLoggerService : ILogger
     {

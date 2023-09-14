@@ -1,6 +1,6 @@
 {
-    "name": "com.djm.core-utilities",
-    "rootNamespace": "DJM.CoreUtilities",
+    "name": "com.djm.core-services",
+    "rootNamespace": "DJM.CoreServices",
     "references": [
         "DOTween.Modules"
     ],

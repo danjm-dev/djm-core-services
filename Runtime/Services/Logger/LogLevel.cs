@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities.Services.Logger
+namespace DJM.CoreServices.Services.Logger
 {
     public enum LogLevel
     {

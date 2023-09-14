@@ -1,7 +1,4 @@
-using System.Collections;
-using UnityEngine;
-
-namespace DJM.CoreUtilities.Services.SceneLoader
+namespace DJM.CoreServices.Services.SceneLoader
 {
     internal static class SceneLoadSequenceRunner
     {

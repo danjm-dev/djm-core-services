@@ -1,6 +1,7 @@
 using System;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.Services.MusicController
+namespace DJM.CoreServices.Services.MusicController
 {
     internal sealed class MusicControllerEventHandler : IDisposable
     {

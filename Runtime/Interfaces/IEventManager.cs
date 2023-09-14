@@ -1,6 +1,6 @@
 using System;
 
-namespace DJM.CoreUtilities
+namespace DJM.CoreServices.Interfaces
 {
     /// <summary>
     /// Event service interface for centralized events.

@@ -1,8 +1,8 @@
 using System;
-using DJM.CoreUtilities.Bootstrap;
-using DJM.CoreUtilities.Services.Events;
+using DJM.CoreServices.Bootstrap;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.API
+namespace DJM.CoreServices.API
 {
     /// <summary>
     /// Static utility class for managing and dispatching global events within the Unity project.

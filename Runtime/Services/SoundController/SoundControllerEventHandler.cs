@@ -1,6 +1,7 @@
 using System;
+using DJM.CoreServices.Interfaces;
 
-namespace DJM.CoreUtilities.Services.SoundController
+namespace DJM.CoreServices.Services.SoundController
 {
     internal sealed class SoundControllerEventHandler : IDisposable
     {

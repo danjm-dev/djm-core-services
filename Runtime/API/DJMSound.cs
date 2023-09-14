@@ -1,9 +1,9 @@
-using DJM.CoreUtilities.Bootstrap;
-using DJM.CoreUtilities.Services.Events;
-using DJM.CoreUtilities.Services.SoundController;
+using DJM.CoreServices.Bootstrap;
+using DJM.CoreServices.Interfaces;
+using DJM.CoreServices.Services.SoundController;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.API
+namespace DJM.CoreServices.API
 {
     /// <summary>
     /// Static utility class for playing and controlling transient sound effects.

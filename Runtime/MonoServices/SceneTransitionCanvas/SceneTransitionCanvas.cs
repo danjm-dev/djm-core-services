@@ -1,9 +1,9 @@
 using System.Collections;
-using DJM.CoreUtilities.Components.UI;
-using DJM.CoreUtilities.Services.SceneLoader;
+using DJM.CoreServices.Services.SceneLoader;
+using DJM.CoreServices.Temp.Components.UI;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.MonoServices.SceneTransitionCanvas
+namespace DJM.CoreServices.MonoServices.SceneTransitionCanvas
 {
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroupFader))]

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using DJM.CoreUtilities.API;
+using DJM.CoreServices.API;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.MonoServices.AudioSource
+namespace DJM.CoreServices.MonoServices.AudioSource
 {
     public sealed class AudioSourcePool : MonoBehaviour
     {

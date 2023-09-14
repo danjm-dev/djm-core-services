@@ -1,4 +1,4 @@
-namespace DJM.CoreUtilities.Services.SceneLoader
+namespace DJM.CoreServices.Services.SceneLoader
 {
     internal static class SceneLoaderEvent
     {

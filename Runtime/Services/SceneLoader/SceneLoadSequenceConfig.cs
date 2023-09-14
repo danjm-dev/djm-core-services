@@ -1,8 +1,8 @@
 using DG.Tweening;
-using DJM.CoreUtilities.MonoServices.SceneTransitionCanvas;
+using DJM.CoreServices.MonoServices.SceneTransitionCanvas;
 using UnityEngine;
 
-namespace DJM.CoreUtilities.Services.SceneLoader
+namespace DJM.CoreServices.Services.SceneLoader
 {
     [CreateAssetMenu(fileName = "SceneLoadSequenceConfig", menuName = "ScriptableObject/SceneManagement/SceneLoadSequenceConfig")]
     public sealed class SceneLoadSequenceConfig : ScriptableObject

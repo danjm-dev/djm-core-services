@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreUtilities.MeshGeneration
+namespace DJM.CoreServices.Temp.MeshGeneration
 {
     internal static class Plane
     {
