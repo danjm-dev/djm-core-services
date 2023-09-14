@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using DJM.CoreUtilities.Services.Logger;
 
 namespace DJM.CoreUtilities.Services.Events
 {
@@ -10,7 +10,12 @@ namespace DJM.CoreUtilities.Services.Events
     /// </summary>
     public abstract class EventManagerBase : IEventManagerService
     {
-        protected readonly Dictionary<Type, Delegate> EventDictionary = new();
+        private readonly Dictionary<Type, Delegate> _eventDictionary = new();
+        protected readonly ILoggerService LoggerService;
+            
+        
+        
+        protected EventManagerBase(ILoggerService loggerService) => LoggerService = loggerService;
 
         public virtual void Subscribe<T>(Action<T> listener) where T : struct
         {
@@ -18,37 +23,35 @@ namespace DJM.CoreUtilities.Services.Events
             
             if (listener is null)
             {
-                var errorMessage = EventManagerErrorMessages
-                    .SubscribeNullListener(GetType().Name, eventId);
-                Debug.LogError(errorMessage);
+                var errorMessage = $"Subscription attempt to {eventId} event had null listener.";
+                LoggerService.LogError(errorMessage, nameof(EventManagerBase));
                 return;
             }
             
-            if (EventDictionary.ContainsKey(eventId))
+            if (_eventDictionary.ContainsKey(eventId))
             {
-                EventDictionary[eventId] = Delegate.Combine(EventDictionary[eventId], listener);
+                _eventDictionary[eventId] = Delegate.Combine(_eventDictionary[eventId], listener);
                 return;
             }
 
-            EventDictionary[eventId] = listener;
+            _eventDictionary[eventId] = listener;
         }
         
         public virtual void Unsubscribe<T>(Action<T> listener) where T : struct
         {
             var eventId = typeof(T);
-            if (!EventDictionary.ContainsKey(eventId)) return;
-            EventDictionary[eventId] = Delegate.Remove(EventDictionary[eventId], listener);
+            if (!_eventDictionary.ContainsKey(eventId)) return;
+            _eventDictionary[eventId] = Delegate.Remove(_eventDictionary[eventId], listener);
             
-            if (EventDictionary[eventId] is null) EventDictionary.Remove(eventId);
+            if (_eventDictionary[eventId] is null) _eventDictionary.Remove(eventId);
         }
         
-        // ReSharper disable Unity.PerformanceAnalysis
         public virtual void TriggerEvent<T>(T eventInstance) where T : struct
         {
             var eventId = typeof(T);
-            if (!EventDictionary.ContainsKey(eventId)) return;
+            if (!_eventDictionary.ContainsKey(eventId)) return;
             
-            foreach (var listener in EventDictionary[eventId].GetInvocationList())
+            foreach (var listener in _eventDictionary[eventId].GetInvocationList())
             {
                 try
                 {
@@ -56,19 +59,18 @@ namespace DJM.CoreUtilities.Services.Events
                 }
                 catch (Exception exception)
                 {
-                    var errorMessage = EventManagerErrorMessages
-                        .EventTriggerException(GetType().Name, eventId, exception);
-                    Debug.LogError(errorMessage);
+                    var errorMessage = $"Exception caught when triggering {eventId} event listener: {exception}";
+                    LoggerService.LogError(errorMessage, nameof(EventManagerBase));
                 }
             }
         }
         
-        public void ClearAllEvents() => EventDictionary.Clear();
+        public void ClearAllEvents() => _eventDictionary.Clear();
         
         public void ClearEvent<T>() where T : struct
         {
             var eventId = typeof(T);
-            EventDictionary.Remove(eventId);
+            _eventDictionary.Remove(eventId);
         }
     }
 }

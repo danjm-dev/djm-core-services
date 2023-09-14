@@ -15,8 +15,9 @@ namespace DJM.CoreUtilities.ServiceContext
         {
             ResetEnvironment();
             
-            IEventManagerService eventManagerService = new EventManagerService();
             ILoggerService loggerService = new LoggerService(true, LogLevel.Info);
+            IEventManagerService eventManagerService = new EventManagerService(loggerService);
+            
             
             // service context
             var serviceContext = DJMServiceContext.Initialize(eventManagerService, loggerService);
@@ -27,7 +28,7 @@ namespace DJM.CoreUtilities.ServiceContext
             // services
             
             IMusicService musicService = new MusicService(audioSourcePool, loggerService);
-            ISoundService soundService = new SoundService(audioSourcePool);
+            ISoundService soundService = new SoundService(audioSourcePool, loggerService);
             ISceneLoaderService sceneLoaderService = new SceneLoaderService(loggerService);
             
             // event handlers

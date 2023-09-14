@@ -1,5 +1,6 @@
 using System;
 using DJM.CoreUtilities.Services.Events;
+using DJM.CoreUtilities.Services.Logger;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -12,7 +13,7 @@ namespace DJM.CoreUtilities.Tests
         private EventManagerService _eventManagerService;
     
         [SetUp]
-        public void SetUp() => _eventManagerService = new EventManagerService();
+        public void SetUp() => _eventManagerService = new EventManagerService(new TestLoggerService());
         
         
         [Test]

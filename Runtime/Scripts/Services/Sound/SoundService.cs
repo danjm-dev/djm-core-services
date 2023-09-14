@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using DJM.CoreUtilities.MonoBehaviors.Audio;
+using DJM.CoreUtilities.Services.Logger;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.Services.Sound
@@ -9,17 +10,20 @@ namespace DJM.CoreUtilities.Services.Sound
     internal sealed class SoundService : ISoundService
     {
         private readonly AudioSourcePool _audioSourcePool;
+        private ILoggerService _loggerService;
         
         private readonly AudioSource _primaryAudioSource;
         private AudioSource _backupAudioSource;
         
         private readonly List<AudioSource> _activeBackupAudioSources;
 
-        internal SoundService(AudioSourcePool audioSourcePool)
+        internal SoundService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 
                 : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
+
+            _loggerService = loggerService ?? throw new ArgumentException($"{nameof(loggerService)} can not be null.", nameof(audioSourcePool));
             
             _primaryAudioSource = _audioSourcePool.GetAudioSource();
             _backupAudioSource = audioSourcePool.GetAudioSource();
