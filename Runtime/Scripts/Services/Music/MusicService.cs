@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using DJM.CoreUtilities.MonoBehaviors.Audio;
+using DJM.CoreUtilities.Services.Logger;
 using UnityEngine;
 
 namespace DJM.CoreUtilities.Services.Music
@@ -11,71 +12,65 @@ namespace DJM.CoreUtilities.Services.Music
     internal sealed class MusicService : IMusicService
     {
         private readonly AudioSourcePool _audioSourcePool;
-        private readonly AudioSource _audioSource;
+        private readonly ILoggerService _loggerService;
+        
+        private AudioSource _audioSource;
 
         private Sequence _trackOperation;
 
-        internal float Volume => _audioSource.volume;
-        internal bool IsPaused { get; private set; }
+        internal float Volume { get; private set; }
         
-        internal MusicService(AudioSourcePool audioSourcePool)
+        internal MusicService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 
                 : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
             
-            _audioSource = _audioSourcePool.GetAudioSource();
-            _audioSource.loop = true;
+            _loggerService = loggerService ?? throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
+            Volume = 1f;
         }
         
         public void SetMute(bool mute) => _audioSource.mute = mute;
         
-        public void SetVolume(float volume) => _audioSource.volume = volume;
-        
+        public void SetVolume(float volume)
+        {
+            Volume = volume;
+            if(_audioSource is not null) _audioSource.volume = Volume;
+        }
+
         public void PlayTrack(AudioClip track, float fadeOutDuration, float fadeInDuration)
         {
             if (track is null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                DJMLogger.LogError("Attempted to play null track.", nameof(MusicService));
-#endif
+                _loggerService.LogError($"Track can not be null, {nameof(track)}", nameof(MusicService));
                 return;
             }
             
             // force complete existing music operations
             _trackOperation?.Complete();
+            _trackOperation = DOTween.Sequence();
 
-            // no fading - immediately stop track and start new one
-            if (fadeOutDuration <= 0f && fadeInDuration <= 0f)
+            if (_audioSource is null)
             {
-                _audioSource.Stop();
-                _audioSource.clip = track;
-                _audioSource.Play();
-                return;
+                _audioSource = _audioSourcePool.GetAudioSource();
+                _audioSource.loop = true;
+            }
+            else if (_audioSource.isPlaying)
+            {
+                if (fadeOutDuration > 0f) _trackOperation.Append(_audioSource.DOFade(0f, fadeOutDuration * Volume));
+                _trackOperation.AppendCallback(() => _audioSource.Stop());
             }
             
-            _trackOperation = DOTween.Sequence();
-            
-            // set volume to 0
-            if (fadeOutDuration > 0f) _trackOperation.Append(_audioSource.DOFade(0f, fadeOutDuration * Volume));
-            else _trackOperation.AppendCallback(() => _audioSource.volume = 0f);
-            
-            // stop current track, set new track, play new track
             _trackOperation.AppendCallback(() =>
             {
-                _audioSource.Stop();
-                
-                //_audioSource.loop = true;
                 _audioSource.clip = track;
-                
+                _audioSource.volume = 0f;
                 _audioSource.Play();
             });
             
-            // set volume to original value
             if (fadeInDuration > 0f) _trackOperation.Append(_audioSource.DOFade(Volume, fadeInDuration * Volume));
             else _trackOperation.AppendCallback(() => _audioSource.volume = Volume);
             
-            // dispose of sequence
             _trackOperation.AppendCallback(() => _trackOperation = null);
         }
         
@@ -84,22 +79,30 @@ namespace DJM.CoreUtilities.Services.Music
             // force complete existing music operations
             _trackOperation?.Complete();
             
-            if(!_audioSource.isPlaying) return;
+            if(_audioSource is null) return;
             
-            // no fade duration, immediate stop
+            // source not playing - release
+            if (!_audioSource.isPlaying)
+            {
+                ReleaseAudioSource();
+                return;
+            }
+            
+            // source playing, but no fade duration - release
             if (fadeOutDuration <= 0f)
             {
                 _audioSource.Stop();
+                ReleaseAudioSource();
                 return;
             }
 
+            // fade out source then release
             _trackOperation = DOTween.Sequence();
-                
             _trackOperation.Append(_audioSource.DOFade(0f, fadeOutDuration * Volume));
             _trackOperation.AppendCallback(() =>
             {
                 _audioSource.Stop();
-                _audioSource.volume = Volume;
+                ReleaseAudioSource();
                 _trackOperation = null;
             });
         }
@@ -109,13 +112,12 @@ namespace DJM.CoreUtilities.Services.Music
             // force complete existing music operations
             _trackOperation?.Complete();
             
-            if(!_audioSource.isPlaying) return;
+            if(_audioSource is null || !_audioSource.isPlaying) return;
             
             // no fade duration, immediate pause
             if (fadeOutDuration <= 0f)
             {
                 _audioSource.Pause();
-                IsPaused = true;
                 return;
             }
 
@@ -125,7 +127,6 @@ namespace DJM.CoreUtilities.Services.Music
             _trackOperation.AppendCallback(() =>
             {
                 _audioSource.Pause();
-                IsPaused = true;
                 _audioSource.volume = Volume;
                 _trackOperation = null;
             });
@@ -136,26 +137,31 @@ namespace DJM.CoreUtilities.Services.Music
             // force complete existing music operations
             _trackOperation?.Complete();
             
-            if(_audioSource.isPlaying || !IsPaused) return;
+            if(_audioSource is null || _audioSource.isPlaying) return;
             
             // no fade duration - resume immediately
             if (fadeInDuration <= 0f)
             {
                 _audioSource.UnPause();
-                IsPaused = false;
                 return;
             }
             
             _trackOperation = DOTween.Sequence();
-                
-            _trackOperation.Append(_audioSource.DOFade(Volume, fadeInDuration * Volume));
+
             _trackOperation.AppendCallback(() =>
             {
+                _audioSource.volume = 0f;
                 _audioSource.UnPause();
-                IsPaused = false;
-                _audioSource.volume = Volume;
-                _trackOperation = null;
             });
+            _trackOperation.Append(_audioSource.DOFade(Volume, fadeInDuration * Volume));
+            _trackOperation.AppendCallback(() => _trackOperation = null);
+        }
+        
+        
+        private void ReleaseAudioSource()
+        {
+            _audioSourcePool.ReleaseAudioSource(_audioSource);
+            _audioSource = null;
         }
     }
 }

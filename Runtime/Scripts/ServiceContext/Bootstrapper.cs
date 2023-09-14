@@ -26,7 +26,7 @@ namespace DJM.CoreUtilities.ServiceContext
             
             // services
             
-            IMusicService musicService = new MusicService(audioSourcePool);
+            IMusicService musicService = new MusicService(audioSourcePool, loggerService);
             ISoundService soundService = new SoundService(audioSourcePool);
             ISceneLoaderService sceneLoaderService = new SceneLoaderService(loggerService);
             
