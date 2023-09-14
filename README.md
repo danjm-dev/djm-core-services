@@ -5,21 +5,21 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/danjm-dev/djm-core-utilities">
+  <a href="https://github.com/danjm-dev/djm-core-services">
     <img src="https://i.imgur.com/dmkwuPo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">DJM Core Utilities Package</h3>
+<h3 align="center">DJM Core Services Package</h3>
 
   <p align="center">
-    Core utilities to jumpstart small Unity projects.
+    Core services to jumpstart small Unity projects.
     <br />
-    <a href="https://github.com/danjm-dev/djm-core-utilities"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/danjm-dev/djm-core-services"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/danjm-dev/djm-core-utilities/issues">Report Bug</a>
+    <a href="https://github.com/danjm-dev/djm-core-services/issues">Report Bug</a>
     ·
-    <a href="https://github.com/danjm-dev/djm-core-utilities/issues">Request Feature</a>
+    <a href="https://github.com/danjm-dev/djm-core-services/issues">Request Feature</a>
   </p>
 </div>
 
@@ -50,7 +50,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-DJM Core Utilities is a Unity package for components and services that many new projects need.
+DJM Core Services is a Unity package for components and services that many new projects need.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -59,17 +59,17 @@ DJM Core Utilities is a Unity package for components and services that many new 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-The DJM Core Utilities package can be easily added to your Unity project with [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html). See installation instructions below.
+The DJM Core Services package can be easily added to your Unity project with [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html). See installation instructions below.
 
 
 ### Installation
 
-1. DJM Core Utilities is dependant on [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), which is free on the Unity asset store. Install DOTween first, following setup instructions from the DOTween readme. Ensure the UI module is included, then press add ASMDEF from the DoTween utility panel to create an assembly djm-core-utilities can access.
+1. DJM Core Services is dependant on [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), which is free on the Unity asset store. Install DOTween first, following setup instructions from the DOTween readme. Ensure the UI module is included, then press add ASMDEF from the DoTween utility panel to create an assembly djm-core-services can access.
 2. In your unity project, open [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html) from Window > Package Manager.
 3. Open the add package menu (+) and select "Add package from git URL...".
 
    ![add package from github](https://i.imgur.com/a9yYzDh.png)
-4. Enter the DJM Core Utilities repo URL : https://github.com/danjm-dev/djm-core-utilities.git, and press Add.
+4. Enter the DJM Core Services repo URL : https://github.com/danjm-dev/djm-core-services.git, and press Add.
 
 For more information about installing Unity packages from git, see [Unity Documentation](https://docs.unity3d.com/2022.3/Documentation/Manual/upm-ui-giturl.html).
 
@@ -115,7 +115,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Dan - danjm.dev@gmail.com
 
-Project Link: [https://github.com/danjm-dev/djm-core-utilities](https://github.com/danjm-dev/djm-core-utilities)
+Project Link: [https://github.com/danjm-dev/djm-core-services](https://github.com/danjm-dev/djm-core-services)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
