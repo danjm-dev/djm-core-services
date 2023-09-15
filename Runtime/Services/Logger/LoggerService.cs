@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using ILogger = DJM.CoreServices.Interfaces.ILogger;
+using ILogger = DJM.CoreServices.ILogger;
 
 namespace DJM.CoreServices.Services.Logger
 {

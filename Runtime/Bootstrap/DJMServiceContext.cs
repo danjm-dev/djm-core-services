@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DJM.CoreServices.Interfaces;
 using UnityEngine;
-using ILogger = DJM.CoreServices.Interfaces.ILogger;
 
 namespace DJM.CoreServices.Bootstrap
 {

@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DJM.CoreServices.Interfaces;
 using UnityEngine.SceneManagement;
 
 namespace DJM.CoreServices.Services.SceneLoader

@@ -1,9 +1,6 @@
-﻿using System;
-using DJM.CoreServices.Interfaces;
-
-namespace DJM.CoreServices.Services.Logger
+﻿namespace DJM.CoreServices.Services.Logger
 {
-    internal sealed class LoggerEventHandler : IDisposable
+    public sealed class LoggerEventHandler : IEventHandler
     {
         private readonly IEventManager _eventManager;
         private readonly ILogger _logger;
@@ -13,22 +10,25 @@ namespace DJM.CoreServices.Services.Logger
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _eventManager = eventManager;
             _logger = logger;
-            Initialize();
 #endif
         }
 
-        private void Initialize()
+        public void Initialize()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             _eventManager.Subscribe<LoggerEvent.Error>(OnLogError);
             _eventManager.Subscribe<LoggerEvent.Warning>(OnLogWarning);
             _eventManager.Subscribe<LoggerEvent.Info>(OnLogInfo);
+#endif
         }
         
         public void Dispose()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             _eventManager.Unsubscribe<LoggerEvent.Error>(OnLogError);
             _eventManager.Unsubscribe<LoggerEvent.Warning>(OnLogWarning);
             _eventManager.Unsubscribe<LoggerEvent.Info>(OnLogInfo);
+#endif
         }
         
         private void OnLogError(LoggerEvent.Error eventData)

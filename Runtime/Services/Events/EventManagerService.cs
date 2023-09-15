@@ -1,5 +1,3 @@
-using DJM.CoreServices.Interfaces;
-
 namespace DJM.CoreServices.Services.Events
 {
     /// <summary>

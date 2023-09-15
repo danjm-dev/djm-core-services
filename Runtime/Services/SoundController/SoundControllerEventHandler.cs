@@ -1,9 +1,6 @@
-using System;
-using DJM.CoreServices.Interfaces;
-
 namespace DJM.CoreServices.Services.SoundController
 {
-    internal sealed class SoundControllerEventHandler : IDisposable
+    internal sealed class SoundControllerEventHandler : IEventHandler
     {
         private readonly IEventManager _eventManager;
         
@@ -13,10 +10,9 @@ namespace DJM.CoreServices.Services.SoundController
         {
             _eventManager = eventManager;
             _soundController = soundController;
-            Initialize();
         }
         
-        private void Initialize()
+        public void Initialize()
         {
             _eventManager.Subscribe<SoundControllerEvent.SetMute>(OnSetMute);
             _eventManager.Subscribe<SoundControllerEvent.SetVolume>(OnSetVolume);

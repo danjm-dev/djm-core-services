@@ -1,9 +1,6 @@
-using System;
-using DJM.CoreServices.Interfaces;
-
 namespace DJM.CoreServices.Services.MusicController
 {
-    internal sealed class MusicControllerEventHandler : IDisposable
+    internal sealed class MusicControllerEventHandler : IEventHandler
     {
         private readonly IEventManager _eventManager;
         private readonly IMusicController _musicController;
@@ -12,10 +9,9 @@ namespace DJM.CoreServices.Services.MusicController
         {
             _eventManager = eventManager;
             _musicController = musicController;
-            Initialize();
         }
         
-        private void Initialize()
+        public void Initialize()
         {
             // music events
             _eventManager.Subscribe<MusicControllerEvent.SetMute>(OnSetMute);

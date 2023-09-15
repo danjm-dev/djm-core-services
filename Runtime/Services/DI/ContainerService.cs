@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DJM.CoreServices.Interfaces;
 
 namespace DJM.CoreServices.Services.DI
 {
