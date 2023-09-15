@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using ILogger = DJM.CoreServices.ILogger;
 
 namespace DJM.CoreServices.Services.Logger
 {
@@ -45,7 +44,7 @@ namespace DJM.CoreServices.Services.Logger
         }
         
         
-        private const string LogMessageTemplate = "<size=13><b><color=orange>DJMLogger</color> <color=lightblue>[{0}]</color></b></size> <color={1}>{2}</color>";
+        private const string LogMessageTemplate = "<size=13><b><color=orange>DJMLogger [<color=lightblue>{0}</color>]</color> </b></size> <color={1}>{2}</color>";
         private static string CreateMessage(string message, string context, LogLevel level)
         {
             var color = level switch
