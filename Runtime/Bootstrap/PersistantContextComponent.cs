@@ -22,5 +22,14 @@ namespace DJM.CoreServices.Bootstrap
             };
             return obj.AddComponent<T>();
         }
+        
+        internal object AddComponentToNewChildGameObject(Type type)
+        {
+            var obj = new GameObject(type.Name)
+            {
+                transform = { parent = transform }
+            };
+            return obj.AddComponent(type);
+        }
     }
 }

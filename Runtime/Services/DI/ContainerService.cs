@@ -1,78 +1,111 @@
 using System;
 using System.Collections.Generic;
+using DJM.CoreServices.Bootstrap;
+using DJM.CoreServices.Services.DI.Binding;
+using DJM.CoreServices.Services.DI.Installer;
 
 namespace DJM.CoreServices.Services.DI
 {
     internal sealed class ContainerService : IContainer
     {
-        private readonly Dictionary<Type, DependencyRegistration> _dependencyRegistrations = new();
+        private readonly Dictionary<Type, BindingData> _bindingRegistrations = new();
         private readonly Dictionary<Type, WeakReference> _singleInstances = new();
+        private readonly List<Type> _nonLazyBindings = new(); // ignoring for now
+
+        private PersistantContextComponent _persistantContextComponent;
         
         // todo: circular dependencies, monoBehaviour/component dependencies, non public constructors
+        
+        // id like to expose less to the installer - maybe a special interface
 
-        public void RegisterTransient<TInterface, TImplementation>() where TImplementation : TInterface
+        public ContainerService(PersistantContextComponent persistantContextComponent)
         {
-            RegisterType(typeof(TInterface), typeof(TImplementation), false);
+            _persistantContextComponent = persistantContextComponent;
         }
         
-        public void RegisterSingle<TInterface, TImplementation>() where TImplementation : TInterface
+        public void Install(IInstaller installer) => installer.InstallBindings(this);
+        
+        public GenericBinder<TBinding> Bind<TBinding>()
         {
-            RegisterType(typeof(TInterface), typeof(TImplementation), true);
-        }
-
-        private void RegisterType(Type interfaceType, Type implementationType, bool isSingle)
-        {
-            if (_dependencyRegistrations.ContainsKey(interfaceType))
-                throw new Exception($"Type {interfaceType.FullName} is already registered.");
-            _dependencyRegistrations[interfaceType] = new DependencyRegistration(implementationType, isSingle);
-        }
-
-        public object Resolve(Type type)
-        {
-            if (!_dependencyRegistrations.ContainsKey(type))
-            {
-                throw new Exception($"Type {type.FullName} is not registered.");
-            }
-
-            var registration = _dependencyRegistrations[type];
-            var dependencyType = registration.Type;
+            var bindingType = typeof(TBinding);
             
-            // if derived from Component - divert here
-
-
-            if (!registration.IsSingle) return CreateInstance(dependencyType);
+            if (_bindingRegistrations.ContainsKey(bindingType)) 
+                throw new TypeAlreadyRegisteredException(bindingType);
             
-            if (_singleInstances.TryGetValue(type, out var weakReference) && weakReference.IsAlive)
-            {
-                return weakReference.Target;
-            }
+            // register binding with default binding data
+            var bindingData = new BindingData(bindingType);
+            _bindingRegistrations[bindingType] = bindingData;
 
-            var newInstance = CreateInstance(dependencyType);
-            _singleInstances[type] = new WeakReference(newInstance);
-            return newInstance;
+
+            var bindingUpdateHandler = new BindingUpdateHandler(bindingType, bindingData,
+                data => BindingUpdateHandler(bindingType, data));
+            
+            return new GenericBinder<TBinding>(bindingUpdateHandler);
         }
         
-        public void Validate()
+        public void RunValidation()
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            foreach (var type in _dependencyRegistrations.Keys)
+            foreach (var type in _bindingRegistrations.Keys)
             {
                 try
                 {
                     Resolve(type);
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    throw new InvalidOperationException($"Failed to resolve type {type.FullName}.", ex);
+                    throw new InitializationValidationFailedException(type, exception);
                 }
             }
             _singleInstances.Clear();
 #endif
         }
         
-        private object CreateInstance(Type type)
+        public TBinding Resolve<TBinding>()
         {
-            var constructor = type.GetConstructors()[0]; // currently gets first public constructor
+            var type = typeof(TBinding);
+            return (TBinding)Resolve(type);
+        }
+        
+        private void BindingUpdateHandler(Type bindingType, BindingData bindingData)
+        {
+            // surely theres a better way to do this -
+            // feels very cumbersome, particularly with the readonly struct and callback for each update
+            _bindingRegistrations[bindingType] = bindingData;
+        }
+        
+        private object Resolve(Type bindingType)
+        {
+            if (!_bindingRegistrations.ContainsKey(bindingType)) throw new TypeNotRegisteredException(bindingType);
+            
+            var bindingData = _bindingRegistrations[bindingType];
+
+            if (!bindingData.IsSingle) return CreateInstance(bindingData);
+            
+            if (_singleInstances.TryGetValue(bindingType, out var weakReference) && weakReference.IsAlive)
+            {
+                return weakReference.Target;
+            }
+
+            var newInstance = CreateInstance(bindingData);
+            _singleInstances[bindingType] = new WeakReference(newInstance);
+            return newInstance;
+        }
+        
+        private object CreateInstance(BindingData bindingData)
+        {
+            return bindingData.ConstructorOption switch
+            {
+                ConstructorOption.New => CreateNewInstance(bindingData),
+                ConstructorOption.NewComponentOnNewGameObject => CreateNewComponentOnNewGameObjectInstance(bindingData),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private object CreateNewInstance(BindingData bindingData)
+        {
+            var concreteType = bindingData.ConcreteType;
+            var constructor = concreteType.GetConstructors()[0]; // currently gets first public constructor
             var constructorParameters = constructor.GetParameters();
             var parameters = new object[constructorParameters.Length];
 
@@ -82,19 +115,12 @@ namespace DJM.CoreServices.Services.DI
                 parameters[i] = Resolve(parameterType);
             }
 
-            return Activator.CreateInstance(type, parameters);
+            return Activator.CreateInstance(concreteType, parameters);
         }
         
-        private readonly struct DependencyRegistration
+        private object CreateNewComponentOnNewGameObjectInstance(BindingData bindingData)
         {
-            public readonly Type Type;
-            public readonly bool IsSingle;
-
-            public DependencyRegistration(Type type, bool isSingle)
-            {
-                Type = type;
-                IsSingle = isSingle;
-            }
+            return _persistantContextComponent.AddComponentToNewChildGameObject(bindingData.ConcreteType);
         }
     }
 }
