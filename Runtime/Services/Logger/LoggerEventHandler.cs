@@ -5,7 +5,7 @@
         private readonly IEventManager _eventManager;
         private readonly ILogger _logger;
         
-        internal LoggerEventHandler(IEventManager eventManager, ILogger logger)
+        public LoggerEventHandler(IEventManager eventManager, ILogger logger)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _eventManager = eventManager;

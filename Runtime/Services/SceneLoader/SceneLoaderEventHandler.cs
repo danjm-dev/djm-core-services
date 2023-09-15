@@ -5,7 +5,7 @@ namespace DJM.CoreServices.Services.SceneLoader
         private readonly IEventManager _eventManager;
         private readonly ISceneLoader _sceneLoader;
         
-        internal SceneLoaderEventHandler(IEventManager eventManager, ISceneLoader sceneLoader)
+        public SceneLoaderEventHandler(IEventManager eventManager, ISceneLoader sceneLoader)
         {
             _eventManager = eventManager;
             _sceneLoader = sceneLoader;

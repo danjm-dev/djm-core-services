@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using DJM.CoreServices.MonoServices.AudioSource;
-using DJM.CoreServices.Services.Events;
 using DJM.CoreServices.Services.Logger;
 using DJM.CoreServices.Services.MusicController;
 using DJM.CoreServices.Services.SceneLoader;
@@ -16,32 +13,16 @@ namespace DJM.CoreServices.Bootstrap
         {
             ResetEnvironment();
             
-            ILogger logger = new LoggerService(true, LogLevel.Info);
-            IEventManager eventManager = new EventManagerService(logger);
+            var serviceContext = DJMServiceContext.Initialize();
             
-            // service context
-            var serviceContext = DJMServiceContext.Initialize(eventManager, logger);
-            
-            // mono services
-            var audioSourcePool = serviceContext.GetMonoBehaviorService<AudioSourcePool>();
-            
-            // services
-            
-            IMusicController musicController = new MusicControllerService(audioSourcePool, logger);
-            ISoundController soundController = new SoundControllerService(audioSourcePool, logger);
-            ISceneLoader sceneLoader = new SceneLoaderService(logger);
-            
-            // event handlers
-            var eventHandlers = new List<IEventHandler>
-            {
-                new LoggerEventHandler(eventManager, logger),
-                new MusicControllerEventHandler(eventManager, musicController),
-                new SoundControllerEventHandler(eventManager, soundController),
-                new SceneLoaderEventHandler(eventManager, sceneLoader)
-            };
-            foreach (var eventHandler in eventHandlers) eventHandler.Initialize(); // temp - will eventually plug into context lifecycle
-            // need to dispose too
+            serviceContext.DependencyContainer.Install(new ServiceContextInstaller());
 
+
+            // temp
+            serviceContext.DependencyContainer.Resolve<MusicControllerEventHandler>().Initialize();
+            serviceContext.DependencyContainer.Resolve<SoundControllerEventHandler>().Initialize();
+            serviceContext.DependencyContainer.Resolve<LoggerEventHandler>().Initialize();
+            serviceContext.DependencyContainer.Resolve<SceneLoaderEventHandler>().Initialize();
         }
         
         private static void ResetEnvironment()

@@ -6,7 +6,7 @@ namespace DJM.CoreServices.Services.SoundController
         
         private readonly ISoundController _soundController;
 
-        internal SoundControllerEventHandler(IEventManager eventManager, ISoundController soundController)
+        public SoundControllerEventHandler(IEventManager eventManager, ISoundController soundController)
         {
             _eventManager = eventManager;
             _soundController = soundController;

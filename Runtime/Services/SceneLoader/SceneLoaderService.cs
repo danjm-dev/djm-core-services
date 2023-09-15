@@ -8,9 +8,9 @@ namespace DJM.CoreServices.Services.SceneLoader
     internal sealed class SceneLoaderService : ISceneLoader
     {
         private CancellationTokenSource _cancellationTokenSource;
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
-        internal SceneLoaderService(ILogger logger) => _logger = logger;
+        public SceneLoaderService(ILogger logger) => _logger = logger;
         
         public void LoadScene(string sceneName) => StartLoadingSceneAsync(sceneName);
         public void CancelLoadingScene() => _cancellationTokenSource?.Cancel();

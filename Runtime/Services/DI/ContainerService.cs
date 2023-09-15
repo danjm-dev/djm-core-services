@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using DJM.CoreServices.Bootstrap;
 using DJM.CoreServices.Services.DI.Binding;
 using DJM.CoreServices.Services.DI.Installer;
@@ -105,7 +106,7 @@ namespace DJM.CoreServices.Services.DI
         private object CreateNewInstance(BindingData bindingData)
         {
             var concreteType = bindingData.ConcreteType;
-            var constructor = concreteType.GetConstructors()[0]; // currently gets first public constructor
+            var constructor = concreteType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)[0]; // currently gets first public constructor
             var constructorParameters = constructor.GetParameters();
             var parameters = new object[constructorParameters.Length];
 

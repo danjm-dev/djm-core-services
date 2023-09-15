@@ -8,10 +8,10 @@ namespace DJM.CoreServices.Services.Logger
         private readonly bool _enableLogging;
         private readonly LogLevel _loggingThreshold;
 
-        public LoggerService(bool enableLogging, LogLevel loggingThreshold)
+        public LoggerService(/*bool enableLogging, LogLevel loggingThreshold*/)
         {
-            _enableLogging = enableLogging;
-            _loggingThreshold = loggingThreshold;
+            _enableLogging = true;
+            _loggingThreshold = LogLevel.Info;
         }
         
         public void LogError(string message, string context)

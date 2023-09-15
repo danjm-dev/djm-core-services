@@ -5,7 +5,7 @@ namespace DJM.CoreServices.Services.MusicController
         private readonly IEventManager _eventManager;
         private readonly IMusicController _musicController;
 
-        internal MusicControllerEventHandler(IEventManager eventManager, IMusicController musicController)
+        public MusicControllerEventHandler(IEventManager eventManager, IMusicController musicController)
         {
             _eventManager = eventManager;
             _musicController = musicController;

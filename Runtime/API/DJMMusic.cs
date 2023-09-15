@@ -6,7 +6,7 @@ namespace DJM.CoreServices.API
 {
     public static class DJMMusic
     {
-        private static readonly IEventManager EventManager = DJMServiceContext.Instance.EventManager;
+        private static readonly IEventManager EventManager = DJMServiceContext.Instance.DependencyContainer.Resolve<IEventManager>();
             
         public static void Mute()
         {
