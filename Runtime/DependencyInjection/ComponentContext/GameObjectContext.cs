@@ -5,9 +5,11 @@ namespace DJM.CoreServices.DependencyInjection.ComponentContext
 {
     internal sealed class GameObjectContext : MonoBehaviour
     {
+        internal Action OnContextAwake;
         internal Action OnContextStart;
         internal Action OnContextDestroy;
-        
+
+        private void Awake() => OnContextAwake?.Invoke();
         private void Start() => OnContextStart?.Invoke();
         private void OnDestroy() => OnContextDestroy?.Invoke();
 

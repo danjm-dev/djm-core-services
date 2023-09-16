@@ -2,12 +2,12 @@ using System;
 
 namespace DJM.CoreServices.DependencyInjection
 {
-    internal readonly struct BindingData
+    internal class BindingData
     {
-        public readonly Type ConcreteType;
-        public readonly ConstructorOption ConstructorOption;
-        public readonly bool IsSingle;
-        public readonly bool IsNonLazy;
+        public Type ConcreteType;
+        public ConstructorOption ConstructorOption;
+        public bool IsSingle;
+        public bool IsNonLazy;
 
         internal BindingData(Type concreteType, ConstructorOption constructorOption = ConstructorOption.New, bool isSingle = false, bool isNonLazy = false)
         {

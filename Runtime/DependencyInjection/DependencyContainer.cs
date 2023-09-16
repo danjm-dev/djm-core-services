@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using DJM.CoreServices.DependencyInjection.Binding;
 using DJM.CoreServices.DependencyInjection.ComponentContext;
+using UnityEngine;
+using Object = System.Object;
 
 namespace DJM.CoreServices.DependencyInjection
 {
@@ -40,22 +42,27 @@ namespace DJM.CoreServices.DependencyInjection
             var bindingData = new BindingData(bindingType);
             _bindings[bindingType] = bindingData;
             
-            var bindingUpdateHandler = new BindingUpdateHandler(bindingType, bindingData, BinderUpdateHandler);
-            return new GenericBinder<TBinding>(bindingUpdateHandler);
-        }
-
-        private void BinderUpdateHandler(Type bindingType, BindingData bindingData)
-        {
-            if (bindingData.IsNonLazy) _nonLazyBindings.Add(bindingType);
-            _bindings[bindingType] = bindingData;
+            return new GenericBinder<TBinding>(bindingData);
         }
         
         public void Install(params IInstaller[] installers)
         {
             foreach (var installer in installers) installer.InstallBindings(this);
             ValidateBindings();
-            ResolveNonLazyBindings();
+            
+            
+            foreach (var type in _bindings.Keys)
+            {
+                var bindingData = _bindings[type];
+                if (bindingData.IsNonLazy)
+                {
+                    _nonLazyBindings.Add(type);
+                    Resolve(type);
+                }
+            }
         }
+        
+
 
         public TBinding Resolve<TBinding>()
         {
@@ -121,37 +128,40 @@ namespace DJM.CoreServices.DependencyInjection
         private void ValidateBindings()
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+
+            var components = new List<Component>();
+            
             foreach (var type in _bindings.Keys)
             {
                 try
                 {
-                    Resolve(type);
+                    var instance = Resolve(type);
+                    if(instance is Component component)
+                        components.Add(component);
                 }
                 catch (Exception exception)
                 {
                     throw new InstallationValidationFailedException(type, exception);
                 }
             }
-            _singleInstances.Clear();
-#endif
-        }
 
-        private void ResolveNonLazyBindings()
-        {
-            // these should all be single
-            foreach (var binding in _nonLazyBindings) Resolve(binding);
+            RunInitializables();
+            RunDisposables();
+            _singleInstances.Clear();
+            foreach (var instance in components) UnityEngine.Object.Destroy(instance.gameObject);
+#endif
         }
 
         private void RunInitializables()
         {
             foreach (var initializable in _initializables) initializable.Initialize();
-            _initializables = null;
+            _initializables.Clear();
         }
         
         private void RunDisposables()
         {
             foreach (var disposable in _disposables) disposable.Dispose();
-            _disposables = null;
+            _disposables.Clear();
         }
     }
 }

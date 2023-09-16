@@ -2,12 +2,12 @@ namespace DJM.CoreServices.DependencyInjection.Binding
 {
     internal class GenericBinder<TBinding> : IGenericBind<TBinding>
     {
-        private readonly BindingUpdateHandler _bindingUpdateHandler;
+        private readonly BindingData _bindingData;
         private BindingOperationOrder? _latestOperationCompleted;
 
-        internal GenericBinder(BindingUpdateHandler bindingUpdateHandler)
+        internal GenericBinder(BindingData bindingData)
         {
-            _bindingUpdateHandler = bindingUpdateHandler;
+            _bindingData = bindingData;
             _latestOperationCompleted = null;
         }
 
@@ -15,7 +15,7 @@ namespace DJM.CoreServices.DependencyInjection.Binding
         public IBindFrom<TBinding> To<TImplementation>() where TImplementation : TBinding
         {
             ValidateOperationOrder(BindingOperationOrder.BindTo);
-            _bindingUpdateHandler.SetConcreteType(typeof(TImplementation));
+            _bindingData.ConcreteType = typeof(TImplementation);
             return this;
         }
         
@@ -23,14 +23,14 @@ namespace DJM.CoreServices.DependencyInjection.Binding
         public IBindScope<TBinding> FromNew()
         {
             ValidateOperationOrder(BindingOperationOrder.BindFrom);
-            _bindingUpdateHandler.SetConstructorOption(ConstructorOption.New);
+            _bindingData.ConstructorOption = ConstructorOption.New;
             return this;
         }
         
         public IBindScope<TBinding> FromNewComponentOnNewGameObject()
         {
             ValidateOperationOrder(BindingOperationOrder.BindFrom);
-            _bindingUpdateHandler.SetConstructorOption(ConstructorOption.NewComponentOnNewGameObject);
+            _bindingData.ConstructorOption = ConstructorOption.NewComponentOnNewGameObject;
             return this;
         }
         
@@ -38,27 +38,27 @@ namespace DJM.CoreServices.DependencyInjection.Binding
         public IBindLazy<TBinding> AsSingle()
         {
             ValidateOperationOrder(BindingOperationOrder.BindScope);
-            _bindingUpdateHandler.SetIsSingle(true);
+            _bindingData.IsSingle = true;
             return this;
         }
         
         public void AsTransient()
         {
             ValidateOperationOrder(BindingOperationOrder.BindScope);
-            _bindingUpdateHandler.SetIsSingle(false);
+            _bindingData.IsSingle = false;
         }
         
         // IBindLazy
         public void NonLazy()
         {
             ValidateOperationOrder(BindingOperationOrder.BindLazy);
-            _bindingUpdateHandler.SetIsNonLazy(true);
+            _bindingData.IsNonLazy = true;
         }
 
         public void Lazy()
         {
             ValidateOperationOrder(BindingOperationOrder.BindLazy);
-            _bindingUpdateHandler.SetIsNonLazy(false);
+            _bindingData.IsNonLazy = false;
         }
         
         private void ValidateOperationOrder(BindingOperationOrder currentOperation)
