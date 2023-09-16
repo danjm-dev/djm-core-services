@@ -10,7 +10,7 @@ namespace DJM.CoreServices.Services.DI
     internal sealed class ContainerService : IContainer
     {
         private readonly Dictionary<Type, BindingData> _bindingRegistrations = new();
-        private readonly Dictionary<Type, WeakReference> _singleInstances = new();
+        private readonly Dictionary<Type, object> _singleInstances = new();
         private readonly List<Type> _nonLazyBindings = new(); // ignoring for now
 
         private PersistantContextComponent _persistantContextComponent;
@@ -81,15 +81,15 @@ namespace DJM.CoreServices.Services.DI
             
             var bindingData = _bindingRegistrations[bindingType];
 
+            // create transient instance
             if (!bindingData.IsSingle) return CreateInstance(bindingData);
             
-            if (_singleInstances.TryGetValue(bindingType, out var weakReference) && weakReference.IsAlive)
-            {
-                return weakReference.Target;
-            }
+            // return existing single instance
+            if (_singleInstances.TryGetValue(bindingType, out var singleInstance)) return singleInstance;
 
+            // create single instance
             var newInstance = CreateInstance(bindingData);
-            _singleInstances[bindingType] = new WeakReference(newInstance);
+            _singleInstances[bindingType] = newInstance;
             return newInstance;
         }
         
