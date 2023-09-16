@@ -15,7 +15,7 @@ namespace DJM.CoreServices.DependencyInjection
     // Exception thrown when an invalid binding operation order occurs
     internal class InvalidBindingOrderException : DependencyInjectionException
     {
-        internal InvalidBindingOrderException(BindingOperationOrder attemptedOperation, BindingOperationOrder lastOperation) 
+        internal InvalidBindingOrderException(AvailableOperations attemptedOperation, AvailableOperations lastOperation) 
             : base($"Invalid binding operation order. {attemptedOperation.ToString()} was attempted, but the last operation was {lastOperation.ToString()}.") { }
     }
 

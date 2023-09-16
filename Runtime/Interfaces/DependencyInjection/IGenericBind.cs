@@ -1,6 +1,6 @@
 namespace DJM.CoreServices
 {
-    public interface IGenericBind<T> : IBindTo<T>, IBindFrom<T>, IBindScope<T>, IBindLazy<T> { }
+    public interface IGenericBindNon<T> : IBindTo<T>, IBindFrom<T>, IBindScope<T>, IBindNonLazy<T> { }
     
     public interface IBindTo<T>
     {
@@ -15,13 +15,12 @@ namespace DJM.CoreServices
 
     public interface IBindScope<T>
     {
-        IBindLazy<T> AsSingle();
+        IBindNonLazy<T> AsSingle();
         void AsTransient();
     }
 
-    public interface IBindLazy<T>
+    public interface IBindNonLazy<T>
     {
         void NonLazy();
-        void Lazy();
     }
 }

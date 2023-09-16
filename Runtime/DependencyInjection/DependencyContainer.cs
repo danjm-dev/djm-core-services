@@ -14,8 +14,8 @@ namespace DJM.CoreServices.DependencyInjection
         private readonly HashSet<Type> _nonLazyBindings;
         
         private readonly Dictionary<Type, object> _singleInstances;
-        private List<IInitializable> _initializables;
-        private List<IDisposable> _disposables;
+        private readonly List<IInitializable> _initializables;
+        private readonly List<IDisposable> _disposables;
         
         private readonly GameObjectContext _gameObjectContext;
 
@@ -33,7 +33,7 @@ namespace DJM.CoreServices.DependencyInjection
             _gameObjectContext.OnContextDestroy += RunDisposables;
         }
         
-        public IGenericBind<TBinding> Bind<TBinding>()
+        public IGenericBindNon<TBinding> Bind<TBinding>()
         {
             var bindingType = typeof(TBinding);
             if (_bindings.ContainsKey(bindingType)) throw new TypeAlreadyRegisteredException(bindingType);
@@ -90,19 +90,17 @@ namespace DJM.CoreServices.DependencyInjection
         
         private object CreateInstance(BindingData bindingData)
         {
-            return bindingData.ConstructorOption switch
+            return bindingData.InitializationOption switch
             {
-                ConstructorOption.New => CreateNewInstance(bindingData),
-                ConstructorOption.NewComponentOnNewGameObject => CreateNewComponentOnNewGameObjectInstance(bindingData),
+                InitializationOption.New => CreateNewInstance(bindingData),
+                InitializationOption.NewComponentOnNewGameObject => CreateNewComponentOnNewGameObjectInstance(bindingData),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
 
         private object CreateNewInstance(BindingData bindingData)
         {
-            var concreteType = bindingData.ConcreteType;
-            var constructor = concreteType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)[0]; // currently gets first public constructor
-            var constructorParameters = constructor.GetParameters();
+            var constructorParameters = bindingData.Constructor.GetParameters();
             var parameters = new object[constructorParameters.Length];
 
             for (var i = 0; i < constructorParameters.Length; i++)
@@ -111,7 +109,7 @@ namespace DJM.CoreServices.DependencyInjection
                 parameters[i] = Resolve(parameterType);
             }
 
-            var instance = Activator.CreateInstance(concreteType, parameters);
+            var instance = Activator.CreateInstance(bindingData.ConcreteType, parameters);
 
             // these are not called on components
             if(instance is IInitializable initializable) _initializables.Add(initializable);

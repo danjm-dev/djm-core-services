@@ -1,4 +1,4 @@
-using System;
+/*using System;
 
 namespace DJM.CoreServices.DependencyInjection.Binding
 {
@@ -22,7 +22,7 @@ namespace DJM.CoreServices.DependencyInjection.Binding
             var updatedBindingData = new BindingData
             (
                 concreteType, 
-                _bindingData.ConstructorOption, 
+                _bindingData.InitializationOption, 
                 _bindingData.IsSingle, 
                 _bindingData.IsNonLazy
             );
@@ -31,14 +31,14 @@ namespace DJM.CoreServices.DependencyInjection.Binding
             _updateCallback?.Invoke(BindingType, _bindingData);
         }
         
-        internal void SetConstructorOption(ConstructorOption constructorOption)
+        internal void SetConstructorOption(InitializationOption initializationOption)
         {
-            if(_bindingData.ConstructorOption == constructorOption) return;
+            if(_bindingData.InitializationOption == initializationOption) return;
             
             var updatedBindingData = new BindingData
             (
                 _bindingData.ConcreteType, 
-                constructorOption, 
+                initializationOption, 
                 _bindingData.IsSingle, 
                 _bindingData.IsNonLazy
             );
@@ -54,7 +54,7 @@ namespace DJM.CoreServices.DependencyInjection.Binding
             var updatedBindingData = new BindingData
             (
                 _bindingData.ConcreteType, 
-                _bindingData.ConstructorOption, 
+                _bindingData.InitializationOption, 
                 isSingle, 
                 _bindingData.IsNonLazy
             );
@@ -70,7 +70,7 @@ namespace DJM.CoreServices.DependencyInjection.Binding
             var updatedBindingData = new BindingData
             (
                 _bindingData.ConcreteType, 
-                _bindingData.ConstructorOption, 
+                _bindingData.InitializationOption, 
                 _bindingData.IsSingle, 
                 isNonLazy
             );
@@ -79,4 +79,4 @@ namespace DJM.CoreServices.DependencyInjection.Binding
             _updateCallback?.Invoke(BindingType, _bindingData);
         }
     }
-}
+}*/

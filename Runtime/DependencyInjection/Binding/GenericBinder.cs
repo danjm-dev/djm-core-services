@@ -1,84 +1,86 @@
 namespace DJM.CoreServices.DependencyInjection.Binding
 {
-    internal class GenericBinder<TBinding> : IGenericBind<TBinding>
+    internal class GenericBinder<TBinding> : IGenericBindNon<TBinding>
     {
         private readonly BindingData _bindingData;
-        private BindingOperationOrder? _latestOperationCompleted;
+        private AvailableOperations _minAllowedOperation;
 
         internal GenericBinder(BindingData bindingData)
         {
             _bindingData = bindingData;
-            _latestOperationCompleted = null;
+            _minAllowedOperation = AvailableOperations.All;
         }
 
         // IBindTo
         public IBindFrom<TBinding> To<TImplementation>() where TImplementation : TBinding
         {
-            ValidateOperationOrder(BindingOperationOrder.BindTo);
-            _bindingData.ConcreteType = typeof(TImplementation);
+            ValidateOperation(AvailableOperations.BindTo);
+            _bindingData.SetConcreteType(typeof(TImplementation));
+            _minAllowedOperation = AvailableOperations.BindFrom;
             return this;
         }
         
         // IBindFrom
         public IBindScope<TBinding> FromNew()
         {
-            ValidateOperationOrder(BindingOperationOrder.BindFrom);
-            _bindingData.ConstructorOption = ConstructorOption.New;
+            ValidateOperation(AvailableOperations.BindFrom);
+            _bindingData.SetInitializationOption(InitializationOption.New);
+            _minAllowedOperation = AvailableOperations.BindScope;
             return this;
         }
         
         public IBindScope<TBinding> FromNewComponentOnNewGameObject()
         {
-            ValidateOperationOrder(BindingOperationOrder.BindFrom);
-            _bindingData.ConstructorOption = ConstructorOption.NewComponentOnNewGameObject;
+            ValidateOperation(AvailableOperations.BindFrom);
+            _bindingData.SetInitializationOption(InitializationOption.NewComponentOnNewGameObject);
+            _minAllowedOperation = AvailableOperations.BindScope;
             return this;
         }
         
         // IBindScope
-        public IBindLazy<TBinding> AsSingle()
+        public IBindNonLazy<TBinding> AsSingle()
         {
-            ValidateOperationOrder(BindingOperationOrder.BindScope);
-            _bindingData.IsSingle = true;
+            ValidateOperation(AvailableOperations.BindScope);
+            _bindingData.SetSingle();
+            _minAllowedOperation = AvailableOperations.BindNonLazy;
             return this;
         }
         
         public void AsTransient()
         {
-            ValidateOperationOrder(BindingOperationOrder.BindScope);
-            _bindingData.IsSingle = false;
+            ValidateOperation(AvailableOperations.BindScope);
+            _bindingData.SetTransient();
+            _minAllowedOperation = AvailableOperations.None;
         }
         
         // IBindLazy
         public void NonLazy()
         {
-            ValidateOperationOrder(BindingOperationOrder.BindLazy);
-            _bindingData.IsNonLazy = true;
-        }
-
-        public void Lazy()
-        {
-            ValidateOperationOrder(BindingOperationOrder.BindLazy);
-            _bindingData.IsNonLazy = false;
+            ValidateOperation(AvailableOperations.BindNonLazy);
+            _bindingData.SetNonLazy();
+            _minAllowedOperation = AvailableOperations.None;
         }
         
-        private void ValidateOperationOrder(BindingOperationOrder currentOperation)
+        private void ValidateOperation(AvailableOperations attemptedOperation)
         {
-            if (_latestOperationCompleted.HasValue && 
-                (byte)_latestOperationCompleted.Value >= (byte)currentOperation)
+            if ((byte)attemptedOperation < (byte)_minAllowedOperation)
+            {
                 throw new InvalidBindingOrderException
                 (
-                    currentOperation, 
-                    _latestOperationCompleted.Value
+                    attemptedOperation, 
+                    _minAllowedOperation
                 );
-            _latestOperationCompleted = currentOperation;
+            }
         }
     }
     
-    internal enum BindingOperationOrder : byte
+    internal enum AvailableOperations : byte
     {
+        All,
         BindTo,
         BindFrom,
         BindScope,
-        BindLazy
+        BindNonLazy,
+        None
     }
 }
