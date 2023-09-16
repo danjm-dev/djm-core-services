@@ -5,7 +5,7 @@ namespace DJM.CoreServices.API
 {
     public static class DJMLogger
     {
-        private static readonly IEventManager EventManager = DJMServiceContext.Instance.DependencyContainer.Resolve<IEventManager>();
+        private static readonly IEventManager EventManager = DJMGlobalService.Instance.ResolvableContainer.Resolve<IEventManager>();
         
         public static void LogError(string message, string context)
         {

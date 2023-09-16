@@ -1,3 +1,5 @@
+using DJM.CoreServices.DependencyInjection;
+using DJM.CoreServices.DependencyInjection.ComponentContext;
 using DJM.CoreServices.Services.Logger;
 using DJM.CoreServices.Services.MusicController;
 using DJM.CoreServices.Services.SceneLoader;
@@ -12,22 +14,29 @@ namespace DJM.CoreServices.Bootstrap
         internal static void InitializeUtilities()
         {
             ResetEnvironment();
-            
-            var serviceContext = DJMServiceContext.Initialize();
-            
-            serviceContext.DependencyContainer.Install(new ServiceContextInstaller());
 
-
+            var globalContainer = new DependencyContainer(CreateGlobalGameObjectContext());
+            globalContainer.Install(new GlobalServiceInstaller());
+            
             // temp
-            serviceContext.DependencyContainer.Resolve<MusicControllerEventHandler>().Initialize();
-            serviceContext.DependencyContainer.Resolve<SoundControllerEventHandler>().Initialize();
-            serviceContext.DependencyContainer.Resolve<LoggerEventHandler>().Initialize();
-            serviceContext.DependencyContainer.Resolve<SceneLoaderEventHandler>().Initialize();
+            globalContainer.Resolve<MusicControllerEventHandler>().Initialize();
+            globalContainer.Resolve<SoundControllerEventHandler>().Initialize();
+            globalContainer.Resolve<LoggerEventHandler>().Initialize();
+            globalContainer.Resolve<SceneLoaderEventHandler>().Initialize();
+            
+            DJMGlobalService.Initialize(globalContainer);
         }
         
         private static void ResetEnvironment()
         {
             
+        }
+
+        private static GameObjectContext CreateGlobalGameObjectContext()
+        {
+            var contextGameObject = new GameObject($"[{nameof(DJMGlobalService)}]") { isStatic = true };
+            Object.DontDestroyOnLoad(contextGameObject);
+            return contextGameObject.AddComponent<GameObjectContext>();
         }
     }
 }

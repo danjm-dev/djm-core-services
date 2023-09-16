@@ -1,4 +1,3 @@
-using DJM.CoreServices.DependencyInjection;
 using DJM.CoreServices.MonoServices.AudioSource;
 using DJM.CoreServices.Services.Events;
 using DJM.CoreServices.Services.Logger;
@@ -8,9 +7,9 @@ using DJM.CoreServices.Services.SoundController;
 
 namespace DJM.CoreServices.Bootstrap
 {
-    internal sealed class ServiceContextInstaller : IInstaller
+    internal sealed class GlobalServiceInstaller : IInstaller
     {
-        public void InstallBindings(IContainer container)
+        public void InstallBindings(IBindableContainer container)
         {
             // services
             container.Bind<ILogger>().To<LoggerService>().FromNew().AsSingle();

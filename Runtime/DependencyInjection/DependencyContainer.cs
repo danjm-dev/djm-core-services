@@ -1,84 +1,65 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using DJM.CoreServices.Bootstrap;
 using DJM.CoreServices.DependencyInjection.Binding;
+using DJM.CoreServices.DependencyInjection.ComponentContext;
 
 namespace DJM.CoreServices.DependencyInjection
 {
-    internal sealed class ContainerService : IContainer
+    internal sealed class DependencyContainer : IResolvableContainer, IBindableContainer
     {
-        private readonly Dictionary<Type, BindingData> _bindingRegistrations = new();
-        private readonly Dictionary<Type, object> _singleInstances = new();
-        private readonly List<Type> _nonLazyBindings = new(); // ignoring for now
+        private readonly Dictionary<Type, BindingData> _bindings;
+        private readonly Dictionary<Type, object> _singleInstances;
+        private readonly HashSet<Type> _nonLazyBindings; // ignoring for now
+        private readonly GameObjectContext _gameObjectContext;
 
-        private PersistantContextComponent _persistantContextComponent;
-        
-        // todo: circular dependencies, monoBehaviour/component dependencies, non public constructors
-        
-        // id like to expose less to the installer - maybe a special interface
-
-        internal ContainerService(PersistantContextComponent persistantContextComponent)
+        internal DependencyContainer(GameObjectContext gameObjectContext)
         {
-            _persistantContextComponent = persistantContextComponent;
+            _bindings = new Dictionary<Type, BindingData>();
+            _singleInstances = new Dictionary<Type, object>();
+            _nonLazyBindings = new HashSet<Type>();
+            
+            _gameObjectContext = gameObjectContext;
+            _gameObjectContext.OnDestroyContext += () => { }; // what to do with this...?
         }
-        
-        public void Install(IInstaller installer) => installer.InstallBindings(this);
         
         public IGenericBind<TBinding> Bind<TBinding>()
         {
             var bindingType = typeof(TBinding);
+            if (_bindings.ContainsKey(bindingType)) throw new TypeAlreadyRegisteredException(bindingType);
             
-            if (_bindingRegistrations.ContainsKey(bindingType)) 
-                throw new TypeAlreadyRegisteredException(bindingType);
-            
-            // register binding with default binding data
+            // register binding with default data
             var bindingData = new BindingData(bindingType);
-            _bindingRegistrations[bindingType] = bindingData;
-
-
-            var bindingUpdateHandler = new BindingUpdateHandler(bindingType, bindingData,
-                data => BindingUpdateHandler(bindingType, data));
+            _bindings[bindingType] = bindingData;
             
+            var bindingUpdateHandler = new BindingUpdateHandler(bindingType, bindingData, BinderUpdateHandler);
             return new GenericBinder<TBinding>(bindingUpdateHandler);
         }
-        
-        public void RunValidation()
+
+        private void BinderUpdateHandler(Type bindingType, BindingData bindingData)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            foreach (var type in _bindingRegistrations.Keys)
-            {
-                try
-                {
-                    Resolve(type);
-                }
-                catch (Exception exception)
-                {
-                    throw new InitializationValidationFailedException(type, exception);
-                }
-            }
-            _singleInstances.Clear();
-#endif
+            if (bindingData.IsNonLazy) _nonLazyBindings.Add(bindingType);
+            _bindings[bindingType] = bindingData;
         }
         
+        public void Install(IInstaller installer)
+        {
+            installer.InstallBindings(this);
+            ValidateBindings();
+            ResolveNonLazyBindings();
+        }
+
         public TBinding Resolve<TBinding>()
         {
             var type = typeof(TBinding);
             return (TBinding)Resolve(type);
         }
         
-        private void BindingUpdateHandler(Type bindingType, BindingData bindingData)
-        {
-            // surely theres a better way to do this -
-            // feels very cumbersome, particularly with the readonly struct and callback for each update
-            _bindingRegistrations[bindingType] = bindingData;
-        }
-        
         private object Resolve(Type bindingType)
         {
-            if (!_bindingRegistrations.ContainsKey(bindingType)) throw new TypeNotRegisteredException(bindingType);
+            if (!_bindings.ContainsKey(bindingType)) throw new TypeNotRegisteredException(bindingType);
             
-            var bindingData = _bindingRegistrations[bindingType];
+            var bindingData = _bindings[bindingType];
 
             // create transient instance
             if (!bindingData.IsSingle) return CreateInstance(bindingData);
@@ -120,7 +101,31 @@ namespace DJM.CoreServices.DependencyInjection
         
         private object CreateNewComponentOnNewGameObjectInstance(BindingData bindingData)
         {
-            return _persistantContextComponent.AddComponentToNewChildGameObject(bindingData.ConcreteType);
+            return _gameObjectContext.AddComponentToNewChildGameObject(bindingData.ConcreteType);
+        }
+        
+        private void ValidateBindings()
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            foreach (var type in _bindings.Keys)
+            {
+                try
+                {
+                    Resolve(type);
+                }
+                catch (Exception exception)
+                {
+                    throw new InstallationValidationFailedException(type, exception);
+                }
+            }
+            _singleInstances.Clear();
+#endif
+        }
+
+        private void ResolveNonLazyBindings()
+        {
+            // these should all be single
+            foreach (var binding in _nonLazyBindings) Resolve(binding);
         }
     }
 }

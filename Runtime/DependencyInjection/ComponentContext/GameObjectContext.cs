@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
-namespace DJM.CoreServices.Bootstrap
+namespace DJM.CoreServices.DependencyInjection.ComponentContext
 {
-    internal sealed class PersistantContextComponent : MonoBehaviour
+    internal sealed class GameObjectContext : MonoBehaviour
     {
-        private void Awake() => DontDestroyOnLoad(gameObject);
+        private void OnDestroy() => OnDestroyContext?.Invoke();
 
         internal Action OnDestroyContext;
 

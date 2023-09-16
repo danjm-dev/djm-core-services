@@ -5,78 +5,78 @@ namespace DJM.CoreServices.DependencyInjection.Binding
     internal sealed class BindingUpdateHandler
     {
         internal readonly Type BindingType;
-        internal BindingData BindingData { get; private set; }
-        private readonly Action<BindingData> _updateCallback;
+        private BindingData _bindingData;
+        private readonly Action<Type, BindingData> _updateCallback;
         
-        internal BindingUpdateHandler(Type bindingType, BindingData bindingData, Action<BindingData> updateCallback)
+        internal BindingUpdateHandler(Type bindingType, BindingData bindingData, Action<Type, BindingData> updateCallback)
         {
             BindingType = bindingType;
-            BindingData = bindingData;
+            _bindingData = bindingData;
             _updateCallback = updateCallback;
         }
 
         internal void SetConcreteType(Type concreteType)
         {
-            if(BindingData.ConcreteType == concreteType) return;
+            if(_bindingData.ConcreteType == concreteType) return;
             
             var updatedBindingData = new BindingData
             (
                 concreteType, 
-                BindingData.ConstructorOption, 
-                BindingData.IsSingle, 
-                BindingData.IsNonLazy
+                _bindingData.ConstructorOption, 
+                _bindingData.IsSingle, 
+                _bindingData.IsNonLazy
             );
             
-            BindingData = updatedBindingData;
-            _updateCallback?.Invoke(BindingData);
+            _bindingData = updatedBindingData;
+            _updateCallback?.Invoke(BindingType, _bindingData);
         }
         
         internal void SetConstructorOption(ConstructorOption constructorOption)
         {
-            if(BindingData.ConstructorOption == constructorOption) return;
+            if(_bindingData.ConstructorOption == constructorOption) return;
             
             var updatedBindingData = new BindingData
             (
-                BindingData.ConcreteType, 
+                _bindingData.ConcreteType, 
                 constructorOption, 
-                BindingData.IsSingle, 
-                BindingData.IsNonLazy
+                _bindingData.IsSingle, 
+                _bindingData.IsNonLazy
             );
             
-            BindingData = updatedBindingData;
-            _updateCallback?.Invoke(BindingData);
+            _bindingData = updatedBindingData;
+            _updateCallback?.Invoke(BindingType, _bindingData);
         }
         
         internal void SetIsSingle(bool isSingle)
         {
-            if(BindingData.IsSingle == isSingle) return;
+            if(_bindingData.IsSingle == isSingle) return;
             
             var updatedBindingData = new BindingData
             (
-                BindingData.ConcreteType, 
-                BindingData.ConstructorOption, 
+                _bindingData.ConcreteType, 
+                _bindingData.ConstructorOption, 
                 isSingle, 
-                BindingData.IsNonLazy
+                _bindingData.IsNonLazy
             );
             
-            BindingData = updatedBindingData;
-            _updateCallback?.Invoke(BindingData);
+            _bindingData = updatedBindingData;
+            _updateCallback?.Invoke(BindingType, _bindingData);
         }
         
         internal void SetIsNonLazy(bool isNonLazy)
         {
-            if(BindingData.IsNonLazy == isNonLazy) return;
+            if(_bindingData.IsNonLazy == isNonLazy) return;
             
             var updatedBindingData = new BindingData
             (
-                BindingData.ConcreteType, 
-                BindingData.ConstructorOption, 
-                BindingData.IsSingle, 
+                _bindingData.ConcreteType, 
+                _bindingData.ConstructorOption, 
+                _bindingData.IsSingle, 
                 isNonLazy
             );
             
-            BindingData = updatedBindingData;
-            _updateCallback?.Invoke(BindingData);
+            _bindingData = updatedBindingData;
+            _updateCallback?.Invoke(BindingType, _bindingData);
         }
     }
 }

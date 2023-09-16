@@ -12,7 +12,7 @@ namespace DJM.CoreServices.API
         private const float MinimumPitchValue = 0.0001f;
         private const float MaximumPitchValue = 3f;
         
-        private static readonly IEventManager EventManager = DJMServiceContext.Instance.DependencyContainer.Resolve<IEventManager>();
+        private static readonly IEventManager EventManager = DJMGlobalService.Instance.ResolvableContainer.Resolve<IEventManager>();
         
         private static float _defaultRandomPitchMinimum = 0.95f;
         private static float _defaultRandomPitchMaximum = 1.05f;

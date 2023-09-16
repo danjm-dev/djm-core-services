@@ -34,12 +34,12 @@ namespace DJM.CoreServices.DependencyInjection
     }
     
     // Exception thrown when validating all registered types
-    internal class InitializationValidationFailedException : DependencyInjectionException
+    internal class InstallationValidationFailedException : DependencyInjectionException
     {
-        public InitializationValidationFailedException(Type type, Exception innerException)
+        public InstallationValidationFailedException(Type type, Exception innerException)
             : base($"Initialization validation failed for type {type.FullName}.", innerException) { }
 
-        protected InitializationValidationFailedException(SerializationInfo info, StreamingContext context)
+        protected InstallationValidationFailedException(SerializationInfo info, StreamingContext context)
             : base(info, context) { }
     }
 }

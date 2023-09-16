@@ -9,7 +9,7 @@ namespace DJM.CoreServices.API
     /// </summary>
     public static class DJMEvents
     {
-        private static readonly IEventManager EventManager = DJMServiceContext.Instance.DependencyContainer.Resolve<IEventManager>();
+        private static readonly IEventManager EventManager = DJMGlobalService.Instance.ResolvableContainer.Resolve<IEventManager>();
         /// <summary>
         /// Subscribes a listener method to a global event of a specified type.
         /// </summary>
