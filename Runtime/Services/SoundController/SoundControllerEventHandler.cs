@@ -1,9 +1,10 @@
+using System;
+
 namespace DJM.CoreServices.Services.SoundController
 {
-    internal sealed class SoundControllerEventHandler : IEventHandler
+    internal sealed class SoundControllerEventHandler : IInitializable, IDisposable
     {
         private readonly IEventManager _eventManager;
-        
         private readonly ISoundController _soundController;
 
         public SoundControllerEventHandler(IEventManager eventManager, ISoundController soundController)

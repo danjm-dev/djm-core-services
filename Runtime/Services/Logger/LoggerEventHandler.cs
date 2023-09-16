@@ -1,6 +1,8 @@
-﻿namespace DJM.CoreServices.Services.Logger
+﻿using System;
+
+namespace DJM.CoreServices.Services.Logger
 {
-    public sealed class LoggerEventHandler : IEventHandler
+    public sealed class LoggerEventHandler : IInitializable, IDisposable
     {
         private readonly IEventManager _eventManager;
         private readonly ILogger _logger;

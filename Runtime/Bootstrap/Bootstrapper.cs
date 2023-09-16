@@ -1,9 +1,5 @@
 using DJM.CoreServices.DependencyInjection;
 using DJM.CoreServices.DependencyInjection.ComponentContext;
-using DJM.CoreServices.Services.Logger;
-using DJM.CoreServices.Services.MusicController;
-using DJM.CoreServices.Services.SceneLoader;
-using DJM.CoreServices.Services.SoundController;
 using UnityEngine;
 
 namespace DJM.CoreServices.Bootstrap
@@ -17,12 +13,6 @@ namespace DJM.CoreServices.Bootstrap
 
             var globalContainer = new DependencyContainer(CreateGlobalGameObjectContext());
             globalContainer.Install(new GlobalServiceInstaller());
-            
-            // temp
-            globalContainer.Resolve<MusicControllerEventHandler>().Initialize();
-            globalContainer.Resolve<SoundControllerEventHandler>().Initialize();
-            globalContainer.Resolve<LoggerEventHandler>().Initialize();
-            globalContainer.Resolve<SceneLoaderEventHandler>().Initialize();
             
             DJMGlobalService.Initialize(globalContainer);
         }

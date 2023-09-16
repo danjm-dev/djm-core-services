@@ -1,6 +1,8 @@
+using System;
+
 namespace DJM.CoreServices.Services.MusicController
 {
-    internal sealed class MusicControllerEventHandler : IEventHandler
+    internal sealed class MusicControllerEventHandler : IInitializable, IDisposable
     {
         private readonly IEventManager _eventManager;
         private readonly IMusicController _musicController;

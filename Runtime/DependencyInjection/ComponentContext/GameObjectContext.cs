@@ -5,9 +5,11 @@ namespace DJM.CoreServices.DependencyInjection.ComponentContext
 {
     internal sealed class GameObjectContext : MonoBehaviour
     {
-        private void OnDestroy() => OnDestroyContext?.Invoke();
-
-        internal Action OnDestroyContext;
+        internal Action OnContextStart;
+        internal Action OnContextDestroy;
+        
+        private void Start() => OnContextStart?.Invoke();
+        private void OnDestroy() => OnContextDestroy?.Invoke();
 
         internal T InstantiatePrefabAsChild<T>(T prefab) where T : MonoBehaviour
         {

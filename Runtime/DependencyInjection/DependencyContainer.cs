@@ -9,18 +9,26 @@ namespace DJM.CoreServices.DependencyInjection
     internal sealed class DependencyContainer : IResolvableContainer, IBindableContainer
     {
         private readonly Dictionary<Type, BindingData> _bindings;
+        private readonly HashSet<Type> _nonLazyBindings;
+        
         private readonly Dictionary<Type, object> _singleInstances;
-        private readonly HashSet<Type> _nonLazyBindings; // ignoring for now
+        private List<IInitializable> _initializables;
+        private List<IDisposable> _disposables;
+        
         private readonly GameObjectContext _gameObjectContext;
 
         internal DependencyContainer(GameObjectContext gameObjectContext)
         {
             _bindings = new Dictionary<Type, BindingData>();
-            _singleInstances = new Dictionary<Type, object>();
             _nonLazyBindings = new HashSet<Type>();
             
+            _singleInstances = new Dictionary<Type, object>();
+            _initializables = new List<IInitializable>();
+            _disposables = new List<IDisposable>();
+            
             _gameObjectContext = gameObjectContext;
-            _gameObjectContext.OnDestroyContext += () => { }; // what to do with this...?
+            _gameObjectContext.OnContextStart += RunInitializables;
+            _gameObjectContext.OnContextDestroy += RunDisposables;
         }
         
         public IGenericBind<TBinding> Bind<TBinding>()
@@ -42,9 +50,9 @@ namespace DJM.CoreServices.DependencyInjection
             _bindings[bindingType] = bindingData;
         }
         
-        public void Install(IInstaller installer)
+        public void Install(params IInstaller[] installers)
         {
-            installer.InstallBindings(this);
+            foreach (var installer in installers) installer.InstallBindings(this);
             ValidateBindings();
             ResolveNonLazyBindings();
         }
@@ -96,7 +104,13 @@ namespace DJM.CoreServices.DependencyInjection
                 parameters[i] = Resolve(parameterType);
             }
 
-            return Activator.CreateInstance(concreteType, parameters);
+            var instance = Activator.CreateInstance(concreteType, parameters);
+
+            // these are not called on components
+            if(instance is IInitializable initializable) _initializables.Add(initializable);
+            if(instance is IDisposable disposable) _disposables.Add(disposable);
+
+            return instance;
         }
         
         private object CreateNewComponentOnNewGameObjectInstance(BindingData bindingData)
@@ -126,6 +140,18 @@ namespace DJM.CoreServices.DependencyInjection
         {
             // these should all be single
             foreach (var binding in _nonLazyBindings) Resolve(binding);
+        }
+
+        private void RunInitializables()
+        {
+            foreach (var initializable in _initializables) initializable.Initialize();
+            _initializables = null;
+        }
+        
+        private void RunDisposables()
+        {
+            foreach (var disposable in _disposables) disposable.Dispose();
+            _disposables = null;
         }
     }
 }

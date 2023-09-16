@@ -1,6 +1,8 @@
+using System;
+
 namespace DJM.CoreServices.Services.SceneLoader
 {
-    internal sealed class SceneLoaderEventHandler : IEventHandler
+    internal sealed class SceneLoaderEventHandler : IInitializable, IDisposable
     {
         private readonly IEventManager _eventManager;
         private readonly ISceneLoader _sceneLoader;

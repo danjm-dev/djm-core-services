@@ -23,10 +23,10 @@ namespace DJM.CoreServices.Bootstrap
             container.Bind<AudioSourcePool>().FromNewComponentOnNewGameObject().AsSingle();
             
             // event handlers
-            container.Bind<LoggerEventHandler>().FromNew().AsSingle();
-            container.Bind<MusicControllerEventHandler>().FromNew().AsSingle();
-            container.Bind<SoundControllerEventHandler>().FromNew().AsSingle();
-            container.Bind<SceneLoaderEventHandler>().FromNew().AsSingle();
+            container.Bind<LoggerEventHandler>().FromNew().AsSingle().NonLazy();
+            container.Bind<MusicControllerEventHandler>().FromNew().AsSingle().NonLazy();
+            container.Bind<SoundControllerEventHandler>().FromNew().AsSingle().NonLazy();
+            container.Bind<SceneLoaderEventHandler>().FromNew().AsSingle().NonLazy();
         }
     }
 }
