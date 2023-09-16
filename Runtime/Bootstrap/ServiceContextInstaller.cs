@@ -1,6 +1,5 @@
+using DJM.CoreServices.DependencyInjection;
 using DJM.CoreServices.MonoServices.AudioSource;
-using DJM.CoreServices.Services.DI;
-using DJM.CoreServices.Services.DI.Installer;
 using DJM.CoreServices.Services.Events;
 using DJM.CoreServices.Services.Logger;
 using DJM.CoreServices.Services.MusicController;

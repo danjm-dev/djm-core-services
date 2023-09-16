@@ -1,14 +1,14 @@
 using System;
 
-namespace DJM.CoreServices.Services.DI.Binding
+namespace DJM.CoreServices.DependencyInjection.Binding
 {
-    public sealed class BindingUpdateHandler
+    internal sealed class BindingUpdateHandler
     {
         internal readonly Type BindingType;
         internal BindingData BindingData { get; private set; }
         private readonly Action<BindingData> _updateCallback;
         
-        public BindingUpdateHandler(Type bindingType, BindingData bindingData, Action<BindingData> updateCallback)
+        internal BindingUpdateHandler(Type bindingType, BindingData bindingData, Action<BindingData> updateCallback)
         {
             BindingType = bindingType;
             BindingData = bindingData;

@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using DJM.CoreServices.Services.DI;
+using DJM.CoreServices.DependencyInjection;
 using UnityEngine;
 
 namespace DJM.CoreServices.Bootstrap

@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.Serialization;
-using DJM.CoreServices.Services.DI.Binding;
+using DJM.CoreServices.DependencyInjection.Binding;
 
-namespace DJM.CoreServices.Services.DI
+namespace DJM.CoreServices.DependencyInjection
 {
     // Base exception for all DI-related issues
     internal class DependencyInjectionException : Exception

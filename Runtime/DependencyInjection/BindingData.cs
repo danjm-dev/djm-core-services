@@ -1,15 +1,15 @@
 using System;
 
-namespace DJM.CoreServices.Services.DI
+namespace DJM.CoreServices.DependencyInjection
 {
-    public readonly struct BindingData
+    internal readonly struct BindingData
     {
         public readonly Type ConcreteType;
         public readonly ConstructorOption ConstructorOption;
         public readonly bool IsSingle;
         public readonly bool IsNonLazy;
 
-        public BindingData(Type concreteType, ConstructorOption constructorOption = ConstructorOption.New, bool isSingle = false, bool isNonLazy = false)
+        internal BindingData(Type concreteType, ConstructorOption constructorOption = ConstructorOption.New, bool isSingle = false, bool isNonLazy = false)
         {
             ConcreteType = concreteType;
             ConstructorOption = constructorOption;
@@ -18,7 +18,7 @@ namespace DJM.CoreServices.Services.DI
         }
     }
         
-    public enum ConstructorOption : byte
+    internal enum ConstructorOption : byte
     {
         New,
         NewComponentOnNewGameObject

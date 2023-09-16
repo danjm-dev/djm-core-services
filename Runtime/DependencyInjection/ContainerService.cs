@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using DJM.CoreServices.Bootstrap;
-using DJM.CoreServices.Services.DI.Binding;
-using DJM.CoreServices.Services.DI.Installer;
+using DJM.CoreServices.DependencyInjection.Binding;
 
-namespace DJM.CoreServices.Services.DI
+namespace DJM.CoreServices.DependencyInjection
 {
     internal sealed class ContainerService : IContainer
     {
@@ -19,14 +18,14 @@ namespace DJM.CoreServices.Services.DI
         
         // id like to expose less to the installer - maybe a special interface
 
-        public ContainerService(PersistantContextComponent persistantContextComponent)
+        internal ContainerService(PersistantContextComponent persistantContextComponent)
         {
             _persistantContextComponent = persistantContextComponent;
         }
         
         public void Install(IInstaller installer) => installer.InstallBindings(this);
         
-        public GenericBinder<TBinding> Bind<TBinding>()
+        public IGenericBind<TBinding> Bind<TBinding>()
         {
             var bindingType = typeof(TBinding);
             

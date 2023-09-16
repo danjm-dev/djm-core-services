@@ -1,4 +1,4 @@
-namespace DJM.CoreServices.Services.DI.Installer
+namespace DJM.CoreServices
 {
     public interface IInstaller
     {
