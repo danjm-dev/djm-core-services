@@ -42,7 +42,7 @@ namespace DJM.CoreServices.DependencyInjection
             var bindingData = new BindingData(bindingType);
             _bindings[bindingType] = bindingData;
             
-            return new RootCompositeBinder<TBinding>(bindingData);
+            return new GenericBinder<TBinding>(bindingData);
         }
         
         public void Install(params IInstaller[] installers)
@@ -61,8 +61,6 @@ namespace DJM.CoreServices.DependencyInjection
                 }
             }
         }
-        
-
 
         public TBinding Resolve<TBinding>()
         {
@@ -112,8 +110,8 @@ namespace DJM.CoreServices.DependencyInjection
             var instance = Activator.CreateInstance(bindingData.ConcreteType, parameters);
 
             // these are not called on components
-            if(instance is IInitializable initializable) _initializables.Add(initializable);
-            if(instance is IDisposable disposable) _disposables.Add(disposable);
+            if(bindingData.IsInitializable) _initializables.Add((IInitializable)instance);
+            if(bindingData.IsDisposable) _disposables.Add((IDisposable)instance);
 
             return instance;
         }

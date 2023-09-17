@@ -2,10 +2,13 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace DJM.CoreServices.DependencyInjection
+namespace DJM.CoreServices.DependencyInjection.Binding
 {
     internal class BindingData
     {
+        private static readonly Type InitializableType = typeof(IInitializable); 
+        private static readonly Type DisposableType = typeof(IDisposable); 
+        
         public ConstructorInfo Constructor { get; private set; }
         
         private readonly Type _bindingType;
@@ -15,23 +18,23 @@ namespace DJM.CoreServices.DependencyInjection
         public InitializationOption InitializationOption { get; private set; }
         public bool IsSingle { get; private set; }
         public bool IsNonLazy { get; private set; }
-
+        public bool IsInitializable { get; private set; }
+        public bool IsDisposable { get; private set; }
+        
         internal BindingData(Type bindingType)
         {
             _bindingType = bindingType;
+
+            if (_bindingType.IsAbstract && !_bindingType.IsInterface) throw new Exception("Cant bind abstract classes");
 
             if (typeof(Component).IsAssignableFrom(_bindingType))
             {
                 _isComponent = true;
                 InitializationOption = InitializationOption.NewComponentOnNewGameObject;
             }
-            else
-            {
-                InitializationOption = InitializationOption.New;
-            }
+            else InitializationOption = InitializationOption.New;
             
-            if(!_bindingType.IsInterface) SetConcreteType(_bindingType); // probably need to handle abstract classes too
-
+            if(!_bindingType.IsInterface) SetConcreteType(_bindingType);
             
             IsSingle = false;
             IsNonLazy = false;
@@ -49,6 +52,8 @@ namespace DJM.CoreServices.DependencyInjection
             ConcreteType = type;
             if(_isComponent) return;
             Constructor = ResolveConstructor(ConcreteType);
+            if (InitializableType.IsAssignableFrom(type)) IsInitializable = true;
+            if (DisposableType.IsAssignableFrom(type)) IsDisposable = true;
         }
 
         internal void SetInitializationOption(InitializationOption option)

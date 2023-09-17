@@ -1,11 +1,11 @@
 namespace DJM.CoreServices.DependencyInjection.Binding
 {
-    internal class RootCompositeBinder<TBinding> : IBindTo<TBinding>
+    internal class GenericBinder<TBinding> : IBindTo<TBinding>
     {
         private readonly BindingData _bindingData;
         private AvailableOperations _minAllowedOperation;
 
-        internal RootCompositeBinder(BindingData bindingData)
+        internal GenericBinder(BindingData bindingData)
         {
             _bindingData = bindingData;
             _minAllowedOperation = AvailableOperations.All;
