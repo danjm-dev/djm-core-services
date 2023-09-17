@@ -33,7 +33,7 @@ namespace DJM.CoreServices.DependencyInjection
             _gameObjectContext.OnContextDestroy += RunDisposables;
         }
         
-        public IGenericBindNon<TBinding> Bind<TBinding>()
+        public IBindTo<TBinding> Bind<TBinding>()
         {
             var bindingType = typeof(TBinding);
             if (_bindings.ContainsKey(bindingType)) throw new TypeAlreadyRegisteredException(bindingType);
@@ -42,7 +42,7 @@ namespace DJM.CoreServices.DependencyInjection
             var bindingData = new BindingData(bindingType);
             _bindings[bindingType] = bindingData;
             
-            return new GenericBinder<TBinding>(bindingData);
+            return new RootCompositeBinder<TBinding>(bindingData);
         }
         
         public void Install(params IInstaller[] installers)

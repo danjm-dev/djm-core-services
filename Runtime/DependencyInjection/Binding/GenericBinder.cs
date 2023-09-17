@@ -1,11 +1,11 @@
 namespace DJM.CoreServices.DependencyInjection.Binding
 {
-    internal class GenericBinder<TBinding> : IGenericBindNon<TBinding>
+    internal class RootCompositeBinder<TBinding> : IBindTo<TBinding>
     {
         private readonly BindingData _bindingData;
         private AvailableOperations _minAllowedOperation;
 
-        internal GenericBinder(BindingData bindingData)
+        internal RootCompositeBinder(BindingData bindingData)
         {
             _bindingData = bindingData;
             _minAllowedOperation = AvailableOperations.All;
@@ -60,6 +60,7 @@ namespace DJM.CoreServices.DependencyInjection.Binding
             _bindingData.SetNonLazy();
             _minAllowedOperation = AvailableOperations.None;
         }
+        
         
         private void ValidateOperation(AvailableOperations attemptedOperation)
         {
