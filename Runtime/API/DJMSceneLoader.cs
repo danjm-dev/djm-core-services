@@ -1,5 +1,6 @@
 using DJM.CoreServices.Bootstrap;
 using DJM.CoreServices.Services.SceneLoader;
+using DJM.EventManager;
 
 namespace DJM.CoreServices.API
 {

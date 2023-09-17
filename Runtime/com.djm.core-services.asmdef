@@ -2,7 +2,8 @@
     "name": "com.djm.core-services",
     "rootNamespace": "DJM.CoreServices",
     "references": [
-        "DOTween.Modules"
+        "DOTween.Modules",
+        "com.djm.event-manager"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

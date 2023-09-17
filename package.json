@@ -4,6 +4,7 @@
   "displayName": "DJM Core Services",
   "description": "Core services for Unity projects.",
   "dependencies": {
+    "com.djm.event-manager": "https://github.com/danjm-dev/djm-event-manager.git"
   },
   "author": {
     "name": "danjm.dev",

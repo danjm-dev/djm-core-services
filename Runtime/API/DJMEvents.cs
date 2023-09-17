@@ -1,5 +1,6 @@
 using System;
 using DJM.CoreServices.Bootstrap;
+using DJM.EventManager;
 
 namespace DJM.CoreServices.API
 {

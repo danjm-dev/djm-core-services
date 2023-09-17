@@ -1,4 +1,5 @@
 ﻿using System;
+using DJM.EventManager;
 
 namespace DJM.CoreServices.Services.Logger
 {
