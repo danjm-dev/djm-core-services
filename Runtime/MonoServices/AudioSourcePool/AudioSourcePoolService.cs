@@ -2,17 +2,17 @@
 using DJM.DependencyInjection;
 using UnityEngine;
 
-namespace DJM.CoreServices.MonoServices.AudioSource
+namespace DJM.CoreServices.MonoServices.AudioSourcePool
 {
-    public sealed class AudioSourcePool : MonoBehaviour
+    public sealed class AudioSourcePoolService : MonoBehaviour, IAudioSourcePool
     {
         private IDebugLogger _debugLogger;
         
         [Min(1)]public int initialPoolSize = 10;
         [Min(1)]public int maxPoolSize = 25;
 
-        private readonly List<UnityEngine.AudioSource> _audioSources = new();
-        private readonly Stack<UnityEngine.AudioSource> _availableAudioSources = new();
+        private readonly List<AudioSource> _audioSources = new();
+        private readonly Stack<AudioSource> _availableAudioSources = new();
 
         [Inject]
         private void Construct(IDebugLogger debugLogger)
@@ -29,7 +29,7 @@ namespace DJM.CoreServices.MonoServices.AudioSource
             }
         }
 
-        private UnityEngine.AudioSource AddAudioSource(bool disable = true)
+        private AudioSource AddAudioSource(bool disable = true)
         {
             var newAudioSource = gameObject.AddComponent<UnityEngine.AudioSource>();
             _audioSources.Add(newAudioSource);
@@ -38,7 +38,7 @@ namespace DJM.CoreServices.MonoServices.AudioSource
             return newAudioSource;
         }
 
-        public UnityEngine.AudioSource GetAudioSource()
+        public AudioSource GetAudioSource()
         {
             // return audio source from pool if available
             if (_availableAudioSources.Count > 0)
@@ -57,7 +57,7 @@ namespace DJM.CoreServices.MonoServices.AudioSource
             return newAudioSource;
         }
 
-        public void ReleaseAudioSource(UnityEngine.AudioSource audioSource)
+        public void ReleaseAudioSource(AudioSource audioSource)
         {
             if (audioSource.transform != transform)
             {
@@ -102,17 +102,17 @@ namespace DJM.CoreServices.MonoServices.AudioSource
 
         private void LogExceededMaxPoolSize(int currentPoolSize)
         {
-            _debugLogger.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
+            _debugLogger.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePoolService));
         }
         
         private void LogTriedToReleaseForeignAudioSource()
         {
-            _debugLogger.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
+            _debugLogger.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePoolService));
         }
         
         private void LogDestroyedExcessAudioSource()
         {
-            _debugLogger.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
+            _debugLogger.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePoolService));
         }
     }
 }

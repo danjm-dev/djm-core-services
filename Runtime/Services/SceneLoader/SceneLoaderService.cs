@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DJM.CoreServices.MonoServices.LoadingScreen;
-using DJM.EventManager;
 using UnityEngine.SceneManagement;
 
 namespace DJM.CoreServices.Services.SceneLoader
@@ -11,11 +10,11 @@ namespace DJM.CoreServices.Services.SceneLoader
     {
         private readonly LoadingScreenService _loadingScreenService;
         private readonly IDebugLogger _debugLogger;
-        private readonly IEventManager _eventManager;
+        private readonly IPersistantEventManager _eventManager;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public SceneLoaderService(LoadingScreenService loadingScreenService, IDebugLogger debugLogger, IEventManager eventManager)
+        public SceneLoaderService(LoadingScreenService loadingScreenService, IDebugLogger debugLogger, IPersistantEventManager eventManager)
         {
             _loadingScreenService = loadingScreenService;
             _debugLogger = debugLogger;

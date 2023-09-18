@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using DJM.CoreServices.MonoServices.AudioSource;
+using DJM.CoreServices.MonoServices.AudioSourcePool;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,7 +12,7 @@ namespace DJM.CoreServices.Services.TransientSound
         private const float MinimumPitchValue = 0.0001f;
         private const float MaximumPitchValue = 3f;
         
-        private readonly AudioSourcePool _audioSourcePool;
+        private readonly IAudioSourcePool _audioSourcePool;
         private readonly IDebugLogger _debugLogger;
         
         private readonly AudioSource _primaryAudioSource;
@@ -23,13 +23,10 @@ namespace DJM.CoreServices.Services.TransientSound
         public bool IsMuted => _primaryAudioSource.mute;
         public float Volume => _primaryAudioSource.volume;
 
-        public TransientSoundService(AudioSourcePool audioSourcePool, IDebugLogger debugLogger)
+        public TransientSoundService(IAudioSourcePool audioSourcePool, IDebugLogger debugLogger)
         {
-            _audioSourcePool = audioSourcePool 
-                ? audioSourcePool 
-                : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
-
-            _debugLogger = debugLogger ?? throw new ArgumentException($"{nameof(debugLogger)} can not be null.", nameof(audioSourcePool));
+            _audioSourcePool = audioSourcePool ?? throw new ArgumentException($"{nameof(audioSourcePool)} can not be null.");
+            _debugLogger = debugLogger ?? throw new ArgumentException($"{nameof(debugLogger)} can not be null.");
             
             _primaryAudioSource = _audioSourcePool.GetAudioSource();
             _backupAudioSource = audioSourcePool.GetAudioSource();

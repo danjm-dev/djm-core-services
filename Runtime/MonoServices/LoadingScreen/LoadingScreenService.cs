@@ -55,11 +55,11 @@ namespace DJM.CoreServices.MonoServices.LoadingScreen
             };
             
             var fillImage = _loadingScreen.AddComponent<Image>();
-            fillImage.color = Color.black;
-            fillImage.rectTransform.anchorMin = new Vector2(0, 0);
-            fillImage.rectTransform.anchorMax = new Vector2(1, 1);
-            fillImage.rectTransform.offsetMin = new Vector2(0, 0);
-            fillImage.rectTransform.offsetMax = new Vector2(0, 0);
+            fillImage.color = _loadingScreenConfig.backgroundColor;
+            fillImage.rectTransform.anchorMin = Vector2.zero;
+            fillImage.rectTransform.anchorMax = Vector2.one;
+            fillImage.rectTransform.offsetMin = Vector2.zero;
+            fillImage.rectTransform.offsetMax = Vector2.zero;
             
             gameObject.SetActive(false);
         }

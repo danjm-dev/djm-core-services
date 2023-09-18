@@ -9,10 +9,10 @@
     <img src="https://i.imgur.com/dmkwuPo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">DJM Core Services Package</h3>
+<h3 align="center">DJM Core Services</h3>
 
   <p align="center">
-    Core services to jumpstart small Unity projects.
+    Core services package for Unity Projects.
     <br />
     <a href="https://github.com/danjm-dev/djm-core-services"><strong>Explore the docs »</strong></a>
     <br />
@@ -35,6 +35,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
+         <li><a href="#dependencies">Dependencies</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -50,7 +51,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-DJM Core Services is a Unity package for components and services that many new projects need.
+DJM Core Services is a Unity package for services that can be used across a range of projects.
+
+The current implementation is a work in progress, but includes the following global services.
+
+- Application Controller
+- Debug Logger
+- Music Service
+- Event Manager
+- Scene Event Manager
+- Scene Loader
+- Transient Sound Service
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -59,17 +70,31 @@ DJM Core Services is a Unity package for components and services that many new p
 <!-- GETTING STARTED -->
 ## Getting Started
 
-The DJM Core Services package can be easily added to your Unity project with [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html). See installation instructions below.
+The DJM Core Services package can be added to your project with [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html). See installation instructions below.
+
+
+### Required Dependencies
+
+DJM Core Services has the following dependencies which must be manually resolved prior to installation. 
+
+#### [DOTween](http://dotween.demigiant.com/index.php)
+Third party asset available on the Unity asset store. Either the [Pro](https://assetstore.unity.com/packages/tools/visual-scripting/dotween-pro-32416) or [Free](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676) version will work. 
+1. Install and configure DOTween according to its [installation instructions](http://dotween.demigiant.com/getstarted.php). Ensure the UI module is included.
+2. Once installed, press 'add ASMDEF' from the DoTween utility panel to create an assembly that djm-core-services can reference.
+
+#### [DJM Event Manager](https://github.com/danjm-dev/djm-event-manager)
+A git based package similar to DJM Core Services. Follow its [installation instructions](https://github.com/danjm-dev/djm-event-manager) to install.
+
+#### [DJM Dependency Injection](https://github.com/danjm-dev/djm-dependency-injection)
+A git based package similar to DJM Core Services. Follow its [installation instructions](https://github.com/danjm-dev/djm-dependency-injection) to install.
 
 
 ### Installation
-
-1. DJM Core Services is dependant on [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676), which is free on the Unity asset store. Install DOTween first, following setup instructions from the DOTween readme. Ensure the UI module is included, then press add ASMDEF from the DoTween utility panel to create an assembly djm-core-services can access.
-2. In your unity project, open [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html) from Window > Package Manager.
-3. Open the add package menu (+) and select "Add package from git URL...".
+1. In your unity project, open [Unity's Package Manager](https://docs.unity3d.com/Manual/Packages.html) from Window > Package Manager.
+2. Open the add package menu (+) and select "Add package from git URL...".
 
    ![add package from github](https://i.imgur.com/a9yYzDh.png)
-4. Enter the DJM Core Services repo URL : https://github.com/danjm-dev/djm-core-services.git, and press Add.
+3. Enter the DJM Core Services repo URL : https://github.com/danjm-dev/djm-core-services.git, and press Add.
 
 For more information about installing Unity packages from git, see [Unity Documentation](https://docs.unity3d.com/2022.3/Documentation/Manual/upm-ui-giturl.html).
 
@@ -78,7 +103,61 @@ For more information about installing Unity packages from git, see [Unity Docume
 
 ## Usage
 
-Todo...
+### Resolving Services
+
+Services can be resolved via a static service locator class. 
+The service locator is initialized before the first scene is loaded, so is safe to reference during Unity's awake phase.
+
+```csharp
+var logger = DJMServiceLocator.Resolve<IDebugLogger>();
+```
+
+Services are bound to the service locator and lazily instantiated when required. 
+Most are "single" instances so only get instantiated the first time they are resolved, with the same instance returned for subsequent resolutions.
+Some services are "transient", meaning a unique instance is instantiated each time the service is resolved.
+
+I recommend caching instances of services during the awake or start phase to minimise reflection related performance costs.
+
+```csharp
+public class MainMenuManager : MonoBehaviour
+{
+    private IDebugLogger _debugLogger;
+    private ISceneLoader _sceneLoader;
+
+    private void Awake()
+    {
+        _debugLogger = DJMServiceLocator.Resolve<IDebugLogger>();
+        _sceneLoader = DJMServiceLocator.Resolve<ISceneLoader>();
+    }
+
+    public void LoadLevelOneScene()
+    {
+        _debugLogger.LogInfo("Loading Level One", nameof(MainMenuManager));
+        _sceneLoader.LoadScene("LevelOne");
+    }
+}
+```
+
+
+### Services
+
+#### Application Controller
+
+```csharp
+// Trigger EVENT_A with no data
+eventManager.TriggerEvent(EVENT_A);
+
+```
+
+
+
+
+- Debug Logger
+- Music Service
+- Event Manager
+- Scene Event Manager
+- Scene Loader
+- Transient Sound Service
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

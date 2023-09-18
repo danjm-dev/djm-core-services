@@ -3,13 +3,13 @@ using DJM.CoreServices.Services.SceneLoader;
 using DJM.DependencyInjection;
 using DJM.EventManager;
 
-namespace DJM.CoreServices.Services.SceneEventManager
+namespace DJM.CoreServices.Services.ScopedEventManager
 {
-    internal sealed class SceneEventManagerService : EventManagerBase, ISceneEventManager, IInitializable, IDisposable
+    internal sealed class ScopedEventManagerService : EventManagerBase, IScopedEventManager, IInitializable, IDisposable
     {
         private readonly IEventManager _eventManager;
 
-        public SceneEventManagerService(IEventManager eventManager) => _eventManager = eventManager;
+        public ScopedEventManagerService(IEventManager eventManager) => _eventManager = eventManager;
         
         public void Initialize()
         {

@@ -1,13 +1,13 @@
 using System;
 using DG.Tweening;
-using DJM.CoreServices.MonoServices.AudioSource;
+using DJM.CoreServices.MonoServices.AudioSourcePool;
 using UnityEngine;
 
 namespace DJM.CoreServices.Services.Music
 {
     public sealed class MusicService : IMusicService
     {
-        private readonly AudioSourcePool _audioSourcePool;
+        private readonly IAudioSourcePool _audioSourcePool;
         private readonly IDebugLogger _debugLogger;
         
         private AudioSource _audioSource;
@@ -17,13 +17,11 @@ namespace DJM.CoreServices.Services.Music
         public float Volume { get; private set; }
         public bool IsPlaying => _audioSource is not null && _audioSource.isPlaying;
         
-        public MusicService(AudioSourcePool audioSourcePool, IDebugLogger debugLogger)
+        public MusicService(IAudioSourcePool audioSourcePool, IDebugLogger debugLogger)
         {
-            _audioSourcePool = audioSourcePool 
-                ? audioSourcePool 
-                : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
+            _audioSourcePool = audioSourcePool ?? throw new ArgumentException($"{nameof(audioSourcePool)} can not be null.");
+            _debugLogger = debugLogger ?? throw new ArgumentException($"{nameof(debugLogger)} can not be null.");
             
-            _debugLogger = debugLogger ?? throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
             IsMuted = false;
             Volume = 1f;
         }
