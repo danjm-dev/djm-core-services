@@ -1,14 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-namespace DJM.CoreServices.Services.Logger
+namespace DJM.CoreServices.Services.DebugLogger
 {
-    public sealed class LoggerService : ILoggerService
+    public sealed class DebugLogger : IDebugLogger
     {
         private readonly bool _enableLogging;
         private readonly LogLevel _loggingThreshold;
 
-        public LoggerService(/*bool enableLogging, LogLevel loggingThreshold*/)
+        public DebugLogger(/*bool enableLogging, LogLevel loggingThreshold*/)
         {
             _enableLogging = true;
             _loggingThreshold = LogLevel.Info;

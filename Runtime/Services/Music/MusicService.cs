@@ -3,33 +3,35 @@ using DG.Tweening;
 using DJM.CoreServices.MonoServices.AudioSource;
 using UnityEngine;
 
-namespace DJM.CoreServices.Services.MusicController
+namespace DJM.CoreServices.Services.Music
 {
-    public sealed class MusicControllerService : IMusicController
+    public sealed class MusicService : IMusicService
     {
         private readonly AudioSourcePool _audioSourcePool;
-        private readonly ILoggerService _loggerService;
+        private readonly IDebugLogger _debugLogger;
         
         private AudioSource _audioSource;
         private Sequence _trackOperation;
 
+        public bool IsMuted { get; private set; }
         public float Volume { get; private set; }
         public bool IsPlaying => _audioSource is not null && _audioSource.isPlaying;
         
-        public MusicControllerService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
+        public MusicService(AudioSourcePool audioSourcePool, IDebugLogger debugLogger)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 
                 : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
             
-            _loggerService = loggerService ?? throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
+            _debugLogger = debugLogger ?? throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
+            IsMuted = false;
             Volume = 1f;
         }
         
-        public void Mute() => _audioSource.mute = true;
-        
-        public void UnMute() => _audioSource.mute = false;
-        
+        public void Mute() => SetMute(true);
+
+        public void UnMute() => SetMute(false);
+
         public void SetVolume(float volume)
         {
             Volume = Mathf.Clamp01(volume);
@@ -40,7 +42,7 @@ namespace DJM.CoreServices.Services.MusicController
         {
             if (track is null)
             {
-                _loggerService.LogError($"Track can not be null, {nameof(track)}", nameof(MusicControllerService));
+                _debugLogger.LogError($"Track can not be null, {nameof(track)}", nameof(MusicService));
                 return;
             }
             
@@ -51,6 +53,7 @@ namespace DJM.CoreServices.Services.MusicController
             if (_audioSource is null)
             {
                 _audioSource = _audioSourcePool.GetAudioSource();
+                _audioSource.mute = IsMuted;
                 _audioSource.loop = true;
             }
             else if (_audioSource.isPlaying)
@@ -155,6 +158,11 @@ namespace DJM.CoreServices.Services.MusicController
             _trackOperation.AppendCallback(() => _trackOperation = null);
         }
         
+        private void SetMute(bool mute)
+        {
+            IsMuted = mute;
+            if(_audioSource is not null) _audioSource.mute = IsMuted;
+        }
         
         private void ReleaseAudioSource()
         {

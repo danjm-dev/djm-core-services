@@ -1,7 +1,7 @@
 using System;
 using DJM.DependencyInjection;
 
-namespace DJM.CoreServices.Bootstrap
+namespace DJM.CoreServices.PersistantServices
 {
     internal sealed class PersistantServiceManager
     {

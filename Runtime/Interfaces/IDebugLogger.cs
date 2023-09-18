@@ -1,6 +1,6 @@
 namespace DJM.CoreServices
 {
-    public interface ILoggerService
+    public interface IDebugLogger
     {
         public void LogError(string message, string context);
         public void LogWarning(string message, string context);

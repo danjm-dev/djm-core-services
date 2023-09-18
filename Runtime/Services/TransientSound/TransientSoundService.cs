@@ -5,28 +5,31 @@ using DJM.CoreServices.MonoServices.AudioSource;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace DJM.CoreServices.Services.TransientSoundController
+namespace DJM.CoreServices.Services.TransientSound
 {
-    public sealed class TransientSoundService : ITransientSoundController
+    public sealed class TransientSoundService : ITransientSoundService
     {
         private const float MinimumPitchValue = 0.0001f;
         private const float MaximumPitchValue = 3f;
         
         private readonly AudioSourcePool _audioSourcePool;
-        private readonly ILoggerService _loggerService;
+        private readonly IDebugLogger _debugLogger;
         
         private readonly AudioSource _primaryAudioSource;
         private AudioSource _backupAudioSource;
         
         private readonly List<AudioSource> _activeBackupAudioSources;
 
-        public TransientSoundService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
+        public bool IsMuted => _primaryAudioSource.mute;
+        public float Volume => _primaryAudioSource.volume;
+
+        public TransientSoundService(AudioSourcePool audioSourcePool, IDebugLogger debugLogger)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 
                 : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
 
-            _loggerService = loggerService ?? throw new ArgumentException($"{nameof(loggerService)} can not be null.", nameof(audioSourcePool));
+            _debugLogger = debugLogger ?? throw new ArgumentException($"{nameof(debugLogger)} can not be null.", nameof(audioSourcePool));
             
             _primaryAudioSource = _audioSourcePool.GetAudioSource();
             _backupAudioSource = audioSourcePool.GetAudioSource();
@@ -77,7 +80,7 @@ namespace DJM.CoreServices.Services.TransientSoundController
         {
             if (sound is null)
             {
-                _loggerService.LogError("Attempted to play null audio clip", nameof(TransientSoundService));
+                _debugLogger.LogError("Attempted to play null audio clip", nameof(TransientSoundService));
                 return;
             }
             

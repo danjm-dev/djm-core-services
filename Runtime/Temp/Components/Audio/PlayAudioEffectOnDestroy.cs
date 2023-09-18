@@ -1,20 +1,20 @@
-using DJM.CoreServices.API;
+using DJM.CoreServices.PersistantServices;
 using UnityEngine;
 
 namespace DJM.CoreServices.Temp.Components.Audio
 {
     internal sealed class PlayAudioEffectOnDestroy : MonoBehaviour
     {
-        private ITransientSoundController _transientSoundController;
+        private ITransientSoundService _transientSoundService;
         
         [SerializeField] private AudioClip audioClip;
         [SerializeField] private bool randomisePitch;
-        private void Awake() => _transientSoundController = DJMPersistantServices.Resolve<ITransientSoundController>();
+        private void Awake() => _transientSoundService = DJMServiceLocator.Resolve<ITransientSoundService>();
 
         private void OnDestroy()
         {
-            if(randomisePitch) _transientSoundController.PlaySoundRandomPitch(audioClip);
-            else _transientSoundController.PlaySound(audioClip);
+            if(randomisePitch) _transientSoundService.PlaySoundRandomPitch(audioClip);
+            else _transientSoundService.PlaySound(audioClip);
         }
     }
 }

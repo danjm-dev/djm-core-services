@@ -1,8 +1,6 @@
-using DJM.CoreServices.Bootstrap;
-
-namespace DJM.CoreServices.API
+namespace DJM.CoreServices.PersistantServices
 {
-    public static class DJMPersistantServices
+    public static class DJMServiceLocator
     {
         public static T Resolve<T>()
         {

@@ -8,9 +8,9 @@ namespace DJM.CoreServices.Services.SceneLoader
     internal sealed class SceneLoaderService : ISceneLoader
     {
         private CancellationTokenSource _cancellationTokenSource;
-        private readonly ILoggerService _loggerService;
+        private readonly IDebugLogger _debugLogger;
 
-        public SceneLoaderService(ILoggerService loggerService) => _loggerService = loggerService;
+        public SceneLoaderService(IDebugLogger debugLogger) => _debugLogger = debugLogger;
         
         public void LoadScene(string sceneName) => StartLoadingSceneAsync(sceneName);
         public void CancelLoadingScene() => _cancellationTokenSource?.Cancel();
@@ -20,17 +20,17 @@ namespace DJM.CoreServices.Services.SceneLoader
             _cancellationTokenSource = new CancellationTokenSource();
             try
             {
-                _loggerService.LogInfo($"Started loading Scene: {sceneName}.", nameof(SceneLoaderService));
+                _debugLogger.LogInfo($"Started loading Scene: {sceneName}.", nameof(SceneLoaderService));
                 await LoadSceneAsync(sceneName, _cancellationTokenSource.Token);
-                _loggerService.LogInfo($"Successfully loaded Scene: {sceneName}.", nameof(SceneLoaderService));
+                _debugLogger.LogInfo($"Successfully loaded Scene: {sceneName}.", nameof(SceneLoaderService));
             }
             catch (TaskCanceledException)
             {
-                _loggerService.LogInfo($"Cancelled loading scene: {sceneName}.", nameof(SceneLoaderService));
+                _debugLogger.LogInfo($"Cancelled loading scene: {sceneName}.", nameof(SceneLoaderService));
             }
             catch (Exception exception)
             {
-                _loggerService.LogError($"Failed to load scene: {sceneName}. Error: {exception.Message}", nameof(SceneLoaderService));
+                _debugLogger.LogError($"Failed to load scene: {sceneName}. Error: {exception.Message}", nameof(SceneLoaderService));
             }
             finally
             {

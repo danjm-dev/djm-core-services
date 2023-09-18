@@ -1,14 +1,14 @@
 using DJM.DependencyInjection;
 using UnityEngine;
 
-namespace DJM.CoreServices.Bootstrap
+namespace DJM.CoreServices.PersistantServices
 {
     internal static class Bootstrapper
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         internal static void InitializeUtilities()
         {
-            ResetEnvironment();
+            ResetPersistantServices();
 
             var container = new DependencyContainer(CreatePersistantGameObjectContext());
             container.Install(new PersistantServiceInstaller());
@@ -16,7 +16,7 @@ namespace DJM.CoreServices.Bootstrap
             PersistantServiceManager.Initialize(container);
         }
         
-        private static void ResetEnvironment()
+        private static void ResetPersistantServices()
         {
             
         }

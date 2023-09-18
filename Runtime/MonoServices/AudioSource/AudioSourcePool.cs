@@ -6,7 +6,7 @@ namespace DJM.CoreServices.MonoServices.AudioSource
 {
     public sealed class AudioSourcePool : MonoBehaviour
     {
-        private ILoggerService _loggerService;
+        private IDebugLogger _debugLogger;
         
         [Min(1)]public int initialPoolSize = 10;
         [Min(1)]public int maxPoolSize = 25;
@@ -15,9 +15,9 @@ namespace DJM.CoreServices.MonoServices.AudioSource
         private readonly Stack<UnityEngine.AudioSource> _availableAudioSources = new();
 
         [Inject]
-        private void Construct(ILoggerService loggerService)
+        private void Construct(IDebugLogger debugLogger)
         {
-            _loggerService = loggerService;
+            _debugLogger = debugLogger;
         }
         
         private void Start()
@@ -102,17 +102,17 @@ namespace DJM.CoreServices.MonoServices.AudioSource
 
         private void LogExceededMaxPoolSize(int currentPoolSize)
         {
-            _loggerService.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
+            _debugLogger.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
         }
         
         private void LogTriedToReleaseForeignAudioSource()
         {
-            _loggerService.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
+            _debugLogger.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
         }
         
         private void LogDestroyedExcessAudioSource()
         {
-            _loggerService.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
+            _debugLogger.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
         }
     }
 }

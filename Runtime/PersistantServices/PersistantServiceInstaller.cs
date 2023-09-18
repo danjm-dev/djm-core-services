@@ -1,23 +1,25 @@
 using DJM.CoreServices.MonoServices.AudioSource;
-using DJM.CoreServices.Services.Logger;
-using DJM.CoreServices.Services.MusicController;
+using DJM.CoreServices.Services.ApplicationController;
+using DJM.CoreServices.Services.DebugLogger;
+using DJM.CoreServices.Services.Music;
 using DJM.CoreServices.Services.SceneLoader;
-using DJM.CoreServices.Services.TransientSoundController;
+using DJM.CoreServices.Services.TransientSound;
 using DJM.DependencyInjection;
 using DJM.EventManager;
 
-namespace DJM.CoreServices.Bootstrap
+namespace DJM.CoreServices.PersistantServices
 {
     internal sealed class PersistantServiceInstaller : IInstaller
     {
         public void InstallBindings(IBindableContainer container)
         {
             // services
-            container.Bind<ILoggerService>().To<LoggerService>().FromNew().AsSingle();
+            container.Bind<IDebugLogger>().To<DebugLogger>().FromNew().AsSingle();
             container.Bind<IEventManager>().To<EventManagerService>().FromNew().AsSingle();
-            container.Bind<IMusicController>().To<MusicControllerService>().FromNew().AsSingle();
-            container.Bind<ITransientSoundController>().To<TransientSoundService>().FromNew().AsSingle();
+            container.Bind<IMusicService>().To<MusicService>().FromNew().AsSingle();
+            container.Bind<ITransientSoundService>().To<TransientSoundService>().FromNew().AsSingle();
             container.Bind<ISceneLoader>().To<SceneLoaderService>().FromNew().AsSingle();
+            container.Bind<IApplicationController>().To<ApplicationControllerService>().FromNew().AsSingle();
 
             // mono services
             container.Bind<AudioSourcePool>().FromNewComponentOnNewGameObject().AsSingle();

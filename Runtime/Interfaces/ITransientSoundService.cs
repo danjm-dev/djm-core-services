@@ -2,8 +2,11 @@ using UnityEngine;
 
 namespace DJM.CoreServices
 {
-    public interface ITransientSoundController
+    public interface ITransientSoundService
     {
+        public bool IsMuted { get; }
+        public float Volume { get; }
+        
         public void Mute();
         public void UnMute();
         public void SetVolume(float volume);
