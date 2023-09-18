@@ -1,5 +1,4 @@
 using DJM.DependencyInjection;
-using DJM.DependencyInjection.ComponentContext;
 using UnityEngine;
 
 namespace DJM.CoreServices.Bootstrap
@@ -11,10 +10,10 @@ namespace DJM.CoreServices.Bootstrap
         {
             ResetEnvironment();
 
-            var globalContainer = new DependencyContainer(CreateGlobalGameObjectContext());
-            globalContainer.Install(new GlobalServiceInstaller());
+            var container = new DependencyContainer(CreatePersistantGameObjectContext());
+            container.Install(new PersistantServiceInstaller());
             
-            DJMGlobalService.Initialize(globalContainer);
+            PersistantServiceManager.Initialize(container);
         }
         
         private static void ResetEnvironment()
@@ -22,9 +21,9 @@ namespace DJM.CoreServices.Bootstrap
             
         }
 
-        private static GameObjectContext CreateGlobalGameObjectContext()
+        private static GameObjectContext CreatePersistantGameObjectContext()
         {
-            var contextGameObject = new GameObject($"[{nameof(DJMGlobalService)}]") { isStatic = true };
+            var contextGameObject = new GameObject($"[PersistantServiceContext]") { isStatic = true };
             Object.DontDestroyOnLoad(contextGameObject);
             return contextGameObject.AddComponent<GameObjectContext>();
         }

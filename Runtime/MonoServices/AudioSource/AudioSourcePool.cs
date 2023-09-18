@@ -1,17 +1,24 @@
 ﻿using System.Collections.Generic;
-using DJM.CoreServices.API;
 using UnityEngine;
 
 namespace DJM.CoreServices.MonoServices.AudioSource
 {
     public sealed class AudioSourcePool : MonoBehaviour
     {
+        private ILoggerService _loggerService;
+        
         [Min(1)]public int initialPoolSize = 10;
         [Min(1)]public int maxPoolSize = 25;
 
         private readonly List<UnityEngine.AudioSource> _audioSources = new();
         private readonly Stack<UnityEngine.AudioSource> _availableAudioSources = new();
 
+        // todo: this is not hooked up
+        private void Construct(ILoggerService loggerService)
+        {
+            _loggerService = loggerService;
+        }
+        
         private void Awake()
         {
             for (var i = 0; i < initialPoolSize; i++)
@@ -44,7 +51,7 @@ namespace DJM.CoreServices.MonoServices.AudioSource
             var newAudioSource = AddAudioSource(false);
             
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (_audioSources.Count > maxPoolSize) LogExceededMaxPoolSize(maxPoolSize, _audioSources.Count);
+            if (_audioSources.Count > maxPoolSize) LogExceededMaxPoolSize(_audioSources.Count);
 #endif          
             return newAudioSource;
         }
@@ -92,19 +99,19 @@ namespace DJM.CoreServices.MonoServices.AudioSource
 
         // logging
 
-        private static void LogExceededMaxPoolSize(int maxPoolSize, int currentPoolSize)
+        private void LogExceededMaxPoolSize(int currentPoolSize)
         {
-            DJMLogger.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
+           // _loggerService.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
         }
         
-        private static void LogTriedToReleaseForeignAudioSource()
+        private void LogTriedToReleaseForeignAudioSource()
         {
-            DJMLogger.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
+           // _loggerService.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
         }
         
-        private static void LogDestroyedExcessAudioSource()
+        private void LogDestroyedExcessAudioSource()
         {
-            DJMLogger.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
+            //_loggerService.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
         }
     }
 }

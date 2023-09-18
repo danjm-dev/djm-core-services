@@ -8,9 +8,9 @@ namespace DJM.CoreServices.API
     /// Static utility class for managing and dispatching global events within the Unity project.
     /// Global events allow different parts of the game to communicate and respond to events efficiently.
     /// </summary>
-    public static class DJMEvents
+    internal static class DJMEvents
     {
-        private static readonly IEventManager EventManager = DJMGlobalService.Instance.ResolvableContainer.Resolve<IEventManager>();
+        private static readonly IEventManager EventManager = PersistantServiceManager.Instance.Container.Resolve<IEventManager>();
         /// <summary>
         /// Subscribes a listener method to a global event of a specified type.
         /// </summary>

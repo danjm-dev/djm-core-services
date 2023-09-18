@@ -2,37 +2,37 @@ using System;
 using DG.Tweening;
 using DJM.CoreServices.MonoServices.AudioSource;
 using UnityEngine;
-using ILogger = DJM.CoreServices.ILogger;
 
 namespace DJM.CoreServices.Services.MusicController
 {
     public sealed class MusicControllerService : IMusicController
     {
         private readonly AudioSourcePool _audioSourcePool;
-        private readonly ILogger _logger;
+        private readonly ILoggerService _loggerService;
         
         private AudioSource _audioSource;
-
         private Sequence _trackOperation;
 
         public float Volume { get; private set; }
         public bool IsPlaying => _audioSource is not null && _audioSource.isPlaying;
         
-        public MusicControllerService(AudioSourcePool audioSourcePool, ILogger logger)
+        public MusicControllerService(AudioSourcePool audioSourcePool, ILoggerService loggerService)
         {
             _audioSourcePool = audioSourcePool 
                 ? audioSourcePool 
                 : throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
             
-            _logger = logger ?? throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
+            _loggerService = loggerService ?? throw new ArgumentException("AudioSource Pool cannot be null.", nameof(audioSourcePool));
             Volume = 1f;
         }
         
-        public void SetMute(bool mute) => _audioSource.mute = mute;
+        public void Mute() => _audioSource.mute = true;
+        
+        public void UnMute() => _audioSource.mute = false;
         
         public void SetVolume(float volume)
         {
-            Volume = volume;
+            Volume = Mathf.Clamp01(volume);
             if(_audioSource is not null) _audioSource.volume = Volume;
         }
 
@@ -40,7 +40,7 @@ namespace DJM.CoreServices.Services.MusicController
         {
             if (track is null)
             {
-                _logger.LogError($"Track can not be null, {nameof(track)}", nameof(MusicControllerService));
+                _loggerService.LogError($"Track can not be null, {nameof(track)}", nameof(MusicControllerService));
                 return;
             }
             
