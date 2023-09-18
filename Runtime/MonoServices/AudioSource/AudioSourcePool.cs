@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DJM.DependencyInjection;
 using UnityEngine;
 
 namespace DJM.CoreServices.MonoServices.AudioSource
@@ -13,13 +14,13 @@ namespace DJM.CoreServices.MonoServices.AudioSource
         private readonly List<UnityEngine.AudioSource> _audioSources = new();
         private readonly Stack<UnityEngine.AudioSource> _availableAudioSources = new();
 
-        // todo: this is not hooked up
+        [Inject]
         private void Construct(ILoggerService loggerService)
         {
             _loggerService = loggerService;
         }
         
-        private void Awake()
+        private void Start()
         {
             for (var i = 0; i < initialPoolSize; i++)
             {
