@@ -102,17 +102,17 @@ namespace DJM.CoreServices.MonoServices.AudioSource
 
         private void LogExceededMaxPoolSize(int currentPoolSize)
         {
-           // _loggerService.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
+            _loggerService.LogWarning($"Exceeding max pool size, max: {maxPoolSize}, current: {currentPoolSize} ", nameof(AudioSourcePool));
         }
         
         private void LogTriedToReleaseForeignAudioSource()
         {
-           // _loggerService.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
+            _loggerService.LogError("Tried to release audio source from another game object.", nameof(AudioSourcePool));
         }
         
         private void LogDestroyedExcessAudioSource()
         {
-            //_loggerService.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
+            _loggerService.LogInfo("Destroyed excess Audio Source.", nameof(AudioSourcePool));
         }
     }
 }
