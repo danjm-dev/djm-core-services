@@ -11,7 +11,7 @@ namespace DJM.CoreServices.ServiceLocator
             ResetPersistantServices();
 
             var container = new DependencyContainer(CreatePersistantGameObjectContext());
-            container.Install(new PersistantServiceInstaller());
+            container.Install(new CoreServiceInstaller());
             
             PersistantServiceManager.Initialize(container);
         }

@@ -1,20 +1,19 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DJM.CoreServices.MonoServices.LoadingScreen;
 using UnityEngine.SceneManagement;
 
 namespace DJM.CoreServices.Services.SceneLoader
 {
     internal sealed class SceneLoaderService : ISceneLoader
     {
-        private readonly LoadingScreenService _loadingScreenService;
+        private readonly ILoadingScreenService _loadingScreenService;
         private readonly IDebugLogger _debugLogger;
         private readonly IPersistantEventManager _eventManager;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public SceneLoaderService(LoadingScreenService loadingScreenService, IDebugLogger debugLogger, IPersistantEventManager eventManager)
+        public SceneLoaderService(ILoadingScreenService loadingScreenService, IDebugLogger debugLogger, IPersistantEventManager eventManager)
         {
             _loadingScreenService = loadingScreenService;
             _debugLogger = debugLogger;

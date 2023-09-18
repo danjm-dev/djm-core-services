@@ -70,7 +70,7 @@ namespace DJM.CoreServices.MonoServices.LoadingScreen
             DOTween.Kill(_canvasGroup);
         }
 
-        internal async Task Show()
+        public async Task Show()
         {
             gameObject.SetActive(true);
             
@@ -82,7 +82,7 @@ namespace DJM.CoreServices.MonoServices.LoadingScreen
                 .AsyncWaitForCompletion();
         }
         
-        internal async Task Hide()
+        public async Task Hide()
         {
             if (_loadingScreenConfig.fadeOut.duration <= 0f) _canvasGroup.alpha = 0f;
             

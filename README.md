@@ -53,7 +53,7 @@
 
 DJM Core Services is a Unity package for services that can be used across a range of projects.
 
-The current implementation is a work in progress, but includes the following global services.
+The current implementation is a work in progress, but includes the following services.
 
 - Application Controller
 - Debug Logger

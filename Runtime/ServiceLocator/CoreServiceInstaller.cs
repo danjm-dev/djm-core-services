@@ -11,7 +11,7 @@ using DJM.DependencyInjection;
 
 namespace DJM.CoreServices.ServiceLocator
 {
-    internal sealed class PersistantServiceInstaller : IInstaller
+    internal sealed class CoreServiceInstaller : IInstaller
     {
         public void InstallBindings(IBindableContainer container)
         {
@@ -30,7 +30,7 @@ namespace DJM.CoreServices.ServiceLocator
 
             // mono services
             container.Bind<IAudioSourcePool>().To<AudioSourcePoolService>().FromNewComponentOnNewGameObject().AsSingle();
-            container.Bind<LoadingScreenService>().FromNewComponentOnNewGameObject().AsSingle();
+            container.Bind<ILoadingScreenService>().To<LoadingScreenService>().FromNewComponentOnNewGameObject().AsSingle();
         }
     }
 }
