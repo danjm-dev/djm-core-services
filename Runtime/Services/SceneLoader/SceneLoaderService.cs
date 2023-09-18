@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DJM.CoreServices.MonoServices.LoadingScreen;
 using DJM.EventManager;
 using UnityEngine.SceneManagement;
 
@@ -8,13 +9,15 @@ namespace DJM.CoreServices.Services.SceneLoader
 {
     internal sealed class SceneLoaderService : ISceneLoader
     {
+        private readonly LoadingScreenService _loadingScreenService;
         private readonly IDebugLogger _debugLogger;
         private readonly IEventManager _eventManager;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public SceneLoaderService(IDebugLogger debugLogger, IEventManager eventManager)
+        public SceneLoaderService(LoadingScreenService loadingScreenService, IDebugLogger debugLogger, IEventManager eventManager)
         {
+            _loadingScreenService = loadingScreenService;
             _debugLogger = debugLogger;
             _eventManager = eventManager;
         }
@@ -27,6 +30,7 @@ namespace DJM.CoreServices.Services.SceneLoader
             _cancellationTokenSource = new CancellationTokenSource();
             try
             {
+                await _loadingScreenService.Show();
                 _debugLogger.LogInfo($"Started loading Scene: {sceneName}.", nameof(SceneLoaderService));
                 await LoadSceneAsync(sceneName, _cancellationTokenSource.Token);
                 _debugLogger.LogInfo($"Successfully loaded Scene: {sceneName}.", nameof(SceneLoaderService));
@@ -43,6 +47,7 @@ namespace DJM.CoreServices.Services.SceneLoader
             {
                 _cancellationTokenSource.Dispose();
                 _cancellationTokenSource = null;
+                await _loadingScreenService.Hide();
             }
         }
 

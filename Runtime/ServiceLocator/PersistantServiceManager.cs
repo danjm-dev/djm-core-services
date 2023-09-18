@@ -1,7 +1,7 @@
 using System;
 using DJM.DependencyInjection;
 
-namespace DJM.CoreServices.PersistantServices
+namespace DJM.CoreServices.ServiceLocator
 {
     internal sealed class PersistantServiceManager
     {

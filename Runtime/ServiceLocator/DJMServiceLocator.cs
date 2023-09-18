@@ -1,4 +1,4 @@
-namespace DJM.CoreServices.PersistantServices
+namespace DJM.CoreServices.ServiceLocator
 {
     public static class DJMServiceLocator
     {

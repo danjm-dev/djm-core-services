@@ -1,0 +1,97 @@
+using System.Threading.Tasks;
+using DG.Tweening;
+using DJM.DependencyInjection;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace DJM.CoreServices.MonoServices.LoadingScreen
+{
+    [RequireComponent(typeof(Canvas))]
+    [RequireComponent(typeof(CanvasGroup))]
+    internal sealed class LoadingScreenService : MonoBehaviour, ILoadingScreenService
+    {
+        private IDebugLogger _debugLogger;
+        
+        private CanvasGroup _canvasGroup;
+
+        private LoadingScreenConfig _loadingScreenConfig;
+
+        private GameObject _loadingScreen;
+
+        [Inject]
+        private void Construct(IDebugLogger debugLogger) => _debugLogger = debugLogger;
+        
+        private void Awake()
+        {
+            var canvas = GetComponent<Canvas>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = short.MaxValue;
+            
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
+        }
+
+        private void Start()
+        {
+            _loadingScreenConfig = Resources.Load<LoadingScreenConfig>("Configuration");
+
+            if (_loadingScreenConfig is null)
+            {
+                _debugLogger.LogWarning
+                (
+                    $"No {nameof(LoadingScreenConfig)} found in Resources/Configuration. Using default loading screen.",
+                    nameof(LoadingScreenService)
+                );
+
+                _loadingScreenConfig = LoadingScreenConfig.Default();
+            }
+
+            _loadingScreen = new GameObject("LoadingScreen")
+            {
+                transform = { parent = transform }
+            };
+            
+            var fillImage = _loadingScreen.AddComponent<Image>();
+            fillImage.color = Color.black;
+            fillImage.rectTransform.anchorMin = new Vector2(0, 0);
+            fillImage.rectTransform.anchorMax = new Vector2(1, 1);
+            fillImage.rectTransform.offsetMin = new Vector2(0, 0);
+            fillImage.rectTransform.offsetMax = new Vector2(0, 0);
+            
+            gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            DOTween.Complete(_canvasGroup);
+            DOTween.Kill(_canvasGroup);
+        }
+
+        internal async Task Show()
+        {
+            gameObject.SetActive(true);
+            
+            if (_loadingScreenConfig.fadeIn.duration <= 0f) _canvasGroup.alpha = 1f;
+            
+            else await _canvasGroup
+                .DOFade(1f, _loadingScreenConfig.fadeIn.duration)
+                .SetEase(_loadingScreenConfig.fadeIn.ease)
+                .AsyncWaitForCompletion();
+        }
+        
+        internal async Task Hide()
+        {
+            if (_loadingScreenConfig.fadeOut.duration <= 0f) _canvasGroup.alpha = 0f;
+            
+            else await _canvasGroup
+                .DOFade(0f, _loadingScreenConfig.fadeOut.duration)
+                .SetEase(_loadingScreenConfig.fadeOut.ease)
+                .AsyncWaitForCompletion();
+            
+            gameObject.SetActive(false);
+        }
+    }
+}

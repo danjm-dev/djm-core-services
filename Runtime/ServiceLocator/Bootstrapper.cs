@@ -1,7 +1,7 @@
 using DJM.DependencyInjection;
 using UnityEngine;
 
-namespace DJM.CoreServices.PersistantServices
+namespace DJM.CoreServices.ServiceLocator
 {
     internal static class Bootstrapper
     {

@@ -1,4 +1,5 @@
 using DJM.CoreServices.MonoServices.AudioSource;
+using DJM.CoreServices.MonoServices.LoadingScreen;
 using DJM.CoreServices.Services.ApplicationController;
 using DJM.CoreServices.Services.DebugLogger;
 using DJM.CoreServices.Services.Music;
@@ -8,7 +9,7 @@ using DJM.CoreServices.Services.TransientSound;
 using DJM.DependencyInjection;
 using DJM.EventManager;
 
-namespace DJM.CoreServices.PersistantServices
+namespace DJM.CoreServices.ServiceLocator
 {
     internal sealed class PersistantServiceInstaller : IInstaller
     {
@@ -26,6 +27,7 @@ namespace DJM.CoreServices.PersistantServices
 
             // mono services
             container.Bind<AudioSourcePool>().FromNewComponentOnNewGameObject().AsSingle();
+            container.Bind<LoadingScreenService>().FromNewComponentOnNewGameObject().AsSingle();
         }
     }
 }

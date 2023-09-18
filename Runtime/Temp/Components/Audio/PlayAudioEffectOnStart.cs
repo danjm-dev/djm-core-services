@@ -1,4 +1,4 @@
-using DJM.CoreServices.PersistantServices;
+using DJM.CoreServices.ServiceLocator;
 using UnityEngine;
 
 namespace DJM.CoreServices.Temp.Components.Audio
