@@ -9,7 +9,7 @@ namespace DJM.CoreServices.Services.SceneEventManager
     {
         private readonly IEventManager _eventManager;
 
-        internal SceneEventManagerService(IEventManager eventManager) => _eventManager = eventManager;
+        public SceneEventManagerService(IEventManager eventManager) => _eventManager = eventManager;
         
         public void Initialize()
         {
