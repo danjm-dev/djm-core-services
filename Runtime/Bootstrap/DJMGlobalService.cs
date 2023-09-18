@@ -1,4 +1,5 @@
 using System;
+using DJM.DependencyInjection;
 
 namespace DJM.CoreServices.Bootstrap
 {

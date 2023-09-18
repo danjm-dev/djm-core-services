@@ -3,6 +3,7 @@ using DJM.CoreServices.Services.Logger;
 using DJM.CoreServices.Services.MusicController;
 using DJM.CoreServices.Services.SceneLoader;
 using DJM.CoreServices.Services.SoundController;
+using DJM.DependencyInjection;
 using DJM.EventManager;
 
 namespace DJM.CoreServices.Bootstrap

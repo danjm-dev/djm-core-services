@@ -1,5 +1,5 @@
-using DJM.CoreServices.DependencyInjection;
-using DJM.CoreServices.DependencyInjection.ComponentContext;
+using DJM.DependencyInjection;
+using DJM.DependencyInjection.ComponentContext;
 using UnityEngine;
 
 namespace DJM.CoreServices.Bootstrap
