@@ -1,17 +1,24 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DJM.EventManager;
 using UnityEngine.SceneManagement;
 
 namespace DJM.CoreServices.Services.SceneLoader
 {
     internal sealed class SceneLoaderService : ISceneLoader
     {
-        private CancellationTokenSource _cancellationTokenSource;
         private readonly IDebugLogger _debugLogger;
-
-        public SceneLoaderService(IDebugLogger debugLogger) => _debugLogger = debugLogger;
+        private readonly IEventManager _eventManager;
         
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public SceneLoaderService(IDebugLogger debugLogger, IEventManager eventManager)
+        {
+            _debugLogger = debugLogger;
+            _eventManager = eventManager;
+        }
+
         public void LoadScene(string sceneName) => StartLoadingSceneAsync(sceneName);
         public void CancelLoadingScene() => _cancellationTokenSource?.Cancel();
 
@@ -39,8 +46,10 @@ namespace DJM.CoreServices.Services.SceneLoader
             }
         }
 
-        private static async Task LoadSceneAsync(string sceneName, CancellationToken cancellationToken)
+        private async Task LoadSceneAsync(string sceneName, CancellationToken cancellationToken)
         {
+            _eventManager.TriggerEvent(new SceneLoaderEvent.LoadStarted());
+            
             var taskCompletionSource = new TaskCompletionSource<bool>();
             var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
 
@@ -52,6 +61,7 @@ namespace DJM.CoreServices.Services.SceneLoader
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
+                    _eventManager.TriggerEvent(new SceneLoaderEvent.LoadCancelled());
                     asyncOperation.allowSceneActivation = false;
                     taskCompletionSource.TrySetCanceled();
                     break;
@@ -59,9 +69,11 @@ namespace DJM.CoreServices.Services.SceneLoader
 
                 if (asyncOperation.progress >= 0.9f)
                 {
+                    _eventManager.TriggerEvent(new SceneLoaderEvent.ActivatingNewScene());
                     asyncOperation.allowSceneActivation = true;
                 }
-
+                
+                _eventManager.TriggerEvent(new SceneLoaderEvent.LoadProgress(asyncOperation.progress));
                 await Task.Yield();
             }
 
