@@ -63,7 +63,6 @@ namespace DJM.CoreServices.SceneLoader
 
         private async Task LoadSceneAsync(string sceneName, CancellationToken cancellationToken)
         {
-            _eventManager.TriggerEvent(new SceneLoaderEvent.LoadStarted());
             
             var taskCompletionSource = new TaskCompletionSource<bool>();
             var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
@@ -76,19 +75,21 @@ namespace DJM.CoreServices.SceneLoader
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    _eventManager.TriggerEvent(new SceneLoaderEvent.LoadCancelled());
                     asyncOperation.allowSceneActivation = false;
+                    await _loadingScreenService.CancelLoadProgress();
                     taskCompletionSource.TrySetCanceled();
                     break;
                 }
 
                 if (asyncOperation.progress >= 0.9f)
                 {
+                    await _loadingScreenService.CompleteLoadProgress();
                     _eventManager.TriggerEvent(new SceneLoaderEvent.ActivatingNewScene());
                     asyncOperation.allowSceneActivation = true;
+                    break;
                 }
                 
-                _eventManager.TriggerEvent(new SceneLoaderEvent.LoadProgress(asyncOperation.progress));
+                _loadingScreenService.SetLoadProgress(asyncOperation.progress);
                 await Task.Yield();
             }
 

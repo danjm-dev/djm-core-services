@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -47,11 +48,20 @@ namespace DJM.CoreServices.Common
         {
             if(Mathf.Approximately(target, TargetValue)) return;
             
-            if(_tween is not null) DOTween.Kill(_tween);
+            _tween?.Kill();
             var duration = _durationPerUnit * Mathf.Abs(target - Value);
             _tween = DOTween
                 .To(()=> Value, x=> Value = x, target, duration)
                 .OnUpdate(() => OnValueUpdate?.Invoke(Value));
         }
+        
+        public async Task SetTargetAsync(float target)
+        {
+            SetTarget(target);
+            if(!_tween.IsPlaying()) return;
+            await _tween.AsyncWaitForCompletion();
+        }
+
+        public void Stop() => _tween?.Kill();
     }
 }

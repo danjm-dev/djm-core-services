@@ -1,8 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using DG.Tweening;
 using DJM.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace DJM.CoreServices.LoadingScreen
 {
@@ -16,10 +18,13 @@ namespace DJM.CoreServices.LoadingScreen
         private IDebugLogger _debugLogger;
         
         private CanvasGroup _canvasGroup;
-
-        private LoadingScreenConfig _loadingScreenConfig;
-
         private GameObject _loadingScreen;
+        
+        private LoadingScreenConfig _loadingScreenConfig;
+        
+        private Tween _progressTween;
+        private float _loadProgress;
+        private float _loadProgressTarget;
 
         /// <summary>
         /// Dependency injection via method, as <see cref="LoadingScreenService"/> can not have a constructor.
@@ -44,7 +49,7 @@ namespace DJM.CoreServices.LoadingScreen
 
         private void Start()
         {
-            _loadingScreenConfig = Resources.Load<LoadingScreenConfig>("Configuration");
+            _loadingScreenConfig = Resources.LoadAll<LoadingScreenConfig>("Configuration")[0];
 
             if (_loadingScreenConfig is null)
             {
@@ -54,7 +59,7 @@ namespace DJM.CoreServices.LoadingScreen
                     nameof(LoadingScreenService)
                 );
 
-                _loadingScreenConfig = LoadingScreenConfig.Default();
+                _loadingScreenConfig = ScriptableObject.CreateInstance<LoadingScreenConfig>();
             }
 
             _loadingScreen = new GameObject("LoadingScreen")
@@ -74,6 +79,7 @@ namespace DJM.CoreServices.LoadingScreen
 
         private void OnDestroy()
         {
+            _progressTween?.Kill();
             DOTween.Complete(_canvasGroup);
             DOTween.Kill(_canvasGroup);
         }
@@ -83,25 +89,67 @@ namespace DJM.CoreServices.LoadingScreen
         {
             gameObject.SetActive(true);
             
-            if (_loadingScreenConfig.fadeIn.duration <= 0f) _canvasGroup.alpha = 1f;
+            if (_loadingScreenConfig.fadeInDuration <= 0f) _canvasGroup.alpha = 1f;
             
             else await _canvasGroup
-                .DOFade(1f, _loadingScreenConfig.fadeIn.duration)
-                .SetEase(_loadingScreenConfig.fadeIn.ease)
+                .DOFade(1f, _loadingScreenConfig.fadeInDuration)
+                .SetEase(_loadingScreenConfig.fadeInEase)
                 .AsyncWaitForCompletion();
         }
         
         /// <inheritdoc/>
         public async Task Hide()
         {
-            if (_loadingScreenConfig.fadeOut.duration <= 0f) _canvasGroup.alpha = 0f;
+            if (_loadingScreenConfig.fadeOutDuration <= 0f) _canvasGroup.alpha = 0f;
             
             else await _canvasGroup
-                .DOFade(0f, _loadingScreenConfig.fadeOut.duration)
-                .SetEase(_loadingScreenConfig.fadeOut.ease)
+                .DOFade(0f, _loadingScreenConfig.fadeOutDuration)
+                .SetEase(_loadingScreenConfig.fadeOutEase)
                 .AsyncWaitForCompletion();
             
             gameObject.SetActive(false);
+        }
+
+        /// <inheritdoc/>
+        public void SetLoadProgress(float progress)
+        {
+            if(_loadProgressTarget >= 1f) return;
+            _loadProgressTarget = Mathf.Clamp01(progress);
+            if (_progressTween is null || !_progressTween.IsPlaying()) StartProgressTween();
+        }
+
+        private void StartProgressTween()
+        {
+            _progressTween?.Kill();
+
+            if (Mathf.Approximately(_loadProgress, _loadProgressTarget))
+            {
+                _progressTween = null;
+                return;
+            }
+
+            var duration = _loadingScreenConfig.minimumLoadDuration * Mathf.Abs(_loadProgressTarget - _loadProgress);
+            _progressTween = DOTween
+                .To(()=> _loadProgress, x=> _loadProgress = x, _loadProgressTarget, duration)
+                .OnComplete(StartProgressTween);
+        }
+
+        /// <inheritdoc/>
+        public async Task CompleteLoadProgress()
+        {
+            _loadProgressTarget = 1f;
+            StartProgressTween();
+
+            if (_progressTween is not null && _progressTween.IsPlaying()) await _progressTween.AsyncWaitForCompletion();
+            await Task.Delay(TimeSpan.FromSeconds(_loadingScreenConfig.loadCompleteDelay));
+        }
+        
+        public async Task CancelLoadProgress()
+        {
+            _progressTween?.Kill();
+            
+            // placeholder await - may want to do something here
+            await Task.Delay(TimeSpan.FromSeconds(_loadingScreenConfig.loadCompleteDelay));
         }
     }
 }
