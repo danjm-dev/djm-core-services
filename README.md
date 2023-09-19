@@ -51,17 +51,19 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-DJM Core Services is a Unity package for services that can be used across a range of projects.
+DJM Core Services is a Unity package for core game services that can be used across a range of projects.
 
 The current implementation is a work in progress, but includes the following services.
 
 - Application Controller
 - Debug Logger
 - Music Service
-- Event Manager
-- Scene Event Manager
-- Scene Loader
 - Transient Sound Service
+- Audio Source Pool
+- Scoped Event Manager
+- Persistant Event Manager
+- Scene Loader
+- Loading Screen Service
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -75,7 +77,7 @@ The DJM Core Services package can be added to your project with [Unity's Package
 
 ### Required Dependencies
 
-DJM Core Services has the following dependencies which must be manually resolved prior to installation. 
+The following dependencies must be manually installed prior to DJM Core Services. 
 
 #### [DOTween](http://dotween.demigiant.com/index.php)
 Third party asset available on the Unity asset store. Either the [Pro](https://assetstore.unity.com/packages/tools/visual-scripting/dotween-pro-32416) or [Free](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676) version will work. 
@@ -83,10 +85,10 @@ Third party asset available on the Unity asset store. Either the [Pro](https://a
 2. Once installed, press 'add ASMDEF' from the DoTween utility panel to create an assembly that djm-core-services can reference.
 
 #### [DJM Event Manager](https://github.com/danjm-dev/djm-event-manager)
-A git based package similar to DJM Core Services. Follow its [installation instructions](https://github.com/danjm-dev/djm-event-manager) to install.
+Another git based UPM package. Find [installation instructions](https://github.com/danjm-dev/djm-event-manager) on its readme.
 
 #### [DJM Dependency Injection](https://github.com/danjm-dev/djm-dependency-injection)
-A git based package similar to DJM Core Services. Follow its [installation instructions](https://github.com/danjm-dev/djm-dependency-injection) to install.
+Another git based UPM package. Find [installation instructions](https://github.com/danjm-dev/djm-dependency-injection) on its readme.
 
 
 ### Installation
@@ -103,7 +105,9 @@ For more information about installing Unity packages from git, see [Unity Docume
 
 ## Usage
 
-### Resolving Services
+There are two primary ways to use services from this package.
+
+### 1. Resolve Services with Service Locator
 
 Services can be resolved via a static service locator class. 
 The service locator is initialized before the first scene is loaded, so is safe to reference during Unity's awake phase.
@@ -114,9 +118,10 @@ var logger = DJMServiceLocator.Resolve<IDebugLogger>();
 
 Services are bound to the service locator and lazily instantiated when required. 
 Most are "single" instances so only get instantiated the first time they are resolved, with the same instance returned for subsequent resolutions.
-Some services are "transient", meaning a unique instance is instantiated each time the service is resolved.
+Services can also be "transient", meaning a unique instance is instantiated each time the service is resolved.
 
-I recommend caching instances of services during the awake or start phase to minimise reflection related performance costs.
+The service locator uses reflection to instantiate services, which can impact performance.
+Although this impact should be minor, I recommend caching instances of services during the awake or start phase to minimise reflection related performance costs.
 
 ```csharp
 public class MainMenuManager : MonoBehaviour
@@ -138,26 +143,23 @@ public class MainMenuManager : MonoBehaviour
 }
 ```
 
+### 2. Manually Initialize Services
+
+If you dont want to utilize the service locator and associated architecture, you can initialize instances of services yourself.
+The concrete classes implemented for each service are listed below. 
+
+There is currently no way to disable the service locator without making code changes. However, as the services are loaded lazily, 
+leaving it on should only result in a negligible performance cost when the first scene is loaded. 
+
+If you'd like to Disable the service locator completely, comment out the `RuntimeInitializeOnLoadMethod` attribute in [Bootstrapper.cs](./Runtime/ServiceLocator/Bootstrapper.cs).
+If you do this, remember that any calls to `DJMServiceLocator` will result in an `InvalidOperationException`.
+
 
 ### Services
 
-#### Application Controller
-
-```csharp
-// Trigger EVENT_A with no data
-eventManager.TriggerEvent(EVENT_A);
-
-```
 
 
 
-
-- Debug Logger
-- Music Service
-- Event Manager
-- Scene Event Manager
-- Scene Loader
-- Transient Sound Service
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace DJM.CoreServices.Services.Music
 {
+    /// <summary>
+    /// Service that provides audio playback functionality for music.
+    /// </summary>
     public sealed class MusicService : IMusicService
     {
         private readonly IAudioSourcePool _audioSourcePool;
@@ -17,6 +20,12 @@ namespace DJM.CoreServices.Services.Music
         public float Volume { get; private set; }
         public bool IsPlaying => _audioSource is not null && _audioSource.isPlaying;
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MusicService"/> class.
+        /// </summary>
+        /// <param name="audioSourcePool">The audio source pool to be used for audio playback.</param>
+        /// <param name="debugLogger">The logger for debugging and error reporting.</param>
+        /// <exception cref="ArgumentException">Thrown when either <paramref name="audioSourcePool"/> or <paramref name="debugLogger"/> is null.</exception>
         public MusicService(IAudioSourcePool audioSourcePool, IDebugLogger debugLogger)
         {
             _audioSourcePool = audioSourcePool ?? throw new ArgumentException($"{nameof(audioSourcePool)} can not be null.");
@@ -26,16 +35,20 @@ namespace DJM.CoreServices.Services.Music
             Volume = 1f;
         }
         
+        /// <inheritdoc/>
         public void Mute() => SetMute(true);
 
+        /// <inheritdoc/>
         public void UnMute() => SetMute(false);
 
+        /// <inheritdoc/>
         public void SetVolume(float volume)
         {
             Volume = Mathf.Clamp01(volume);
             if(_audioSource is not null) _audioSource.volume = Volume;
         }
 
+        /// <inheritdoc/>
         public void PlayTrack(AudioClip track, float fadeOutDuration, float fadeInDuration)
         {
             if (track is null)
@@ -73,6 +86,7 @@ namespace DJM.CoreServices.Services.Music
             _trackOperation.AppendCallback(() => _trackOperation = null);
         }
         
+        /// <inheritdoc/>
         public void StopTrack(float fadeOutDuration)
         {
             // force complete existing music operations
@@ -106,6 +120,7 @@ namespace DJM.CoreServices.Services.Music
             });
         }
         
+        /// <inheritdoc/>
         public void PauseTrack(float fadeOutDuration)
         {
             // force complete existing music operations
@@ -131,6 +146,7 @@ namespace DJM.CoreServices.Services.Music
             });
         }
         
+        /// <inheritdoc/>
         public void ResumeTrack(float fadeInDuration)
         {
             // force complete existing music operations

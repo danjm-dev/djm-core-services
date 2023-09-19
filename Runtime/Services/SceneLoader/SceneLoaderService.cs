@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 namespace DJM.CoreServices.Services.SceneLoader
 {
+    /// <summary>
+    /// Service for handling scene loading operations.
+    /// </summary>
     internal sealed class SceneLoaderService : ISceneLoader
     {
         private readonly ILoadingScreenService _loadingScreenService;
@@ -13,6 +16,12 @@ namespace DJM.CoreServices.Services.SceneLoader
         
         private CancellationTokenSource _cancellationTokenSource;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneLoaderService"/> class.
+        /// </summary>
+        /// <param name="loadingScreenService">The service used for handling the loading screen.</param>
+        /// <param name="debugLogger">The logger for debugging and error reporting.</param>
+        /// <param name="eventManager">The persistant event manager for triggering loading-related events.</param>
         public SceneLoaderService(ILoadingScreenService loadingScreenService, IDebugLogger debugLogger, IPersistantEventManager eventManager)
         {
             _loadingScreenService = loadingScreenService;
@@ -20,7 +29,10 @@ namespace DJM.CoreServices.Services.SceneLoader
             _eventManager = eventManager;
         }
 
+        /// <inheritdoc/>
         public void LoadScene(string sceneName) => StartLoadingSceneAsync(sceneName);
+        
+        /// <inheritdoc/>
         public void CancelLoadingScene() => _cancellationTokenSource?.Cancel();
 
         private async void StartLoadingSceneAsync(string sceneName)

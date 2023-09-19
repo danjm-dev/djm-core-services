@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace DJM.CoreServices.MonoServices.LoadingScreen
 {
+    /// <summary>
+    /// Manages loading screen components. If manually instantiating, ensure Construct method is called before use.
+    /// </summary>
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(CanvasGroup))]
     internal sealed class LoadingScreenService : MonoBehaviour, ILoadingScreenService
@@ -18,8 +21,13 @@ namespace DJM.CoreServices.MonoServices.LoadingScreen
 
         private GameObject _loadingScreen;
 
+        /// <summary>
+        /// Dependency injection via method, as <see cref="LoadingScreenService"/> can not have a constructor.
+        /// If manually instantiated, this must be called before use to prevent exceptions.
+        /// </summary>
+        /// <param name="debugLogger">The debug logger for logging diagnostic information.</param>
         [Inject]
-        private void Construct(IDebugLogger debugLogger) => _debugLogger = debugLogger;
+        public void Construct(IDebugLogger debugLogger) => _debugLogger = debugLogger;
         
         private void Awake()
         {
@@ -70,6 +78,7 @@ namespace DJM.CoreServices.MonoServices.LoadingScreen
             DOTween.Kill(_canvasGroup);
         }
 
+        /// <inheritdoc/>
         public async Task Show()
         {
             gameObject.SetActive(true);
@@ -82,6 +91,7 @@ namespace DJM.CoreServices.MonoServices.LoadingScreen
                 .AsyncWaitForCompletion();
         }
         
+        /// <inheritdoc/>
         public async Task Hide()
         {
             if (_loadingScreenConfig.fadeOut.duration <= 0f) _canvasGroup.alpha = 0f;

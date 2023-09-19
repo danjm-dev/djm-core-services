@@ -19,7 +19,7 @@ namespace DJM.CoreServices.ServiceLocator
             container.Bind<IPersistantEventManager>().To<PersistantEventManagerService>().FromNew().AsSingle();
             container.Bind<IScopedEventManager>().To<ScopedEventManagerService>().FromNew().AsSingle();
             
-            container.Bind<IDebugLogger>().To<DebugLogger>().FromNew().AsSingle();
+            container.Bind<IDebugLogger>().To<DebugLoggerService>().FromNew().AsSingle();
             
             container.Bind<IMusicService>().To<MusicService>().FromNew().AsSingle();
             container.Bind<ITransientSoundService>().To<TransientSoundService>().FromNew().AsSingle();

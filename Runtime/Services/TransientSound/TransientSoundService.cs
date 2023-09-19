@@ -7,6 +7,9 @@ using Random = UnityEngine.Random;
 
 namespace DJM.CoreServices.Services.TransientSound
 {
+    /// <summary>
+    /// Service that provides audio playback functionality for transient sounds.
+    /// </summary>
     public sealed class TransientSoundService : ITransientSoundService
     {
         private const float MinimumPitchValue = 0.0001f;
@@ -23,6 +26,12 @@ namespace DJM.CoreServices.Services.TransientSound
         public bool IsMuted => _primaryAudioSource.mute;
         public float Volume => _primaryAudioSource.volume;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransientSoundService"/> class.
+        /// </summary>
+        /// <param name="audioSourcePool">The audio source pool to be used for audio playback.</param>
+        /// <param name="debugLogger">The logger for debugging and error reporting.</param>
+        /// <exception cref="ArgumentException">Thrown when either <paramref name="audioSourcePool"/> or <paramref name="debugLogger"/> is null.</exception>
         public TransientSoundService(IAudioSourcePool audioSourcePool, IDebugLogger debugLogger)
         {
             _audioSourcePool = audioSourcePool ?? throw new ArgumentException($"{nameof(audioSourcePool)} can not be null.");
@@ -33,10 +42,13 @@ namespace DJM.CoreServices.Services.TransientSound
             _activeBackupAudioSources = new List<AudioSource>();
         }
 
+        /// <inheritdoc/>
         public void Mute() => SetMute(true);
         
+        /// <inheritdoc/>
         public void UnMute() => SetMute(false);
         
+        /// <inheritdoc/>
         public void SetVolume(float volume)
         {
             volume = Mathf.Clamp01(volume);
@@ -46,11 +58,13 @@ namespace DJM.CoreServices.Services.TransientSound
             foreach (var audioSource in _activeBackupAudioSources) audioSource.volume = volume;
         }
 
+        /// <inheritdoc/>
         public void PlaySound(AudioClip sound, float volumeScale, float pitch)
         {
             PlayTransientSound(sound, volumeScale, pitch);
         }
 
+        /// <inheritdoc/>
         public void PlaySoundRandomPitch(AudioClip sound, float minPitch, float maxPitch, float volumeScale)
         {
 

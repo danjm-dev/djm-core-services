@@ -2,8 +2,9 @@ using UnityEngine;
 
 namespace DJM.CoreServices.Services.ApplicationController
 {
-    internal sealed class ApplicationControllerService : IApplicationController
+    public sealed class ApplicationControllerService : IApplicationController
     {
+        /// <inheritdoc/>
         public void QuitGame()
         {
 #if UNITY_EDITOR
@@ -13,8 +14,10 @@ namespace DJM.CoreServices.Services.ApplicationController
 #endif
         }
 
+        /// <inheritdoc/>
         public void PauseGame() => Time.timeScale = 0f;
         
+        /// <inheritdoc/>
         public void UnPauseGame() => Time.timeScale = 1f;
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace DJM.CoreServices.MonoServices.AudioSourcePool
 {
+    /// <summary>
+    /// Manages a pool of audio sources. If manually instantiating, ensure Construct method is called before use.
+    /// </summary>
     public sealed class AudioSourcePoolService : MonoBehaviour, IAudioSourcePool
     {
         private IDebugLogger _debugLogger;
@@ -14,8 +17,13 @@ namespace DJM.CoreServices.MonoServices.AudioSourcePool
         private readonly List<AudioSource> _audioSources = new();
         private readonly Stack<AudioSource> _availableAudioSources = new();
 
+        /// <summary>
+        /// Dependency injection via method, as <see cref="AudioSourcePoolService"/> can not have a constructor.
+        /// If manually instantiated, this must be called before use to prevent exceptions.
+        /// </summary>
+        /// <param name="debugLogger">The debug logger for logging diagnostic information.</param>
         [Inject]
-        private void Construct(IDebugLogger debugLogger)
+        public void Construct(IDebugLogger debugLogger)
         {
             _debugLogger = debugLogger;
         }
@@ -28,16 +36,8 @@ namespace DJM.CoreServices.MonoServices.AudioSourcePool
                 _availableAudioSources.Push(audioSource);
             }
         }
-
-        private AudioSource AddAudioSource(bool disable = true)
-        {
-            var newAudioSource = gameObject.AddComponent<UnityEngine.AudioSource>();
-            _audioSources.Add(newAudioSource);
-            newAudioSource.playOnAwake = false;
-            if(disable) newAudioSource.enabled = false;
-            return newAudioSource;
-        }
-
+        
+        /// <inheritdoc/>
         public AudioSource GetAudioSource()
         {
             // return audio source from pool if available
@@ -51,19 +51,16 @@ namespace DJM.CoreServices.MonoServices.AudioSourcePool
             // pool empty - create new one
             var newAudioSource = AddAudioSource(false);
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
             if (_audioSources.Count > maxPoolSize) LogExceededMaxPoolSize(_audioSources.Count);
-#endif          
             return newAudioSource;
         }
 
+        /// <inheritdoc/>
         public void ReleaseAudioSource(AudioSource audioSource)
         {
             if (audioSource.transform != transform)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 LogTriedToReleaseForeignAudioSource();
-#endif
                 return;
             }
             
@@ -78,12 +75,19 @@ namespace DJM.CoreServices.MonoServices.AudioSourcePool
             _audioSources.Remove(audioSource);
             Destroy(audioSource);
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
             LogDestroyedExcessAudioSource();
-#endif
+        }
+        
+        private AudioSource AddAudioSource(bool disable = true)
+        {
+            var newAudioSource = gameObject.AddComponent<AudioSource>();
+            _audioSources.Add(newAudioSource);
+            newAudioSource.playOnAwake = false;
+            if(disable) newAudioSource.enabled = false;
+            return newAudioSource;
         }
 
-        private static void ResetAudioSource(UnityEngine.AudioSource audioSource)
+        private static void ResetAudioSource(AudioSource audioSource)
         {
             audioSource.Stop();
             

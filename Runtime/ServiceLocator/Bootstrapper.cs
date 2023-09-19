@@ -5,7 +5,7 @@ namespace DJM.CoreServices.ServiceLocator
 {
     internal static class Bootstrapper
     {
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)] // comment this out to prevent service locator initializing
         internal static void InitializeUtilities()
         {
             ResetPersistantServices();
@@ -13,7 +13,7 @@ namespace DJM.CoreServices.ServiceLocator
             var container = new DependencyContainer(CreatePersistantGameObjectContext());
             container.Install(new CoreServiceInstaller());
             
-            PersistantServiceManager.Initialize(container);
+            ServiceManager.Initialize(container);
         }
         
         private static void ResetPersistantServices()

@@ -4,7 +4,7 @@ namespace DJM.CoreServices.ServiceLocator
     {
         public static T Resolve<T>()
         {
-            return PersistantServiceManager.Instance.Container.Resolve<T>();
+            return ServiceManager.Instance.Container.Resolve<T>();
         }
     }
 }

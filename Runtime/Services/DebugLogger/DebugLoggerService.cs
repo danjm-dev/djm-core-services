@@ -3,17 +3,19 @@ using UnityEngine;
 
 namespace DJM.CoreServices.Services.DebugLogger
 {
-    public sealed class DebugLogger : IDebugLogger
+    public sealed class DebugLoggerService : IDebugLogger
     {
         private readonly bool _enableLogging;
         private readonly LogLevel _loggingThreshold;
 
-        public DebugLogger(/*bool enableLogging, LogLevel loggingThreshold*/)
+        // todo: will make configurable when djm-dependency-injection supports setting constructor argument
+        public DebugLoggerService(/*bool enableLogging, LogLevel loggingThreshold*/)
         {
             _enableLogging = true;
             _loggingThreshold = LogLevel.Info;
         }
         
+        /// <inheritdoc/>
         public void LogError(string message, string context)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -23,6 +25,7 @@ namespace DJM.CoreServices.Services.DebugLogger
 #endif
         }
 
+        /// <inheritdoc/>
         public void LogWarning(string message, string context)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -33,6 +36,7 @@ namespace DJM.CoreServices.Services.DebugLogger
 #endif
         }
 
+        /// <inheritdoc/>
         public void LogInfo(string message, string context)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD

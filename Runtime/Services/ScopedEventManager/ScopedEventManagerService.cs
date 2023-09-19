@@ -7,9 +7,9 @@ namespace DJM.CoreServices.Services.ScopedEventManager
 {
     internal sealed class ScopedEventManagerService : EventManagerBase, IScopedEventManager, IInitializable, IDisposable
     {
-        private readonly IEventManager _eventManager;
+        private readonly IPersistantEventManager _eventManager;
 
-        public ScopedEventManagerService(IEventManager eventManager) => _eventManager = eventManager;
+        public ScopedEventManagerService(IPersistantEventManager eventManager) => _eventManager = eventManager;
         
         public void Initialize()
         {
