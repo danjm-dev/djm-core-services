@@ -30,11 +30,5 @@ namespace DJM.CoreServices
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task CompleteLoadProgress();
-
-        /// <summary>
-        /// Signals to progress screen that loading is cancelled. Allows it to hold thread until ready.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task CancelLoadProgress();
     }
 }

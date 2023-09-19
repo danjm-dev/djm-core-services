@@ -7,6 +7,7 @@ namespace DJM.CoreServices.LoadingScreen
     public class LoadingScreenConfig : ScriptableObject
     {
         [SerializeField] public Color backgroundColor = Color.black;
+        [SerializeField] public CustomLoadingScreen customLoadingScreenPrefab;
         
         [Header("Fade In")]
         [Min(0f)] public float fadeInDuration = 0.5f;
