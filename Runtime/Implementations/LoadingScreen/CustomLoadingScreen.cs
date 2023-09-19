@@ -1,19 +1,17 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace DJM.CoreServices.LoadingScreen
 {
     [RequireComponent(typeof(RectTransform))]
     public sealed class CustomLoadingScreen : MonoBehaviour
     {
-        [SerializeField] public Image progressBar;
+        public UnityEvent<float> onSetupDelayStart;
+        public UnityEvent<float> onLoadProgress;
+        public UnityEvent<float> onShutdownDelayStart;
 
-        private void Awake() => SetProgressBarFill(0f);
-        
-        public void SetProgressBarFill(float fillAmount)
-        {
-            if(progressBar is null) return;
-            progressBar.fillAmount = fillAmount;
-        }
+        private void Awake() => SetLoadProgress(0f);
+
+        public void SetLoadProgress(float fillAmount) => onLoadProgress?.Invoke(fillAmount);
     }
 }

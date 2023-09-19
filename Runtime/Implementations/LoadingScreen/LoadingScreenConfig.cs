@@ -14,6 +14,7 @@ namespace DJM.CoreServices.LoadingScreen
         public Ease fadeInEase = Ease.InOutSine;
         
         [Header("Load Progress")]
+        [Min(0f)] public float loadStartDelay = 0f;
         [Min(0f)] public float minimumLoadDuration = 0.2f;
         [Min(0f)] public float loadCompleteDelay = 0f;
         

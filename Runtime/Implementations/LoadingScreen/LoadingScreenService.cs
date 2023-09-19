@@ -69,20 +69,14 @@ namespace DJM.CoreServices.LoadingScreen
             
             gameObject.SetActive(false);
         }
-
-        private void OnDestroy()
-        {
-            DOTween.Complete(_canvasGroup);
-            DOTween.Kill(_canvasGroup);
-        }
-
+        
         private void Update()
         {
             if(_loadProgress >= 1f) return;
             var maxDelta = (1f / _loadingScreenConfig.minimumLoadDuration) * Time.deltaTime;
             _loadProgress = Mathf.MoveTowards(_loadProgress, _loadProgressTarget, maxDelta);
             if(_customLoadingScreen is null) return;
-            _customLoadingScreen.SetProgressBarFill(_loadProgress);
+            _customLoadingScreen.SetLoadProgress(_loadProgress);
         }
 
         private void OnDisable()
@@ -90,7 +84,13 @@ namespace DJM.CoreServices.LoadingScreen
             _loadProgressTarget = 0f;
             _loadProgress = 0f;
             if(_customLoadingScreen is null) return;
-            _customLoadingScreen.SetProgressBarFill(0f);
+            _customLoadingScreen.SetLoadProgress(0f);
+        }
+        
+        private void OnDestroy()
+        {
+            DOTween.Complete(_canvasGroup);
+            DOTween.Kill(_canvasGroup);
         }
 
         /// <inheritdoc/>
@@ -104,6 +104,10 @@ namespace DJM.CoreServices.LoadingScreen
                 .DOFade(1f, _loadingScreenConfig.fadeInDuration)
                 .SetEase(_loadingScreenConfig.fadeInEase)
                 .AsyncWaitForCompletion();
+            
+            if(_customLoadingScreen is not null) 
+                _customLoadingScreen.onSetupDelayStart?.Invoke(_loadingScreenConfig.loadStartDelay);
+            await Task.Delay(TimeSpan.FromSeconds(_loadingScreenConfig.loadStartDelay));
         }
         
         /// <inheritdoc/>
@@ -127,6 +131,9 @@ namespace DJM.CoreServices.LoadingScreen
         {
             _loadProgressTarget = 1f;
             while (_loadProgress < 1f) await Task.Yield();
+            
+            if(_customLoadingScreen is not null) 
+                _customLoadingScreen.onShutdownDelayStart?.Invoke(_loadingScreenConfig.loadCompleteDelay);
             await Task.Delay(TimeSpan.FromSeconds(_loadingScreenConfig.loadCompleteDelay));
         }
     }
