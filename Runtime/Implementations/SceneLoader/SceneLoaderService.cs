@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
-namespace DJM.CoreServices.Services.SceneLoader
+namespace DJM.CoreServices.SceneLoader
 {
     /// <summary>
     /// Service for handling scene loading operations.

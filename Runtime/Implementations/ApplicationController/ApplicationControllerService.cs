@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DJM.CoreServices.Services.ApplicationController
+namespace DJM.CoreServices.ApplicationController
 {
     public sealed class ApplicationControllerService : IApplicationController
     {

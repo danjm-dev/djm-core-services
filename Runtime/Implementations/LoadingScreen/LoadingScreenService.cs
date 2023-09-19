@@ -4,7 +4,7 @@ using DJM.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DJM.CoreServices.MonoServices.LoadingScreen
+namespace DJM.CoreServices.LoadingScreen
 {
     /// <summary>
     /// Manages loading screen components. If manually instantiating, ensure Construct method is called before use.

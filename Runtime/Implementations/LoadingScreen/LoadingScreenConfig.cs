@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace DJM.CoreServices.MonoServices.LoadingScreen
+namespace DJM.CoreServices.LoadingScreen
 {
     [CreateAssetMenu(fileName = "LoadingScreenConfig", menuName = "DJM/CoreServices/LoadingScreen/LoadingScreenConfig")]
     public sealed class LoadingScreenConfig : ScriptableObject

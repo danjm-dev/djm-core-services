@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using DJM.CoreServices.MonoServices.AudioSourcePool;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace DJM.CoreServices.Services.TransientSound
+namespace DJM.CoreServices.TransientSound
 {
     /// <summary>
     /// Service that provides audio playback functionality for transient sounds.

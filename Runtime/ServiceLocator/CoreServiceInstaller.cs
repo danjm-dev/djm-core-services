@@ -1,12 +1,12 @@
-using DJM.CoreServices.MonoServices.AudioSourcePool;
-using DJM.CoreServices.MonoServices.LoadingScreen;
-using DJM.CoreServices.Services.ApplicationController;
-using DJM.CoreServices.Services.DebugLogger;
-using DJM.CoreServices.Services.Music;
-using DJM.CoreServices.Services.PersistantEventManager;
-using DJM.CoreServices.Services.SceneLoader;
-using DJM.CoreServices.Services.ScopedEventManager;
-using DJM.CoreServices.Services.TransientSound;
+using DJM.CoreServices.ApplicationController;
+using DJM.CoreServices.AudioSourcePool;
+using DJM.CoreServices.DebugLogger;
+using DJM.CoreServices.LoadingScreen;
+using DJM.CoreServices.Music;
+using DJM.CoreServices.PersistantEventManager;
+using DJM.CoreServices.SceneLoader;
+using DJM.CoreServices.ScopedEventManager;
+using DJM.CoreServices.TransientSound;
 using DJM.DependencyInjection;
 
 namespace DJM.CoreServices.ServiceLocator

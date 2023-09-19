@@ -1,9 +1,8 @@
 using System;
 using DG.Tweening;
-using DJM.CoreServices.MonoServices.AudioSourcePool;
 using UnityEngine;
 
-namespace DJM.CoreServices.Services.Music
+namespace DJM.CoreServices.Music
 {
     /// <summary>
     /// Service that provides audio playback functionality for music.

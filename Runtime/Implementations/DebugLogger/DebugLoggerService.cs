@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace DJM.CoreServices.Services.DebugLogger
+namespace DJM.CoreServices.DebugLogger
 {
     public sealed class DebugLoggerService : IDebugLogger
     {

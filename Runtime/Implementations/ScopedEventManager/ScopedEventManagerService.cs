@@ -1,9 +1,9 @@
 using System;
-using DJM.CoreServices.Services.SceneLoader;
+using DJM.CoreServices.SceneLoader;
 using DJM.DependencyInjection;
 using DJM.EventManager;
 
-namespace DJM.CoreServices.Services.ScopedEventManager
+namespace DJM.CoreServices.ScopedEventManager
 {
     internal sealed class ScopedEventManagerService : EventManagerBase, IScopedEventManager, IInitializable, IDisposable
     {

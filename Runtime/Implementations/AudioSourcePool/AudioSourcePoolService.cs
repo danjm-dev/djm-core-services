@@ -2,7 +2,7 @@
 using DJM.DependencyInjection;
 using UnityEngine;
 
-namespace DJM.CoreServices.MonoServices.AudioSourcePool
+namespace DJM.CoreServices.AudioSourcePool
 {
     /// <summary>
     /// Manages a pool of audio sources. If manually instantiating, ensure Construct method is called before use.

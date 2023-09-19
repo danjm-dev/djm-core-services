@@ -1,5 +1,4 @@
-using DJM.CoreServices.MonoServices.LoadingScreen;
-using DJM.CoreServices.Services.SceneLoader;
+using DJM.CoreServices.LoadingScreen;
 using UnityEditor;
 
 namespace DJM.CoreServices.Editor.CustomEditors
