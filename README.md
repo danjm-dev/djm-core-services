@@ -56,14 +56,14 @@ DJM Core Services is a Unity package for core game services that can be used acr
 The current implementation is a work in progress, but includes the following services.
 
 - Application Controller
-- Debug Logger
-- Music Service
-- Transient Sound Service
-- Audio Source Pool
-- Scoped Event Manager
-- Persistant Event Manager
-- Scene Loader
+- Audio Source Pool      
+- Debug Logger           
 - Loading Screen Service
+- Music Service          
+- Persistant Event Manager
+- Scene Loader           
+- Scoped Event Manager   
+- Transient Sound Service
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -116,12 +116,12 @@ The service locator is initialized before the first scene is loaded, so is safe 
 var logger = DJMServiceLocator.Resolve<IDebugLogger>();
 ```
 
-Services are bound to the service locator and lazily instantiated when required. 
-Most are "single" instances so only get instantiated the first time they are resolved, with the same instance returned for subsequent resolutions.
-Services can also be "transient", meaning a unique instance is instantiated each time the service is resolved.
+Services are bound to the service locator and lazily instantiated when required.
+Services scoped to "single" only get instantiated the first time they are resolved, with the same instance returned for subsequent resolutions.
+Services scoped as "transient" get instantiated each time the service is resolved.
 
 The service locator uses reflection to instantiate services, which can impact performance.
-Although this impact should be minor, I recommend caching instances of services during the awake or start phase to minimise reflection related performance costs.
+Although this impact should be minor, I recommend caching instances of services during the awake or start phase to minimise any impact.
 
 ```csharp
 public class MainMenuManager : MonoBehaviour
@@ -145,7 +145,7 @@ public class MainMenuManager : MonoBehaviour
 
 ### 2. Manually Initialize Services
 
-If you dont want to utilize the service locator and associated architecture, you can initialize instances of services yourself.
+If you dont want to utilize the service locator and associated architecture, you can initialize instances of most services yourself.
 The concrete classes implemented for each service are listed below. 
 
 There is currently no way to disable the service locator without making code changes. However, as the services are loaded lazily, 
@@ -157,7 +157,19 @@ If you do this, remember that any calls to `DJMServiceLocator` will result in an
 
 ### Services
 
+These are the current services implemented in DJM Core Services. XML Documentation is available on the interface of each service.
 
+| Service                  | Interface                                                                | Implementation               | Service Locator Scope | Description                                                                                                                                                                                                                                                                                                                                                                  |
+|--------------------------|--------------------------------------------------------------------------|------------------------------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Application Controller   | [IApplicationController](Runtime/Interfaces/IApplicationController.cs)   | ApplicationControllerService | Single                | Controls the application's game state.                                                                                                                                                                                                                                                                                                                                       |
+| Audio Source Pool        | [IAudioSourcePool](Runtime/Interfaces/IAudioSourcePool.cs)               | AudioSourcePoolService       | Single                | Manages a pool of audio source components. Used internally by music and transient sound services.                                                                                                                                                                                                                                                                            |
+| Debug Logger             | [IDebugLogger](Runtime/Interfaces/IDebugLogger.cs)                       | DebugLoggerService           | Single                | Centralized logging for debug messages with different severity levels.                                                                                                                                                                                                                                                                                                       |
+| Loading Screen Service   | [ILoadingScreenService](Runtime/Interfaces/ILoadingScreenService.cs)     | LoadingScreenService         | Single                | Controls loading screen components. Used internally by Scene Loader.                                                                                                                                                                                                                                                                                                         |
+| Music Service            | [IMusicService](Runtime/Interfaces/IMusicService.cs)                     | MusicService                 | Single                | Provides audio playback functionality for music.                                                                                                                                                                                                                                                                                                                             |
+| Persistant Event Manager | [IPersistantEventManager](Runtime/Interfaces/IPersistantEventManager.cs) |                              | Single                | Persistent event manager used by internal services. Subscribers persist through scene loading. Should not be used for non-persistent event listeners (use Scoped Event Manager instead). If it is, ensure all non-persistent listeners are unsubscribed before a new scene is loaded. If not using service locator, use EventManager from djm-event-manager package instead. |
+| Scene Loader             | [ISceneLoader](Runtime/Interfaces/ISceneLoader.cs)                       | SceneLoaderService           | Single                | Handles scene loading operations.                                                                                                                                                                                                                                                                                                                                            |
+| Scoped Event Manager     | [IScopedEventManager](Runtime/Interfaces/IScopedEventManager.cs)         |                              | Single                | Event manager scoped to the lifecycle of a scene. All listeners cleared when new scene loaded. If not using service locator, use EventManager from djm-event-manager package instead.                                                                                                                                                                                        |
+| Transient Sound Service  | [ITransientSoundService](Runtime/Interfaces/ITransientSoundService.cs)   | TransientSoundService        | Single                | Provides audio playback functionality for transient sounds.                                                                                                                                                                                                                                                                                                                  |
 
 
 
