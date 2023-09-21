@@ -23,7 +23,6 @@ namespace DJM.CoreServices.LoadingScreen
         
         private float _loadProgress;
         private float _loadProgressTarget;
-
         private Tween _loadProgressTween;
 
         /// <summary>
@@ -84,6 +83,9 @@ namespace DJM.CoreServices.LoadingScreen
         {
             DOTween.Complete(_canvasGroup);
             DOTween.Kill(_canvasGroup);
+            
+            _loadProgressTween.Complete();
+            _loadProgressTween.Kill();
         }
 
         /// <inheritdoc/>
