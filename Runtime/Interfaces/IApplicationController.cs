@@ -6,6 +6,11 @@ namespace DJM.CoreServices
     public interface IApplicationController
     {
         /// <summary>
+        /// Gets a value indicating whether the game is currently paused.
+        /// </summary>
+        public bool IsPaused { get; }
+        
+        /// <summary>
         /// Quits the game. This has different behavior in the Unity editor vs a built game.
         /// </summary>
         /// 

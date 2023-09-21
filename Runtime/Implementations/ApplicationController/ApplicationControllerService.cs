@@ -5,6 +5,9 @@ namespace DJM.CoreServices.ApplicationController
     public sealed class ApplicationControllerService : IApplicationController
     {
         /// <inheritdoc/>
+        public bool IsPaused => Time.timeScale == 0f;
+
+        /// <inheritdoc/>
         public void QuitGame()
         {
 #if UNITY_EDITOR
