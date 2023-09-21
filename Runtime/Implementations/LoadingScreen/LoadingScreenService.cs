@@ -24,6 +24,8 @@ namespace DJM.CoreServices.LoadingScreen
         private float _loadProgress;
         private float _loadProgressTarget;
 
+        private Tween _loadProgressTween;
+
         /// <summary>
         /// Dependency injection via method, as <see cref="LoadingScreenService"/> can not have a constructor.
         /// If manually instantiated, this must be called before use to prevent exceptions.
@@ -69,15 +71,6 @@ namespace DJM.CoreServices.LoadingScreen
             
             gameObject.SetActive(false);
         }
-        
-        private void Update()
-        {
-            if(_loadProgress >= 1f) return;
-            var maxDelta = (1f / _loadingScreenConfig.minimumLoadDuration) * Time.deltaTime;
-            _loadProgress = Mathf.MoveTowards(_loadProgress, _loadProgressTarget, maxDelta);
-            if(_customLoadingScreen is null) return;
-            _customLoadingScreen.SetLoadProgress(_loadProgress);
-        }
 
         private void OnDisable()
         {
@@ -103,6 +96,7 @@ namespace DJM.CoreServices.LoadingScreen
             else await _canvasGroup
                 .DOFade(1f, _loadingScreenConfig.fadeInDuration)
                 .SetEase(_loadingScreenConfig.fadeInEase)
+                .SetUpdate(true)
                 .AsyncWaitForCompletion();
             
             if(_customLoadingScreen is not null) 
@@ -118,18 +112,35 @@ namespace DJM.CoreServices.LoadingScreen
             else await _canvasGroup
                 .DOFade(0f, _loadingScreenConfig.fadeOutDuration)
                 .SetEase(_loadingScreenConfig.fadeOutEase)
+                .SetUpdate(true)
                 .AsyncWaitForCompletion();
             
             gameObject.SetActive(false);
         }
 
         /// <inheritdoc/>
-        public void SetLoadProgress(float progress) => _loadProgressTarget = Mathf.Clamp01(progress);
+        public void SetLoadProgress(float progress)
+        {
+            _loadProgressTarget = Mathf.Clamp01(progress);
+            _loadProgressTween?.Kill();
+
+            var duration = _loadingScreenConfig.minimumLoadDuration * (_loadProgressTarget - _loadProgress);
+            _loadProgressTween = DOTween
+                .To(() => _loadProgress, val => _loadProgress = val, _loadProgressTarget, duration)
+                .SetUpdate(true)
+                .OnUpdate(UpdateCustomLoadingScreen);
+        }
+
+        private void UpdateCustomLoadingScreen()
+        {
+            if(_customLoadingScreen == null) return;
+            _customLoadingScreen.SetLoadProgress(_loadProgress);
+        }
 
         /// <inheritdoc/>
         public async Task CompleteLoadProgress()
         {
-            _loadProgressTarget = 1f;
+            SetLoadProgress(1f);
             while (_loadProgress < 1f) await Task.Yield();
             
             if(_customLoadingScreen is not null) 
