@@ -2,6 +2,7 @@ using DJM.CoreServices.ApplicationController;
 using DJM.CoreServices.AudioSourcePool;
 using DJM.CoreServices.DebugLogger;
 using DJM.CoreServices.LoadingScreen;
+using DJM.CoreServices.MonoBehaviorDelegator;
 using DJM.CoreServices.Music;
 using DJM.CoreServices.PersistantEventManager;
 using DJM.CoreServices.SceneLoader;
@@ -31,6 +32,7 @@ namespace DJM.CoreServices.ServiceLocator
             // mono services
             container.Bind<IAudioSourcePool>().To<AudioSourcePoolService>().FromNewComponentOnNewGameObject().AsSingle();
             container.Bind<ILoadingScreenService>().To<LoadingScreenService>().FromNewComponentOnNewGameObject().AsSingle();
+            container.Bind<IMonoBehaviorDelegator>().To<MonoBehaviorDelegatorService>().FromNewComponentOnNewGameObject().AsSingle();
         }
     }
 }

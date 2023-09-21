@@ -10,10 +10,5 @@ namespace DJM.CoreServices
         /// </summary>
         /// <param name="sceneName">The name of the scene to load.</param>
         public void LoadScene(string sceneName);
-        
-        /// <summary>
-        /// Cancels the ongoing scene loading operation, if any.
-        /// </summary>
-        public void CancelLoadingScene();
     }
 }

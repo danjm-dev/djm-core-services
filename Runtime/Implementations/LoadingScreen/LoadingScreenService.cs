@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
 using DJM.DependencyInjection;
@@ -94,31 +95,32 @@ namespace DJM.CoreServices.LoadingScreen
         }
 
         /// <inheritdoc/>
-        public async Task Show()
+        public IEnumerator Show()
         {
             gameObject.SetActive(true);
             
             if (_loadingScreenConfig.fadeInDuration <= 0f) _canvasGroup.alpha = 1f;
             
-            else await _canvasGroup
+            else yield return _canvasGroup
                 .DOFade(1f, _loadingScreenConfig.fadeInDuration)
                 .SetEase(_loadingScreenConfig.fadeInEase)
-                .AsyncWaitForCompletion();
+                .WaitForCompletion();
             
             if(_customLoadingScreen is not null) 
                 _customLoadingScreen.onSetupDelayStart?.Invoke(_loadingScreenConfig.loadStartDelay);
-            await Task.Delay(TimeSpan.FromSeconds(_loadingScreenConfig.loadStartDelay));
+
+            yield return new WaitForSeconds(_loadingScreenConfig.loadStartDelay);
         }
         
         /// <inheritdoc/>
-        public async Task Hide()
+        public IEnumerator Hide()
         {
             if (_loadingScreenConfig.fadeOutDuration <= 0f) _canvasGroup.alpha = 0f;
             
-            else await _canvasGroup
+            else yield return _canvasGroup
                 .DOFade(0f, _loadingScreenConfig.fadeOutDuration)
                 .SetEase(_loadingScreenConfig.fadeOutEase)
-                .AsyncWaitForCompletion();
+                .WaitForCompletion();
             
             gameObject.SetActive(false);
         }
@@ -127,14 +129,14 @@ namespace DJM.CoreServices.LoadingScreen
         public void SetLoadProgress(float progress) => _loadProgressTarget = Mathf.Clamp01(progress);
 
         /// <inheritdoc/>
-        public async Task CompleteLoadProgress()
+        public IEnumerator CompleteLoadProgress()
         {
             _loadProgressTarget = 1f;
-            while (_loadProgress < 1f) await Task.Yield();
+            while (_loadProgress < 1f) yield return null;
             
             if(_customLoadingScreen is not null) 
                 _customLoadingScreen.onShutdownDelayStart?.Invoke(_loadingScreenConfig.loadCompleteDelay);
-            await Task.Delay(TimeSpan.FromSeconds(_loadingScreenConfig.loadCompleteDelay));
+            yield return new WaitForSeconds(_loadingScreenConfig.loadCompleteDelay);
         }
     }
 }
