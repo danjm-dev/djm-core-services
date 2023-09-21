@@ -1,8 +1,10 @@
 {
   "name": "com.djm.core-services",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "displayName": "DJM Core Services",
   "description": "Core services for Unity projects.",
+  "dependencies": {
+  },
   "author": {
     "name": "danjm.dev",
     "email": "danjm.dev@gmail.com",

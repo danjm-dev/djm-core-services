@@ -1,4 +1,6 @@
-using System.Collections;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 namespace DJM.CoreServices.SceneLoader
@@ -11,7 +13,8 @@ namespace DJM.CoreServices.SceneLoader
         private readonly ILoadingScreenService _loadingScreenService;
         private readonly IDebugLogger _debugLogger;
         private readonly IPersistantEventManager _eventManager;
-        private readonly IMonoBehaviorDelegator _monoBehaviorDelegator;
+        
+        private CancellationTokenSource _cancellationTokenSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneLoaderService"/> class.
@@ -19,46 +22,77 @@ namespace DJM.CoreServices.SceneLoader
         /// <param name="loadingScreenService">The service used for handling the loading screen.</param>
         /// <param name="debugLogger">The logger for debugging and error reporting.</param>
         /// <param name="eventManager">The persistant event manager for triggering loading-related events.</param>
-        public SceneLoaderService(ILoadingScreenService loadingScreenService, IDebugLogger debugLogger, IPersistantEventManager eventManager, IMonoBehaviorDelegator monoBehaviorDelegator)
+        public SceneLoaderService(ILoadingScreenService loadingScreenService, IDebugLogger debugLogger, IPersistantEventManager eventManager)
         {
             _loadingScreenService = loadingScreenService;
             _debugLogger = debugLogger;
             _eventManager = eventManager;
-            _monoBehaviorDelegator = monoBehaviorDelegator;
         }
 
         /// <inheritdoc/>
-        public void LoadScene(string sceneName)
-        {
-            _monoBehaviorDelegator.DelegateStartCoroutine(StartLoadingSceneCoroutine(sceneName));
-        }
+        public void LoadScene(string sceneName) => StartLoadingSceneAsync(sceneName);
+        
+        /// <inheritdoc/>
+        public void CancelLoadingScene() => _cancellationTokenSource?.Cancel();
 
-        private IEnumerator StartLoadingSceneCoroutine(string sceneName)
+        private async void StartLoadingSceneAsync(string sceneName)
         {
-            yield return _loadingScreenService.Show();
-            _debugLogger.LogInfo($"Started loading Scene: {sceneName}.", nameof(SceneLoaderService));
-            yield return LoadSceneAsync(sceneName);
-            _debugLogger.LogInfo($"Successfully loaded Scene: {sceneName}.", nameof(SceneLoaderService));
-            yield return _loadingScreenService.Hide();
-        }
-
-        private IEnumerator LoadSceneAsync(string sceneName)
-        {
-            var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
-            asyncOperation.allowSceneActivation = false;
-            
-            do
+            _cancellationTokenSource = new CancellationTokenSource();
+            try
             {
-                _loadingScreenService.SetLoadProgress(asyncOperation.progress);
-                yield return null;
+                await _loadingScreenService.Show();
+                _debugLogger.LogInfo($"Started loading Scene: {sceneName}.", nameof(SceneLoaderService));
+                await LoadSceneAsync(sceneName, _cancellationTokenSource.Token);
+                _debugLogger.LogInfo($"Successfully loaded Scene: {sceneName}.", nameof(SceneLoaderService));
             }
-            while (asyncOperation.progress < 0.9f);
+            catch (TaskCanceledException)
+            {
+                _debugLogger.LogInfo($"Cancelled loading scene: {sceneName}.", nameof(SceneLoaderService));
+            }
+            catch (Exception exception)
+            {
+                _debugLogger.LogError($"Failed to load scene: {sceneName}. Error: {exception.Message}", nameof(SceneLoaderService));
+            }
+            finally
+            {
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+                await _loadingScreenService.Hide();
+            }
+        }
 
-            yield return _loadingScreenService.CompleteLoadProgress();
-            asyncOperation.allowSceneActivation = true;
+        private async Task LoadSceneAsync(string sceneName, CancellationToken cancellationToken)
+        {
             
-            while (!asyncOperation.isDone) yield return null;
-            _eventManager.TriggerEvent(new SceneLoaderEvent.ActivatingNewScene());
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+            var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
+
+            asyncOperation.allowSceneActivation = false;
+
+            asyncOperation.completed += _ => taskCompletionSource.TrySetResult(true);
+
+            while (!asyncOperation.isDone)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    asyncOperation.allowSceneActivation = false;
+                    taskCompletionSource.TrySetCanceled();
+                    break;
+                }
+
+                if (asyncOperation.progress >= 0.9f)
+                {
+                    await _loadingScreenService.CompleteLoadProgress();
+                    _eventManager.TriggerEvent(new SceneLoaderEvent.ActivatingNewScene());
+                    asyncOperation.allowSceneActivation = true;
+                    break;
+                }
+                
+                _loadingScreenService.SetLoadProgress(asyncOperation.progress);
+                await Task.Yield();
+            }
+
+            await taskCompletionSource.Task;
         }
     }
 }

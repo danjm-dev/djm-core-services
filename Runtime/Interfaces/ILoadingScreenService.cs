@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Threading.Tasks;
 
 namespace DJM.CoreServices
 {
@@ -7,12 +7,28 @@ namespace DJM.CoreServices
     /// </summary>
     public interface ILoadingScreenService
     {
-        public IEnumerator Show();
+        /// <summary>
+        /// Shows the loading screen over a duration.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task Show();
         
-        public IEnumerator Hide();
+        /// <summary>
+        /// Hides the loading screen over a duration.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task Hide();
         
+        /// <summary>
+        /// Sets the load progress of the screen.
+        /// </summary>
+        /// <param name="progress">The load progress value between 0 and 1</param>
         public void SetLoadProgress(float progress);
         
-        public IEnumerator CompleteLoadProgress();
+        /// <summary>
+        /// Signals to progress screen that loading is complete. Allows it to hold thread until ready.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task CompleteLoadProgress();
     }
 }
