@@ -7,12 +7,13 @@ namespace DJM.CoreServices.ServiceLocator
     {
         private static ServiceManager _instance;
         internal static ServiceManager Instance => _instance ?? throw new InvalidOperationException($"{nameof(ServiceManager)} not initialized.");
-        
-        public readonly IResolvableContainer Container;
-        
-        private ServiceManager(IResolvableContainer container) => Container = container;
 
-        internal static void Initialize(IResolvableContainer resolvableContainer)
+        private readonly DependencyContainer _dependencyContainer;
+        public IResolvableContainer Container => _dependencyContainer;
+        
+        private ServiceManager(DependencyContainer container) => _dependencyContainer = container;
+
+        internal static void Initialize(DependencyContainer resolvableContainer)
         {
             if (_instance is not null)
             {
@@ -20,6 +21,13 @@ namespace DJM.CoreServices.ServiceLocator
             }
             
             _instance = new ServiceManager(resolvableContainer);
+        }
+
+        internal static void Reset()
+        {
+            if(_instance is null) return;
+            _instance._dependencyContainer.Dispose();
+            _instance = null;
         }
     }
 }
