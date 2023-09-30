@@ -7,6 +7,10 @@ namespace DJM.CoreServices.Common
         public static T Instance { get; private set; }
 
         protected virtual void Awake() => InitializeInstance();
+        protected virtual void OnDestroy()
+        {
+            if(Instance == this) Instance = null;
+        }
 
         private void InitializeInstance()
         {
